@@ -1,8 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tricks{% endblock %}
+{% block title 'All Tricks' %}
 
 {% block body %}
 
-</div>
-{% endblock %}
+	<div class="container mt-4">
+
+
+		<div class="jumbotron">
+		
+			<h1 class="display-4">{{ lastFigure.title}}</h1>
+			<p class="lead">
+				{{ lastFigure.description }}
+			</p>
+			<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+		</div>
+
+		<h1>All Tricks</h1>
+		<div class="container">
+			<div class="row">
+				{% for figure in figures %}
+					<div class="col-md-6 col-lg-4">
+						<div class="card mb-4 ">
+							<img src="http://placehold.it/300x200" alt="">
+							<div class="card-body">
+								<h5 class="card-title">
+									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
+										{{ figure.title }}
+									</a>
+								</h5>
+
+								<p class="card-text">
+									{{ figure.description|nl2br }}
+								</p>
+								<a href="{{ path( 'trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+							</div>
+						</div>
+
+					</div>
+
+				{% endfor %}
+			</div>
+		</div>
+
+
+	</div>
+
+
+</div>{% endblock %}
