@@ -20,7 +20,7 @@ class AppController extends AbstractController
         $lastFigure = $figures[array_key_last($figures)];
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
-            'lastFigure' => $lastFigure,
+            'lastFigure' => $lastFigure
         ]);
     }
 

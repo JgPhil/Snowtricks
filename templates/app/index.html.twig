@@ -5,15 +5,16 @@
 {% block body %}
 
 	<div class="container mt-4">
-
-
 		<div class="jumbotron">
-		
-			<h1 class="display-4">{{ lastFigure.title}}</h1>
-			<p class="lead">
-				{{ lastFigure.description }}
-			</p>
-			<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+			<div class="container">
+				<div class="fond">
+					<h1 class="display-4">{{ lastFigure.title}}</h1>
+					<p class="lead">
+						{{ lastFigure.description }}
+					</p>
+					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+				</div>
+			</div>
 		</div>
 
 		<h1>All Tricks</h1>

@@ -1,0 +1,16 @@
+.fond {
+  background: url('http://placehold.it/1080x300') no-repeat center center;
+  position: fixed; /* Le fond est fixé en haut de la page */
+  width: 100%; /* Il occupe toute la largeur de l'écran */
+  height: 400px; /* On met ici la même hauteur que le jumbotron */
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.jumbotron {
+  margin-bottom: 0px;
+  height: 400px;
+  color: white; /* Le texte sera affiché en blanc */
+  text-shadow: black 0.3em 0.3em 0.3em;
+  background: transparent;
+}
