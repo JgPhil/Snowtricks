@@ -38,7 +38,7 @@ class AppController extends AbstractController
     public function show(Figure $figure)
     {
         return $this->render('app/show.html.twig', [
-            'figure' => $figure,
+            'figure' => $figure
         ]);
     }
 }

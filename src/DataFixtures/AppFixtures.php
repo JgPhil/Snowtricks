@@ -32,6 +32,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                 $figure->setTitle($faker->sentence(2))
                     ->setAuthor($users[array_rand($users, 1)])
                     ->setDescription($faker->paragraph())
+                    ->setCategory($category)
                     ->setCreatedAt(
                         $faker->dateTimeThisMonth('now', 'Europe/Paris')
                     );

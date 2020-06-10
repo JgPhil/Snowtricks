@@ -36,11 +36,6 @@ class Figure
     private $createdAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="figures")
-     */
-    private $categories;
-
-    /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", orphanRemoval=true)
      */
     private $comments;
@@ -61,9 +56,14 @@ class Figure
      */
     private $videos;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="figures")
+     */
+    private $category;
+
+
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
@@ -110,34 +110,7 @@ class Figure
         return $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-            $category->addFigure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        if ($this->categories->contains($category)) {
-            $this->categories->removeElement($category);
-            $category->removeFigure($this);
-        }
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection|Comment[]
      */
@@ -239,6 +212,18 @@ class Figure
                 $video->setFigure(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

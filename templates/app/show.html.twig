@@ -10,8 +10,8 @@
 			Ecrit le
 			{{ figure.createdAt|date('d/m/Y') }}
 			à
-			{{ figure.createdAt|date('H:i') }}
-			par
+			{{ figure.createdAt|date('H:i') }} dans la catégorie {{ figure.category.title }}
+			par {{ figure.author.username }}
 		</div>
 		<p>{{ figure.description }}</p>
 	</article>

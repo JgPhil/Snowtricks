@@ -30,7 +30,7 @@ class Category
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Figure::class, inversedBy="categories")
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="category")
      */
     private $figures;
 
@@ -38,6 +38,10 @@ class Category
     {
         $this->figures = new ArrayCollection();
     }
+
+    
+
+  
 
     public function getId(): ?int
     {
@@ -80,6 +84,7 @@ class Category
     {
         if (!$this->figures->contains($figure)) {
             $this->figures[] = $figure;
+            $figure->addCategory($this);
         }
 
         return $this;
@@ -89,8 +94,11 @@ class Category
     {
         if ($this->figures->contains($figure)) {
             $this->figures->removeElement($figure);
+            $figure->removeCategory($this);
         }
 
         return $this;
     }
+
+    
 }
