@@ -14,7 +14,7 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 50; $i++) {
             $user = new User();
             $faker = Faker\Factory::create('fr_FR');
-            $user->setPseudo($faker->firstName());
+            $user->setUsername($faker->firstName());
             $user->setPassword(
                 password_hash($faker->password(), PASSWORD_BCRYPT)
             );

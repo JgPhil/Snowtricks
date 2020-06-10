@@ -4,13 +4,15 @@
 {% endblock %}
 
 {% block body %}
-
-<article>		
-			<h1>{{ figure.title }}</h1>
-            <div class="metadata">Ecrit le {{ figure.createdAt | date('d/m/Y')}} à {{ figure.createdAt | date('H:i') }} par </div>
-			<p>{{ figure.description }}</p>
-		
-	
-</article>
-
+	<article>
+		<h1>{{ figure.title }}</h1>
+		<div class="metadata">
+			Ecrit le
+			{{ figure.createdAt|date('d/m/Y') }}
+			à
+			{{ figure.createdAt|date('H:i') }}
+			par
+		</div>
+		<p>{{ figure.description }}</p>
+	</article>
 {% endblock %}
