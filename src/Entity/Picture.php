@@ -32,6 +32,21 @@ class Picture
      */
     private $user_id;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $alt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="pictures")
+     */
+    private $figure;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +84,42 @@ class Picture
     public function setUserId(?int $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(string $alt): self
+    {
+        $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getFigure(): ?Figure
+    {
+        return $this->figure;
+    }
+
+    public function setFigure(?Figure $figure): self
+    {
+        $this->figure = $figure;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
