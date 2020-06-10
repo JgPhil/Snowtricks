@@ -19,17 +19,17 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create('fr_FR');
         $users = $manager->getRepository(User::class)->findAll();
 
-
         for ($i = 0; $i < 6; $i++) {
-
             $category = new Category();
-            $category->setTitle($faker->word())
+            $category
+                ->setTitle($faker->word())
                 ->setDescription($faker->sentence(16));
             $manager->persist($category);
 
-            for ($j = 0; $j < 10; $j++) {
+            for ($j = 0; $j < mt_rand(2, 5); $j++) {
                 $figure = new Figure();
-                $figure->setTitle($faker->sentence(2))
+                $figure
+                    ->setTitle($faker->sentence(2))
                     ->setAuthor($users[array_rand($users, 1)])
                     ->setDescription($faker->paragraph())
                     ->setCategory($category)
@@ -38,14 +38,17 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     );
                 $manager->persist($figure);
 
-                for ($k = 0; $k < 12; $k++) {
-                    $comment = new Comment;
+                for ($k = 0; $k < mt_rand(2, 5); $k++) {
+                    $comment = new Comment();
                     $now = new \DateTime();
                     $days = $now->diff($figure->getCreatedAt())->days;
 
-                    $comment->setContent($faker->sentence(12))
+                    $comment
+                        ->setContent($faker->sentence(12))
                         ->setAuthor($users[array_rand($users, 1)])
-                        ->setCreatedAt($faker->dateTimeBetween('-' . $days . ' days'))
+                        ->setCreatedAt(
+                            $faker->dateTimeBetween('-' . $days . ' days')
+                        )
                         ->setFigure($figure);
 
                     $manager->persist($comment);
@@ -57,8 +60,6 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies()
     {
-        return array(
-            UserFixtures::class,
-        );
+        return [UserFixtures::class];
     }
 }

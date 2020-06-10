@@ -5,14 +5,41 @@
 
 {% block body %}
 	<article>
-		<h1>{{ figure.title }}</h1>
-		<div class="metadata">
-			Ecrit le
-			{{ figure.createdAt|date('d/m/Y') }}
-			à
-			{{ figure.createdAt|date('H:i') }} dans la catégorie {{ figure.category.title }}
-			par {{ figure.author.username }}
+		<div class="jumbotron">
+			<div class="container">
+				<div class="fond">
+					<h1 class="display-4">{{ figure.title }}</h1>
+					<p>Categorie
+						{{ figure.category.title }}
+					</p>
+					<p class="lead">{{ figure.description }}</p>
+					<div class="metadata">
+						Dernière modification le
+						{{ figure.createdAt|date('d/m/Y') }}
+						à
+						{{ figure.createdAt|date('H:i') }}
+						par
+						{{ figure.author.username }}
+					</div>
+				</div>
+			</div>
 		</div>
-		<p>{{ figure.description }}</p>
 	</article>
-{% endblock %}
+
+	<section id="commentaires">
+		<div class="container">
+			<h3>Commentaires</h3>
+			{% for comment in figure.comments %}
+				<div class="comment">
+					<div class="row">
+						{{ comment.author.username }}
+						(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
+						</small>)
+					</div>
+					<div class="col">
+						{{ comment.content | raw }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endblock %}
