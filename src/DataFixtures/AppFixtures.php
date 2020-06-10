@@ -11,11 +11,15 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 10; $i++) {
+        $faker = Faker\Factory::create('fr_FR');
+        $users = $manager->getRepository(User::class)->findAll();
+        $usernames = array_column($users, 'username');
+
+        for ($j = 0; $j < 10; $j++) {
             $figure = new Figure();
-            $faker = Faker\Factory::create('fr_FR');
+
             $figure->setTitle($faker->sentence(2, true));
-            $figure->setUserId(mt_rand(1, 50));
+            $figure->setAuthor(extract($usernames[array_rand($usernames)]));
             $figure->setDescription($faker->paragraph());
             $figure->setCreatedAt(
                 $faker->dateTimeThisMonth('now', 'Europe/Paris')
