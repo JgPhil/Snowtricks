@@ -4,16 +4,18 @@
 
 {% block body %}
 
-	<div class="container mt-4">
-		<div class="jumbotron">
-			<div class="container">
-				<div class="fond">
-					<h1 class="display-4">{{ lastFigure.title}}</h1>
-					<p class="lead">
-						{{ lastFigure.description }}
-					</p>
-					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-				</div>
+	<div class="container">
+	
+		<div class="jumbotron" style="background: url(' {{ lastFigure.picture.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
+			<div class="container-full-bg">
+				<h1 class="display-4">{{ lastFigure.title}}</h1>
+				<hr>
+				<p class="lead">
+					{{ lastFigure.description }}
+				</p>
+				<p class="lead">
+					<a href="{{ path('trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+				</p>
 			</div>
 		</div>
 
@@ -23,7 +25,7 @@
 				{% for figure in figures %}
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
-							<img src="http://placehold.it/300x200" alt="">
+							<img src="{{ figure.picture.name|default('http://placehold.it/300x200') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
 							<div class="card-body">
 								<h5 class="card-title">
 									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
@@ -34,7 +36,7 @@
 								<p class="card-text">
 									{{ figure.description|nl2br }}
 								</p>
-								<a href="{{ path( 'trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 							</div>
 						</div>
 

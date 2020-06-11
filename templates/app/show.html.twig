@@ -4,27 +4,26 @@
 {% endblock %}
 
 {% block body %}
-	<article>
-		<div class="jumbotron">
-			<div class="container">
-				<div class="fond">
-					<h1 class="display-4">{{ figure.title }}</h1>
-					<p>Categorie
-						{{ figure.category.title }}
-					</p>
-					<p class="lead">{{ figure.description }}</p>
-					<div class="metadata">
-						Dernière modification le
-						{{ figure.createdAt|date('d/m/Y') }}
-						à
-						{{ figure.createdAt|date('H:i') }}
-						par
-						{{ figure.author.username }}
-					</div>
-				</div>
+
+
+	<div class="container-fluid p-0" style="position:relative;">
+		<section class="hero" >
+			<h1 class="display-4">{{ figure.title }}</h1>
+			<p>Categorie
+				{{ figure.category.title }}
+			</p>
+			<p class="lead">{{ figure.description }}</p>
+			<div class="metadata">
+				Dernière modification le
+				{{ figure.createdAt|date('d/m/Y') }}
+				à
+				{{ figure.createdAt|date('H:i') }}
+				par
+				{{ figure.author.username }}
 			</div>
-		</div>
-	</article>
+		</section>
+	</div>
+
 
 	<section id="commentaires">
 		<div class="container">
