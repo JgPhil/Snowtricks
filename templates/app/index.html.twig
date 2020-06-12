@@ -18,29 +18,27 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<h1 class="text-center">All Tricks</h1>
-		
+
 		<div class="container ">
 			<div class="row mt-4">
 				{% for figure in figures %}
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
-							<img src="{{ figure.picture.name|default('http://placehold.it/300x200') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
+							<img class="card-img-top" src="{{ figure.picture.name|default('http://placehold.it/300x200') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
 							<div class="card-body">
 								<h5 class="card-title">
 									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
 										{{ figure.title }}
 									</a>
 								</h5>
-
 								<p class="card-text">
 									{{ figure.description|nl2br }}
 								</p>
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 							</div>
 						</div>
-
 					</div>
 
 				{% endfor %}
