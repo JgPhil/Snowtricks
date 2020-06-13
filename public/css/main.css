@@ -9,6 +9,12 @@
   color: white;
 }
 
+.login_form,.registration_form{
+  margin-top:5em;
+  margin-bottom: 15em;
+}
+
+
 .toto {
   padding-top: 50px;
 }
