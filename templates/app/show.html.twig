@@ -7,38 +7,51 @@
 
 
 	<div class="container">
-		<section class="hero" >
-			<h1 class="display-4">{{ figure.title }}</h1>
-			<p>Categorie
-				{{ figure.category.title }}
-			</p>
-			<p class="lead">{{ figure.description }}</p>
-			<div class="metadata">
-				Dernière modification le
-				{{ figure.createdAt|date('d/m/Y') }}
-				à
-				{{ figure.createdAt|date('H:i') }}
-				par
-				{{ figure.author.username }}
-			</div>
-		</section>
-	</div>
-
-
-	<section id="commentaires">
-		<div class="container">
-			<h3>Commentaires</h3>
-			{% for comment in figure.comments %}
-				<div class="comment">
-					<div class="row">
-						{{ comment.author.username }}
-						(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
-						</small>)
-					</div>
-					<div class="col">
-						{{ comment.content | raw }}
-					</div>
+		<div class="row">
+			<div class="col-lg-8">
+				<h1 class="display-4 mt-4">{{ figure.title|title}}</h1>
+				<p>Category:
+					{{ figure.category.title }}by</p>
+				<p class="lead">{{ figure.author.username }}</p>
+				<!-- Date/Time -->
+				<div class="metadata">
+					Posted on
+					{{ figure.createdAt|date('d/m/Y') }}
+					at
+					{{ figure.createdAt|date('H:i') }}
 				</div>
-			{% endfor %}
+				
+				<hr>
+				<img class="img-fluid rounded" src="{{ figure.picture.name|default('http://placehold.it/1000x500') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
+				<hr>
+
+				<!-- Post Content -->
+				<p class="lead">{{ figure.description }}</p>
+			</div>
 		</div>
-	{% endblock %}
+
+
+		<hr>
+
+		<h3>Commentaires</h3>
+		<hr>
+
+		{% for comment in figure.comments %}
+
+			<div class="media mb-4">
+				<img src="" class="d-flex mr-3 rounded-circle">
+				<div class="media-body">
+
+					<h5 class="mt-0">{{ comment.author.username }}</h5>
+					(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
+					</small>)
+
+
+					{{ comment.content | raw }}
+
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	<hr>
+</div>{% endblock %}

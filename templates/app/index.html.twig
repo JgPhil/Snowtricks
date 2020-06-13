@@ -34,7 +34,7 @@
 									</a>
 								</h5>
 								<p class="card-text">
-									{{ figure.description|nl2br }}
+									{{ figure.description|u.truncate(90, '...') }}
 								</p>
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 							</div>
