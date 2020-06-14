@@ -20,6 +20,7 @@ class UserFixtures extends Fixture
             $user->setPassword(
                 password_hash($faker->password(), PASSWORD_BCRYPT)
             );
+            $user->setRoles(["ROLE_USER"]);
             $user->setEmail($faker->email())
                 ->setCreatedAt(
                     $faker->dateTimeThisMonth('now', 'Europe/Paris')
