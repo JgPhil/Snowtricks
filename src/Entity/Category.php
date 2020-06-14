@@ -84,7 +84,7 @@ class Category
     {
         if (!$this->figures->contains($figure)) {
             $this->figures[] = $figure;
-            $figure->addCategory($this);
+            $figure->setCategory($this);
         }
 
         return $this;
@@ -94,7 +94,6 @@ class Category
     {
         if ($this->figures->contains($figure)) {
             $this->figures->removeElement($figure);
-            $figure->removeCategory($this);
         }
 
         return $this;
