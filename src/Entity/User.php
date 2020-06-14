@@ -26,7 +26,6 @@ class User implements UserInterface
      */
     private $id;
 
-
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -76,11 +75,15 @@ class User implements UserInterface
         $this->pictures = new ArrayCollection();
     }
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
     }
-    
 
     public function getPassword(): ?string
     {
@@ -130,12 +133,26 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials() {}
+    public function eraseCredentials()
+    {
+    }
 
-    public function getSalt() {}
+    public function getSalt()
+    {
+    }
 
-    public function getRoles() {
-        return ['ROLE_USER'];
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): array
+    {
+        $this->roles = $roles;
+        return $this->roles;
     }
 
     /**
