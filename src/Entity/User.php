@@ -85,6 +85,7 @@ class User implements UserInterface
      */
     private $activation_token;
 
+
     public function getId(): ?int
     {
         return $this->id;
