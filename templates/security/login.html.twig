@@ -4,18 +4,35 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container mt-4">
+		{% if error %}
+			<div class="alert alert-danger">
+				{{ error.messageKey | trans(error.messagedata, 'security')}}
+			</div>
+		{% endif %}
+		{% for message in app.flashes('info') %}
+			<div class="flash-info">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		{% if error %}
+			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
+
 		<div class="row justify-content-center">
 			<div class="col-lg-6  login_form">
 				<h1>Connexion</h1>
+
 				<form action="{{ path('security_login') }}" method="post" class="form">
 					<div class="form-group">
-						<label for="username" class="text-info">Username:</label><br>
-						<input class="form-control" type="text" required label="Username" name="_username" placeholder="Username...">
+						<label for="username" class="text-info">Pseudo :
+						</label><br>
+						<input class="form-control" type="text" required label="Pseudo" name="_username" placeholder="Pseudo..." value="{{ last_username }} ">
 					</div>
 					<div class="form-group">
-						<label for="password" class="text-info">Password:</label><br>
-						<input class="form-control" type="password" required label="Password" name="_password" placeholder="Password...">
+						<label for="password" class="text-info">Mot de passe:</label><br>
+						<input class="form-control" type="password" required label="Mot de passe" name="_password" placeholder="Mot de passe...">
 					</div>
 					<div class="form-group">
 						<input type="submit" name="submit" class="btn btn-success btn-md" value="submit">

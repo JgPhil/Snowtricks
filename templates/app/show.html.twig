@@ -10,14 +10,14 @@
 		<div class="row">
 			<div class="col-lg-8">
 				<h1 class="display-4 mt-4">{{ figure.title|title}}</h1>
-				<p>Category:
-					{{ figure.category.title }}by</p>
+				<p>Categorie : 
+					{{ figure.category.title }}par</p>
 				<p class="lead">{{ figure.author.username }}</p>
 				<!-- Date/Time -->
 				<div class="metadata">
-					Posted on
+					Posté le 
 					{{ figure.createdAt|date('d/m/Y') }}
-					at
+					 à 
 					{{ figure.createdAt|date('H:i') }}
 				</div>
 				

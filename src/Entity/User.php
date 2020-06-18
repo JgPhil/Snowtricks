@@ -13,8 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(
- * fields= {"email"},
- * message= "L'email que vous avez indiqué est déja utilisé "
+ * fields= {"username"},
+ * message= "Le nom que vous avez indiqué est déja utilisé "
  * )
  */
 class User implements UserInterface
@@ -79,6 +79,12 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $activation_token;
+
 
     public function getId(): ?int
     {
@@ -244,6 +250,18 @@ class User implements UserInterface
                 $picture->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getActivationToken(): ?string
+    {
+        return $this->activation_token;
+    }
+
+    public function setActivationToken(?string $activation_token): self
+    {
+        $this->activation_token = $activation_token;
 
         return $this;
     }

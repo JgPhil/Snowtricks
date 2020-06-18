@@ -18,8 +18,13 @@
 				</p>
 			</div>
 		</div>
+		{% for message in app.flashes('info') %}
+			<div class="flash-info">
+				{{ message }}
+			</div>
+		{% endfor %}
 
-		<h1 class="text-center">All Tricks</h1>
+		<h1 class="text-center">Toutes les figures</h1>
 
 		<div class="container ">
 			<div class="row mt-4">
