@@ -5,23 +5,27 @@
 
 {% block body %}
 	<div class="container mt-4">
-		{% if error %}
-			<div class="alert alert-danger">
-				{{ error.messageKey | trans(error.messagedata, 'security')}}
-			</div>
-		{% endif %}
-		{% for message in app.flashes('info') %}
-			<div class="flash-info">
-				{{ message }}
-			</div>
-		{% endfor %}
 
-		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-		{% endif %}
 
 		<div class="row justify-content-center">
+		
 			<div class="col-lg-6  login_form">
+				{% if error %}
+					<div class="alert alert-danger">
+						{{ error.messageKey | trans(error.messagedata, 'security')}}
+					</div>
+				{% endif %}
+				{% for message in app.flashes('message') %}
+					<div class="flash-info">
+						<div class="alert alert-success">{{ message }}</div>
+					</div>
+				{% endfor %}
+				{% for message in app.flashes('danger') %}
+					<div class="flash-info">
+						<div class="alert alert-danger">{{ message }}</div>
+					</div>
+				{% endfor %}
+
 				<h1>Connexion</h1>
 
 				<form action="{{ path('security_login') }}" method="post" class="form">

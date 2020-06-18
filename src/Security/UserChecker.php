@@ -23,7 +23,7 @@ class UserChecker implements UserCheckerInterface
         }
  
         // user account is expired, the user may be notified
-        if ($user->getActivationToken()) {
+        if ($user->getToken()) {
             throw new CustomUserMessageAccountStatusException("ce compte n'est pas actif");
         }
     }

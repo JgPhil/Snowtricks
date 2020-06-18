@@ -5,7 +5,6 @@
 {% block body %}
 
 	<div class="container">
-
 		<div class="jumbotron" style="background: url(' {{ lastFigure.picture.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
 				<h1 class="display-4">{{ lastFigure.title}}</h1>
@@ -20,7 +19,12 @@
 		</div>
 		{% for message in app.flashes('info') %}
 			<div class="flash-info">
-				{{ message }}
+				<div class="alert alert-success">{{ message }}</div>
+			</div>
+		{% endfor %}
+		{% for message in app.flashes('danger') %}
+			<div class="flash-info">
+				<div class="alert alert-danger">{{ message }}</div>
 			</div>
 		{% endfor %}
 
