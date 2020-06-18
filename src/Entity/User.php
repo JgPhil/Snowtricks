@@ -83,7 +83,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $activation_token;
+    private $token;
 
 
     public function getId(): ?int
@@ -254,15 +254,16 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getActivationToken(): ?string
+    public function  getToken(): ?string
     {
-        return $this->activation_token;
+        return $this->token;
     }
 
-    public function setActivationToken(?string $activation_token): self
+    public function  setToken(?string $token): self
     {
-        $this->activation_token = $activation_token;
+        $this->token = $token;
 
         return $this;
     }
+
 }

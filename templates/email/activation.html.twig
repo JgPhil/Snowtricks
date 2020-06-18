@@ -1,4 +1,13 @@
-<h1>Activation</h1>
-<p>Bonjour, Pour valider votre inscription, merci de cliquer sur le lien suivant: </p>
-<hr>
-<p><a href="{{ absolute_url(path('security_activation', {'token': token})) }}">Activer mon compte</a></p>
+
+
+<h1>B {{ email.toName }}!</h1>
+
+<p>
+    Bonjour, {{ username }} Pour valider votre inscription, merci de cliquer sur le lien suivant: 
+</p>
+
+
+<p>
+    <a href="{{ absolute_url(path('security_activation', {'token': token})) }}">Activer mon compte</a>
+    Ce lien sera valide jusqu' au {{ expiration_date|date('d,m,Y') }}) à {{ expiration_date|date('H:i') }}) 
+</p>
