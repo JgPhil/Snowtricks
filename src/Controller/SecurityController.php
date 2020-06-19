@@ -55,7 +55,7 @@ class SecurityController extends AbstractController
                 ->from('no-reply@snowtricks.com')
                 ->to($user->getEmail())
                 ->subject('Activation de votre compte')
-                ->htmlTemplate('email/signup.html.twig')
+                ->htmlTemplate('email/activation.html.twig')
                 ->context([
                     'username' => $user->getUsername(),
                     'expiration_date' => new \DateTime('+2 days'),
