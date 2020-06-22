@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SecurityController extends AbstractController
 {
@@ -110,15 +111,16 @@ class SecurityController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('Aucun utilisateur trouvé !');
         }
-        // suppression token
+
         $user->setToken(null);
 
         $manager->persist($user);
         $manager->flush();
 
         $this->addFlash('message', 'Génial, votre compte est activé !');
-
-        return $this->redirectToRoute('security_login');
+        //automatic login
+        $this->authenticateUser($user);
+        return $this->redirectToRoute("home");
     }
 
     /**
@@ -207,11 +209,37 @@ class SecurityController extends AbstractController
             $manager->persist($user);
             $manager->flush();
             $this->addFlash('message', 'Mot de passe modifié avec succès');
+<<<<<<< Updated upstream
             return $this->redirectToRoute('security_login');
         } else {
             return $this->render('security/reset_password.html.twig', [
                 'token' => $token,
             ]);
         }
+=======
+            //automatic login
+            $this->authenticateUser($user);
+            return $this->redirectToRoute("home");
+        }
+        return $this->render('security/reset_password.html.twig', [
+            'passwordForm' => $form->createView(),
+            'token' => $token,
+        ]);
+>>>>>>> Stashed changes
+    }
+
+    /**
+     * automatic login method
+     */
+    private function authenticateUser(User $user)
+    {
+        $providerKey = 'main'; 
+        $token = new UsernamePasswordToken(
+            $user,
+            null,
+            $providerKey,
+            $user->getRoles()
+        );
+        $this->container->get('security.token_storage')->setToken($token);
     }
 }
