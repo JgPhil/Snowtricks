@@ -16,7 +16,7 @@ class AppController extends AbstractController
      */
     public function index(FigureRepository $repo)
     {
-        $figures = $repo->findAll();
+        $figures = $repo->findBy(array(), null, 9);
         $lastFigure = $figures[array_key_last($figures)];
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
@@ -41,4 +41,6 @@ class AppController extends AbstractController
             'figure' => $figure
         ]);
     }
+
+    
 }
