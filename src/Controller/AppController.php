@@ -16,8 +16,8 @@ class AppController extends AbstractController
      */
     public function index(FigureRepository $repo)
     {
-        $figures = $repo->findBy(array(), null, 9);
-        $lastFigure = $figures[array_key_last($figures)];
+        $figures = $repo->findBy(array(), array('createdAt'=> 'DESC'), 6);
+        $lastFigure = $figures[array_key_first($figures)];
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
             'lastFigure' => $lastFigure
@@ -39,6 +39,20 @@ class AppController extends AbstractController
     {
         return $this->render('app/show.html.twig', [
             'figure' => $figure
+        ]);
+    }
+
+    public function sliceFigures(FigureRepository $repo, $offset)
+    {
+        /*
+        ON RECUPERE les 6 prochaines figures  avec l'offset (Id) de la dernière figure chargée précédemment
+        */
+        $sliceFigures = $repo->findBy(array(),array('createdAt'=> 'DESC') , 6, $offset);
+        /*
+        ON RETOURNE le résultet au format json 
+        */
+        return $this->json($sliceFigures, 200, [
+            'offset' => array_key_last($sliceFigures)
         ]);
     }
 

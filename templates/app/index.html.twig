@@ -60,14 +60,22 @@
 			</div>
 			<div class="row">
 				<div class="col text-center">
-					<a class="btn btn-success" id="action-load-more">
-						Charger plus de figures</a>
+					<a class="btn btn-success" id="load_more">
+						Load More</a>
 				</div>
 			</div>
 		</div>
-
-
 	</div>
-
-
 </div>{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function () {
+    $("#load_more").on('click', function (e) {
+        e.preventDefault();
+		alert("il faut lancer la requête maintenant pour récupérer les figures suivantes !");
+    });
+});
+</script>
+
+{% endblock %}
