@@ -16,8 +16,9 @@ class AppController extends AbstractController
      */
     public function index(FigureRepository $repo)
     {
-        $figures = $repo->findBy(array(), array('createdAt'=> 'DESC'), 6);
+        $figures = $repo->findBy(array(), array('createdAt' => 'DESC'), 6);
         $lastFigure = $figures[array_key_first($figures)];
+
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
             'lastFigure' => $lastFigure
@@ -42,19 +43,31 @@ class AppController extends AbstractController
         ]);
     }
 
-    public function sliceFigures(FigureRepository $repo, $offset)
+    /**
+     * @Route("/{offset}", name="load_more")
+     *
+     * @param FigureRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function sliceFigures(FigureRepository $repo, $offset = 6)
     {
-        /*
-        ON RECUPERE les 6 prochaines figures  avec l'offset (Id) de la dernière figure chargée précédemment
-        */
-        $sliceFigures = $repo->findBy(array(),array('createdAt'=> 'DESC') , 6, $offset);
-        /*
-        ON RETOURNE le résultet au format json 
-        */
-        return $this->json($sliceFigures, 200, [
-            'offset' => array_key_last($sliceFigures)
-        ]);
-    }
 
-    
+        //ON RECUPERE les 6 prochaines figures  avec l'offset (Id) de la dernière figure chargée précédemment
+
+        $sliceFigures = [];
+        $figRepo = $repo->findBy(array(), array('createdAt' => 'DESC'), 6, $offset);
+        $firstFigure = $figRepo[array_key_last($figRepo)];
+        foreach ($figRepo as $slice) {
+            array_push($sliceFigures, $slice);
+        }
+        // ON RECUPERE le dernier index
+        $offset = array_key_last($figRepo);
+        //ON RETOURNE le résultet au format json         
+        return $this->json([
+            'sliceFigures' => $sliceFigures,
+            'firstFigure' => $firstFigure,
+            'offset' => $offset
+        ], 200);
+    }
 }
