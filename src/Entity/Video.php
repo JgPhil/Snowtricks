@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\VideoRepository;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=VideoRepository::class)
@@ -28,6 +29,7 @@ class Video
     private $url;
 
     /**
+     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="videos")
      * @ORM\JoinColumn(nullable=false)
      */

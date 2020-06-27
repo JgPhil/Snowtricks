@@ -55,36 +55,12 @@
 						</div>
 					</div>
 				{% endfor %}
-
-				<!-- SLICE FIGURES -->
-				{% if sliceFigures is defined %}
-
-					{% for sliceFigure in sliceFigures %}
-
-						<div class="col-md-6 col-lg-4">
-							<div class="card mb-4 ">
-								<img class="card-img-top" src="{{ sliceFigure.picture.name|default('http://placehold.it/300x200') }}" alt="{{ sliceFigure.picture.alt|default('Une image de la figure {{sliceFigure.title}} ') }} ">
-								<div class="card-body">
-									<h5 class="card-title">
-										<a href="{{ path( 'trick_show', { id: sliceFigure.id } ) }}">
-											{{ sliceFigure.title }}
-										</a>
-									</h5>
-									<p class="card-text">
-										{{ sliceFigure.description|u.truncate(90, '...') }}
-									</p>
-									<a href="{{ path('trick_show', { id: sliceFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-								</div>
-							</div>
-						</div>
-
-					{% endfor %}
-				{% endif %}
-
+				<div id="js-more">
+				</div>
 			</div>
 			<div class="row">
 				<div class="col text-center">
-					<a class="btn btn-success" {% if firstFigure is defined %} href=" {{ path('load_more', {offset: firstFigure.id } ) }}" {% else %} href="/2" {% endif %} id="js-load">
+					<a class="btn btn-success" {% if firstFigure is defined %} href=" {{ path('load_more', {offset: firstFigure.id } ) }}" {% else %} href="/more/2" {% endif %} id="js-load">
 						Load More</a>
 				</div>
 			</div>

@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PictureRepository;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
@@ -38,11 +39,13 @@ class Picture
     private $alt;
 
     /**
+     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="pictures")
      */
     private $figure;
 
     /**
+     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
      */
     private $user;
