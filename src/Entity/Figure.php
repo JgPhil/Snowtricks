@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
@@ -17,53 +17,57 @@ class Figure
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("figure_read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("figure_read")
      */
     private $title;
 
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("figure_read")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("figure_read")
      */
     private $createdAt;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", orphanRemoval=true)
+     * @Groups("figure_read")
      */
     private $comments;
 
     /**
-     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("figure_read")
      */
     private $author;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure")
+     * @Groups("figure_read")
      */
     private $pictures;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure")
+     * @Groups("figure_read")
      */
     private $videos;
 
     /**
-     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="figures")
+     * @Groups("figure_read")
      */
     private $category;
 

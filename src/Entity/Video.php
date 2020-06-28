@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Figure;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\VideoRepository;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=VideoRepository::class)
@@ -15,21 +16,23 @@ class Video
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("figure_read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("figure_read")
      */
     private $figure_id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("figure_read")
      */
     private $url;
 
     /**
-     * @MaxDepth(2)
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="videos")
      * @ORM\JoinColumn(nullable=false)
      */

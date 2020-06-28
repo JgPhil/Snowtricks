@@ -35,8 +35,8 @@
 
 		<h1 class="text-center">Toutes les figures</h1>
 
-		<div class="container ">
-			<div class="row mt-4">
+		<div class="container">
+			<div class="row mt-4" id="js-more">
 				{% for figure in figures %}
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
@@ -55,8 +55,6 @@
 						</div>
 					</div>
 				{% endfor %}
-				<div id="js-more">
-				</div>
 			</div>
 			<div class="row">
 				<div class="col text-center">
@@ -66,6 +64,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-});{% endblock %}
+</div>{% endblock %}

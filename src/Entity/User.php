@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -25,11 +25,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("figure_read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("figure_read")
      */
     private $username;
 
@@ -56,19 +58,16 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author")
      */
     private $figures;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @MaxDepth(2)
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
      */
     private $pictures;
