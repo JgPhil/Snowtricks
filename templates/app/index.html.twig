@@ -58,11 +58,7 @@
 			</div>
 			<div class="row">
 				<div class="col text-center">	
-				<script>
-					let lastFigure = result[result.length]-1;
-					let lastId = lastFigure.id;
-				</script>	
-					<a class="btn btn-success" {% if result is defined %} href=" {{ path('load_more', {offset: lastId } ) }}" {% else %} href="/more/2" {% endif %} id="js-load">
+					<a class="btn btn-success"  href="/more/6" id="js-load">
 						Load More</a>
 				</div>
 			</div>

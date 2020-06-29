@@ -58,6 +58,13 @@ class AppController extends AbstractController
      */
     public function sliceFigures(FigureRepository $repo, $offset = 6)
     {
-        return $this->json($repo->findBy([], ['createdAt' => 'DESC'], 6, $offset), 200, [], ['groups' => 'figure_read']);
+        $figRepo = $repo->findBy([], ['createdAt' => 'DESC'], 6, $offset);
+        $lastFigureId = $figRepo[array_key_last($figRepo)]->getId();
+
+        return $this->json([
+                'sliceFigures' => $repo->findBy([], ['createdAt' => 'DESC'], 6, $offset),
+                'lastFigureId' => $lastFigureId
+                ], 200, [], ['groups' => 'figure_read']
+        );
     }
 }

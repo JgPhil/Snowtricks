@@ -1,23 +1,27 @@
 
 const xhr = new XMLHttpRequest();
 
-const loadButton = document.querySelector("#js-load");
+let loadButton = document.querySelector("#js-load");
 let result = null;
-let more = document.querySelector("#js-more");
-
+let more = document.querySelector("#js-more"); //all figures container
 
 loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
-    const url = this.href;  
-    
+
+    let url = this.href;
+    if (more.childElementCount > 6) {
+        let oldUrl = more.lastChild.lastChild.lastChild.lastElementChild.href.split('/');  // the last figure url link
+        href = oldUrl.pop(); // search the last figureID (ex: /figure/45)
+        url = "/more/" + href; //
+    }
     xhr.open("POST", url);
     xhr.onreadystatechange = function () {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             let response = this.response
             result = JSON.parse(response);
 
-            result.forEach(function (k) {
+            result.sliceFigures.forEach(function (k) {
                 let div1 = document.createElement('div');
                 div1.classList.add("col-md-6", "col-lg-4");
 
@@ -26,7 +30,7 @@ loadButton.addEventListener('click', function (event) {
 
                 let img = document.createElement('img');
                 img.classList.add('card-img-top');
-                img.src = k.pictures[0] ? k.pictures[0].name : 'http://placehold.it/300x200';
+                img.src = k.pictures.length !== 0 ? k.pictures[0].name : 'http://placehold.it/300x200';
 
                 let div3 = document.createElement('div');
                 div3.classList.add("card-body");
