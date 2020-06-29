@@ -12,10 +12,11 @@ loadButton.addEventListener('click', function (event) {
     let url = this.href;
     if (more.childElementCount > 6) {
         let oldUrl = more.lastChild.lastChild.lastChild.lastElementChild.href.split('/');  // the last figure url link
-        href = oldUrl.pop(); // search the last figureID (ex: /figure/45)
-        url = "/more/" + href; //
+
+        offset = oldUrl.pop(); // search the last figureID (ex: /figure/45)
+        url = "/more/?offset=" + offset; //
     }
-    xhr.open("POST", url);
+    xhr.open("GET", url);
     xhr.onreadystatechange = function () {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             let response = this.response
