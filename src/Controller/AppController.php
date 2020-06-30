@@ -3,17 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\FigureRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class AppController extends AbstractController
 {
@@ -42,10 +46,30 @@ class AppController extends AbstractController
     /**
      * @Route("/figure/{id}", name="trick_show")
      */
-    public function show(Figure $figure)
-    {
+    public function show(
+        Figure $figure,
+        Request $request,
+        EntityManagerInterface $manager
+    ) {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setFigure($figure);
+            $comment->setAuthor($this->getUser());
+
+            $manager->persist($comment);
+            $manager->flush();
+            $this->addFlash('message', 'Votre message a bien été envoyé');
+            return $this->redirectToRoute('trick_show', [
+                'id' => $figure->getId()
+                ]);
+        }
+
         return $this->render('app/show.html.twig', [
             'figure' => $figure,
+            'commentForm' => $form->createView(),
         ]);
     }
 
@@ -58,6 +82,26 @@ class AppController extends AbstractController
      */
     public function sliceFigures(FigureRepository $repo, $offset = 6)
     {
+<<<<<<< Updated upstream
         return $this->json($repo->findBy([], ['createdAt' => 'DESC'], 6, $offset), 200, [], ['groups' => 'figure_read']);
+=======
+        $figRepo = $repo->findBy([], ['createdAt' => 'DESC'], 6, $offset);
+        $lastFigureId = $figRepo[array_key_last($figRepo)]->getId();
+
+        return $this->json(
+            [
+                'sliceFigures' => $repo->findBy(
+                    [],
+                    ['createdAt' => 'DESC'],
+                    6,
+                    $offset
+                ),
+                'lastFigureId' => $lastFigureId,
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
+>>>>>>> Stashed changes
     }
 }
