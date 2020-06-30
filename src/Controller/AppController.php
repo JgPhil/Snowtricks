@@ -63,8 +63,8 @@ class AppController extends AbstractController
             $manager->flush();
             $this->addFlash('message', 'Votre message a bien été envoyé');
             return $this->redirectToRoute('trick_show', [
-                'id' => $figure->getId()
-                ]);
+                'id' => $figure->getId(),
+            ]);
         }
 
         return $this->render('app/show.html.twig', [
@@ -82,9 +82,6 @@ class AppController extends AbstractController
      */
     public function sliceFigures(FigureRepository $repo, $offset = 6)
     {
-        $figRepo = $repo->findBy([], ['createdAt' => 'DESC'], 6, $offset);
-        $lastFigureId = $figRepo[array_key_last($figRepo)]->getId();
-
         return $this->json(
             [
                 'sliceFigures' => $repo->findBy(
@@ -93,7 +90,6 @@ class AppController extends AbstractController
                     6,
                     $offset
                 ),
-                'lastFigureId' => $lastFigureId,
             ],
             200,
             [],

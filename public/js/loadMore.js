@@ -15,7 +15,7 @@ loadButton.addEventListener('click', function (event) {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             let response = this.response
             result = JSON.parse(response);
-            result.forEach(function (k) {
+            result.sliceFigures.forEach(function(k) {
                 div1 = document.createElement('div');
                 div1.classList.add("col-md-6", "col-lg-4");
 
