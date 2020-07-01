@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+
+{% form_theme figureForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title "Poster"%}
+
+{% block body %}
+
+
+	<div class="container mt-4">
+		<h1>Poster une figure</h1>
+		{{ form_start(figureForm) }}
+
+		{{ form_row(figureForm.title) }}
+		{{ form_row(figureForm.description) }}
+		{{ form_row(figureForm.category) }}
+
+
+		{% if app.request.attributes.get('_route') ==  "figure_edit"  %}
+
+			<h2>Images</h2>
+
+			{% for picture in trick.pictures %}
+				<div>
+					<img src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" class="img-thumbnail">
+					<a href="{{ path('figure_delete', {id: picture.id}) }} " 
+					data-delete data-token="{{ csrf_token('delete' ~ picture.id) }} ">Supprimer</a>
+				</div>
+
+			{% endfor %}
+
+		{% endif %}
+		{{ form_row(figureForm.pictures) }}
+		{{ form_row(figureForm.videos) }}
+		{{ form_row(figureForm.submit) }}
+
+		{{ form_end(figureForm) }}
+	</div>
+
+
+{% endblock %}

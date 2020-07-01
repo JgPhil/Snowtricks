@@ -119,9 +119,7 @@ class SecurityController extends AbstractController
         $manager->flush();
 
         $this->addFlash('message', 'Génial, votre compte est activé !');
-        //automatic login
-        $this->authenticateUser($user);
-        return $this->redirectToRoute("home");
+        return $this->redirectToRoute("security_login");
     }
 
     /**

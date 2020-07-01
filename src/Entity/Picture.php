@@ -38,12 +38,6 @@ class Picture
     private $user_id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("figure_read")
-     */
-    private $alt;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="pictures")
      */
     private $figure;

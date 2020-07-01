@@ -37,6 +37,7 @@
 
 		<div class="container">
 			<div class="row mt-4" id="js-more">
+
 				{% for figure in figures %}
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
@@ -51,10 +52,13 @@
 									{{ figure.description|u.truncate(90, '...') }}
 								</p>
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+								<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
+								<a href="{{ path('figure_delete', { id: figure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
 							</div>
 						</div>
 					</div>
 				{% endfor %}
+
 			</div>
 			<div class="row">
 				<div class="col text-center">
@@ -64,4 +68,5 @@
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+</div>{% endblock %}{% block javascript %}
+<script src=" {{ asset('/js/loadMore.js') }}"></script>{% endblock %}

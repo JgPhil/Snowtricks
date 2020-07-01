@@ -4,20 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 use App\Entity\Comment;
+use App\Entity\Picture;
+use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\FigureRepository;
-use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\Repository\RepositoryFactory;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AppController extends AbstractController
 {
@@ -38,9 +34,40 @@ class AppController extends AbstractController
     /**
      * @Route("/figure/new", name="figure_create")
      */
-    public function create()
+    public function create(EntityManagerInterface $em, Request $request)
     {
-        return $this->render('app/create.html.twig');
+        $figure = new Figure();
+        $form = $this->createForm(FigureType::class, $figure);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //Récupération des images
+            $pictures = $form->get('pictures')->getData();
+
+            foreach ($pictures as $picture) {
+                //nouveau nom de fichier
+                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                //copie dans dossier uploads
+                $picture->move(
+                    $this->getParameter('pictures_directory', $filename)
+                );
+                //stockage du nom du fichier dans la base de donnée
+                $pic = new Picture();
+                $pic->setName($filename);
+                // Ajout de l'image par cascade dans l'entité Annonce -> "pictures"
+                $figure->addPicture($pic);
+            }
+            $figure->setCreatedAt(new \DateTime());
+            $figure->setAuthor($this->getUser());
+
+            $em->persist($figure);
+            $em->flush();
+            $this->addFlash('message', 'Votre figure a bien été ajoutée');
+            $this->redirectToRoute('home');
+        }
+        return $this->render('app/figure_form.html.twig', [
+            'figureForm' => $form->createView(),
+        ]);
     }
 
     /**
@@ -61,7 +88,7 @@ class AppController extends AbstractController
 
             $manager->persist($comment);
             $manager->flush();
-            $this->addFlash('message', 'Votre message a bien été envoyé');
+            $this->addFlash('message', 'Message posté !');
             return $this->redirectToRoute('trick_show', [
                 'id' => $figure->getId(),
             ]);
@@ -71,6 +98,97 @@ class AppController extends AbstractController
             'figure' => $figure,
             'commentForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
+     */
+    public function edit(
+        EntityManagerInterface $em,
+        Request $request,
+        Figure $figure
+    ) {
+        $form = $this->createForm(FigureType::class, $figure, );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //Récupération des images
+            $pictures = $form->get('pictures')->getData();
+
+            foreach ($pictures as $picture) {
+                //nouveau nom de fichier
+                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                //copie dans dossier uploads
+                $picture->move(
+                    $this->getParameter('pictures_directory', $filename)
+                );
+                //stockage du nom du fichier dans la base de donnée
+                $pic = new Picture();
+                $pic->setName($filename);
+                // Ajout de l'image par cascade dans l'entité Annonce -> "pictures"
+                $figure->addPicture($pic);
+            }
+            $figure->setCreatedAt(new \DateTime());
+            $em->flush();
+            $this->addFlash('message', 'Votre figure a bien été modifiée');
+            $this->redirectToRoute('home');
+        }
+        return $this->render('app/figure_form.html.twig', [
+            'figureForm' => $form->createView(),
+            'trick' => $figure
+
+        ]);
+    }
+
+    /**
+     * @Route("/figure/delete/{id}", name="figure_delete")
+     */
+    public function delete(
+        EntityManagerInterface $em,
+        Request $request,
+        Figure $figure
+    ) {
+        if (
+            $this->isCsrfTokenValid(
+                'delete' . $figure->getId(),
+                $request->$request->get('_token')
+            )
+        ) {
+            $em->remove($figure);
+            $em->flush();
+        }
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/delete/picture/{id}", name="picture", methods={"DELETE"})
+     *
+     * @return void
+     */
+    public function deletePicture(
+        Picture $picture,
+        Request $request,
+        EntityManagerInterface $em
+    ) {
+        $data = json_decode($request->getContent(), true);
+        // vérification token valide
+        if (
+            $this->isCsrfTokenValid(
+                'delete' . $picture->getId(),
+                $data['_token']
+            )
+        ) {
+            $name = $picture->getName();
+            //suppression du fichier dans le dossier uploads
+            unlink($this->getParameter('pictures_directory') . '/' . $name);
+            // suppression de l'entrée en base
+            $em->remove($picture);
+            $em->flush();
+            //réponse JSON
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token invalide'], 400);
+        }
     }
 
     /**

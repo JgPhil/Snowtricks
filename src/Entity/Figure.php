@@ -54,13 +54,13 @@ class Figure
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure", cascade={"persist"})
      * @Groups("figure_read")
      */
     private $pictures;
 
     /**
-     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure", cascade={"persist"})
      * @Groups("figure_read")
      */
     private $videos;
