@@ -108,7 +108,7 @@ class AppController extends AbstractController
         Request $request,
         Figure $figure
     ) {
-        $form = $this->createForm(FigureType::class, $figure, );
+        $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -120,7 +120,8 @@ class AppController extends AbstractController
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
                 //copie dans dossier uploads
                 $picture->move(
-                    $this->getParameter('pictures_directory', $filename)
+                    $this->getParameter('pictures_directory'),
+                    $filename
                 );
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
@@ -135,8 +136,7 @@ class AppController extends AbstractController
         }
         return $this->render('app/figure_form.html.twig', [
             'figureForm' => $form->createView(),
-            'trick' => $figure
-
+            'trick' => $figure,
         ]);
     }
 
@@ -161,7 +161,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/delete/picture/{id}", name="picture", methods={"DELETE"})
+     * @Route("/delete/picture/{id}", name="picture_delete", methods={"DELETE"})
      *
      * @return void
      */
@@ -171,11 +171,15 @@ class AppController extends AbstractController
         EntityManagerInterface $em
     ) {
         $data = json_decode($request->getContent(), true);
+        $response = $this->isCsrfTokenValid(
+            'delete' . $picture->getId(),
+            $data['picture_token']);
+
         // vérification token valide
         if (
             $this->isCsrfTokenValid(
                 'delete' . $picture->getId(),
-                $data['_token']
+                $data['picture_token']
             )
         ) {
             $name = $picture->getName();

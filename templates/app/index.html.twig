@@ -19,6 +19,8 @@
 				<div class="alert alert-danger">{{ message }}</div>
 			</div>
 		{% endfor %}
+
+		<!-- FIGURE A LA UNE -->
 		<div class="jumbotron" style="background: url(' {{ lastFigure.picture.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
 				<h1 class="display-4">{{ lastFigure.title}}</h1>
@@ -28,11 +30,13 @@
 				</p>
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+					<a href="{{ path('figure_edit', { id: lastFigure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
+					<a href="{{ path('figure_delete', { id: lastFigure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
 				</p>
 			</div>
 		</div>
 
-
+		<!-- TOUTES LES FIGURES -->
 		<h1 class="text-center">Toutes les figures</h1>
 
 		<div class="container">
