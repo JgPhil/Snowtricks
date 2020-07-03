@@ -33,7 +33,7 @@ class FigureType extends AbstractType
                 'choice_label' => 'title',
             ])
             ->add('pictures', FileType::class, [
-                'label' => false,
+                'label' => "Télécharger une image",
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
@@ -43,12 +43,14 @@ class FigureType extends AbstractType
             ])
             ->add('videos', UrlType::class, [
                 'label' => false,
-                'mapped' => false,
                 'required' => false,
+                'mapped' => false,
                 'attr' => [
-                    'placeholder' => "Entrez l'URL de la vidéo...",
-                ]
+                    'placeholder' => "Entrez l'URL de la vidéo...",                   
+                    
+                ],
             ])
+            
             ->add('submit', SubmitType::class);
     }
 

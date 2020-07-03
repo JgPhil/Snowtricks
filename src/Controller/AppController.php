@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Video;
 use App\Entity\Figure;
 use App\Entity\Comment;
 use App\Entity\Picture;
@@ -11,9 +12,9 @@ use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AppController extends AbstractController
 {
@@ -43,27 +44,35 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
+            $videoUrl = $form->get('videos')->getData();
 
+            //Images
             foreach ($pictures as $picture) {
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
                 //copie dans dossier uploads
                 $picture->move(
-                    $this->getParameter('pictures_directory', $filename)
+                    $this->getParameter('pictures_directory'),
+                    $filename
                 );
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
-                // Ajout de l'image par cascade dans l'entité Annonce -> "pictures"
+                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
             }
+            //video
+            $video = new Video();
+            $video->setUrl($videoUrl);
+            $figure->addVideo($video);
+
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
 
             $em->persist($figure);
             $em->flush();
             $this->addFlash('message', 'Votre figure a bien été ajoutée');
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
         return $this->render('app/figure_form.html.twig', [
             'figureForm' => $form->createView(),
@@ -114,7 +123,9 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
+            $videoUrl = $form->get('videos')->getData();
 
+            //Images
             foreach ($pictures as $picture) {
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
@@ -126,13 +137,21 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
-                // Ajout de l'image par cascade dans l'entité Annonce -> "pictures"
+                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
             }
+            //video
+            if ($videoUrl) {
+                $video = new Video();
+            $video->setUrl($videoUrl);
+            $figure->addVideo($video);
+            }
+            
+
             $figure->setCreatedAt(new \DateTime());
             $em->flush();
             $this->addFlash('message', 'Votre figure a bien été modifiée');
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
         return $this->render('app/figure_form.html.twig', [
             'figureForm' => $form->createView(),
@@ -173,7 +192,8 @@ class AppController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $response = $this->isCsrfTokenValid(
             'delete' . $picture->getId(),
-            $data['picture_token']);
+            $data['picture_token']
+        );
 
         // vérification token valide
         if (

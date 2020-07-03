@@ -5,8 +5,8 @@
   top: 0;
   left: 0;
   z-index: -1;
-  text-shadow: black 0.3em 0.3em 0.3em;
-  color: white;
+  /* text-shadow: black 0.3em 0.3em 0.3em; */
+  /* color: white; */
 }
 
 .login_form,.registration_form{

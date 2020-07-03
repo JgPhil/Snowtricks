@@ -17,20 +17,32 @@ window.onload = () => {
                         "X-Requested-Width": "XMLHttpRequest",
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ "picture_token": this.dataset.token})
+                    body: JSON.stringify({ "picture_token": this.dataset.token })
                 }).then(
                     //Récupération de la réponse en JSON
                     response => response.json()
-                    ).then(data => {
-                        if (data.success) {
-                            //on supprime la div parent
-                            this.parentElement.remove();
-                        } else {
-                            //alert(data.error);
-                            alert(data.error)
-                        }
-                    }).catch(e => alert(e))
+                ).then(data => {
+                    if (data.success) {
+                        //on supprime la div parent
+                        this.parentElement.remove();
+                    } else {
+                        //alert(data.error);
+                        alert(data.error)
+                    }
+                }).catch(e => alert(e))
             }
         })
     }
+
+
 }
+
+
+$('.custom-file input').change(function (e) {
+    let files = [];
+    for (var i = 0; i < $(this)[0].files.length; i++) {
+        files.push($(this)[0].files[i].name);
+    }
+    $(this).next('.custom-file-label').html(files.join(', '));
+});
+

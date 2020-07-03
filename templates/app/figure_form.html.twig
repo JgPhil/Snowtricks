@@ -1,4 +1,6 @@
 {% extends "base.html.twig" %}
+{% set route = app.request.attributes.get('_route') %}
+{% set title = route == "figure_create" ? "Nouvelle figure" : "Modifier la figure" %}
 
 
 {% form_theme figureForm 'bootstrap_4_layout.html.twig' %}
@@ -9,7 +11,8 @@
 
 
 	<div class="container mt-4">
-		<h1>Poster une figure</h1>
+		<h1>{{ title }}
+		</h1>
 		{{ form_start(figureForm) }}
 
 		{{ form_row(figureForm.title) }}
@@ -19,6 +22,7 @@
 
 		{% if app.request.attributes.get('_route') ==  "figure_edit"  %}
 
+
 			<h2>Images</h2>
 
 			{% for picture in trick.pictures %}
@@ -26,7 +30,6 @@
 					<img src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
 					<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ picture.id)}}">Supprimer</a>
 				</div>
-
 			{% endfor %}
 
 			{{ form_row(figureForm.pictures) }}
@@ -36,25 +39,26 @@
 
 			{% for video in trick.videos %}
 				<div>
-					<img src="{{ asset('/uploads/pictures/' ~ video.name) }}" alt="Image" class="img-thumbnail">
-					<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
-				</div>
+					<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				{% endfor %}
 
-			{% endfor %}
+				{% for video in figureForm.videos %}
+					<li>{{ form_row(video) }}</li>
+				{% endfor %}
+
+				{{ form_end(figureForm) }}
+
+			{% else %}
 
 
+				{{ form_row(figureForm.pictures) }}
+				{{ form_row(figureForm.videos) }}
+				{{ form_row(figureForm.submit) }}
+
+				{{ form_end(figureForm) }}
+			</div>
 		{% endif %}
-
-
-		{{ form_row(figureForm.videos) }}
-		{{ form_row(figureForm.submit) }}
-
-		{{ form_end(figureForm) }}
-	</div>
-
-
-{% endblock %}
-
-{% block javascript %}
-	<script src=" {{ asset('js/picture.js') }} "></script>
-{% endblock %}
+	{% endblock %}
+	{% block javascript %}
+		<script src=" {{ asset('js/picture.js') }} "></script>
+	{% endblock %}

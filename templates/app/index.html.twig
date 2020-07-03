@@ -23,7 +23,11 @@
 		<!-- FIGURE A LA UNE -->
 		<div class="jumbotron" style="background: url(' {{ lastFigure.picture.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
-				<h1 class="display-4">{{ lastFigure.title}}</h1>
+				<h1 class="display-4">
+					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}">
+						{{ lastFigure.title }}
+					</a>
+				</h1>
 				<hr>
 				<p class="lead">
 					{{ lastFigure.description }}
