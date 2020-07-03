@@ -143,10 +143,9 @@ class AppController extends AbstractController
             //video
             if ($videoUrl) {
                 $video = new Video();
-            $video->setUrl($videoUrl);
-            $figure->addVideo($video);
+                $video->setUrl($videoUrl);
+                $figure->addVideo($video);
             }
-            
 
             $figure->setCreatedAt(new \DateTime());
             $em->flush();
@@ -190,16 +189,12 @@ class AppController extends AbstractController
         EntityManagerInterface $em
     ) {
         $data = json_decode($request->getContent(), true);
-        $response = $this->isCsrfTokenValid(
-            'delete' . $picture->getId(),
-            $data['picture_token']
-        );
 
         // vérification token valide
         if (
             $this->isCsrfTokenValid(
                 'delete' . $picture->getId(),
-                $data['picture_token']
+                $data['_token']
             )
         ) {
             $name = $picture->getName();
@@ -215,6 +210,36 @@ class AppController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/delete/video/{id}", name="video_delete", methods={"DELETE"})
+     *
+     * @return void
+     */
+    public function deleteVideo(
+        Video $video,
+        Request $request,
+        EntityManagerInterface $em
+    ) {
+        $data = json_decode($request->getContent(), true);
+
+        // vérification token valide
+        if (
+            $this->isCsrfTokenValid(
+                'delete' . $video->getId(),
+                $data['_token']
+            )
+        ) {
+            // suppression de l'entrée en base
+            $em->remove($video);
+            $em->flush();
+            //réponse JSON
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token invalide'], 400);
+        }
+    }
+
+    
     /**
      * @Route("/more/{offset}", name="load_more")
      *

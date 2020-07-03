@@ -40,25 +40,27 @@
 			{% for video in trick.videos %}
 				<div>
 					<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				{% endfor %}
+					<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
+				</div>
+			{% endfor %}
 
-				{% for video in figureForm.videos %}
-					<li>{{ form_row(video) }}</li>
-				{% endfor %}
+			{% for video in figureForm.videos %}
+				<li>{{ form_row(video) }}</li>
+			{% endfor %}
 
-				{{ form_end(figureForm) }}
+			{{ form_end(figureForm) }}
 
-			{% else %}
+		{% else %}
 
 
-				{{ form_row(figureForm.pictures) }}
-				{{ form_row(figureForm.videos) }}
-				{{ form_row(figureForm.submit) }}
+			{{ form_row(figureForm.pictures) }}
+			{{ form_row(figureForm.videos) }}
+			{{ form_row(figureForm.submit) }}
 
-				{{ form_end(figureForm) }}
-			</div>
-		{% endif %}
-	{% endblock %}
-	{% block javascript %}
-		<script src=" {{ asset('js/picture.js') }} "></script>
-	{% endblock %}
+			{{ form_end(figureForm) }}
+		</div>
+	{% endif %}
+{% endblock %}
+{% block javascript %}
+	<script src=" {{ asset('js/media_delete.js') }} "></script>
+{% endblock %}
