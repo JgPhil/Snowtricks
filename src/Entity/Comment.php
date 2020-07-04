@@ -14,19 +14,19 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $createdAt;
 
@@ -39,7 +39,7 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("figure_read")
+     * @Groups({"figure_read"})
      */
     private $author;
 

@@ -25,13 +25,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $username;
 
@@ -48,27 +48,32 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"figure_read", "user_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"figure_read", "user_read"})
      * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author")
+     * @Groups({"user_read"})
      */
     private $figures;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author", orphanRemoval=true)
+     * @Groups({"user_read"})
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
+     * @Groups({"user_read"})
      */
     private $pictures;
 

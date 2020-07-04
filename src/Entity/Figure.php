@@ -17,32 +17,32 @@ class Figure
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $title;
 
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", orphanRemoval=true)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $comments;
 

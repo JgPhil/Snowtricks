@@ -15,20 +15,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class AppController extends AbstractController
 {
     /**
      * @Route("/", name="home")
      */
-    public function index(FigureRepository $repo)
-    {
+    public function index(
+        FigureRepository $repo,
+        SerializerInterface $serializer
+    ) {
         $figures = $repo->findBy([], ['createdAt' => 'DESC'], 6);
         $lastFigure = $figures[array_key_first($figures)];
 
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
             'lastFigure' => $lastFigure,
+            'user' => $serializer->serialize($this->getUser(), 'json', [
+                'groups' => 'user_read',
+            ]),
         ]);
     }
 
@@ -224,10 +230,7 @@ class AppController extends AbstractController
 
         // vérification token valide
         if (
-            $this->isCsrfTokenValid(
-                'delete' . $video->getId(),
-                $data['_token']
-            )
+            $this->isCsrfTokenValid('delete' . $video->getId(), $data['_token'])
         ) {
             // suppression de l'entrée en base
             $em->remove($video);
@@ -239,7 +242,6 @@ class AppController extends AbstractController
         }
     }
 
-    
     /**
      * @Route("/more/{offset}", name="load_more")
      *

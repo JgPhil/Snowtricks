@@ -21,10 +21,10 @@
 		{% endfor %}
 
 		<!-- FIGURE A LA UNE -->
-		<div class="jumbotron" style="background: url(' {{ lastFigure.picture.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
+		<div class="jumbotron" style="background: url(' {{ " /uploads/pictures/" ~ lastFigure.pictures.first.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
 				<h1 class="display-4">
-					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}">
+					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" style="color: white">
 						{{ lastFigure.title }}
 					</a>
 				</h1>
@@ -34,8 +34,10 @@
 				</p>
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-					<a href="{{ path('figure_edit', { id: lastFigure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-					<a href="{{ path('figure_delete', { id: lastFigure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+					{% if app.user %}
+						<a href="{{ path('figure_edit', { id: lastFigure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
+						<a href="{{ path('figure_delete', { id: lastFigure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+					{% endif %}
 				</p>
 			</div>
 		</div>
@@ -47,9 +49,13 @@
 			<div class="row mt-4" id="js-more">
 
 				{% for figure in figures %}
+					{% if figure.pictures is not empty %}
+						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
+					{% endif %}
+
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
-							<img class="card-img-top" src="{{ figure.picture.name|default('http://placehold.it/300x200') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
+							<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}} ">
 							<div class="card-body">
 								<h5 class="card-title">
 									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
@@ -60,8 +66,10 @@
 									{{ figure.description|u.truncate(90, '...') }}
 								</p>
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-								<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-								<a href="{{ path('figure_delete', { id: figure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+								{% if app.user %}
+									<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
+									<a href="{{ path('figure_delete', { id: figure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -77,4 +85,7 @@
 		</div>
 	</div>
 </div>{% endblock %}{% block javascript %}
-<script src=" {{ asset('/js/loadMore.js') }}"></script>{% endblock %}
+<script src=" {{ asset('/js/loadMore.js') }}"></script>
+<script>
+	window.user = {{ user|raw }};
+</script>{% endblock %}

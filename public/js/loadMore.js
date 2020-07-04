@@ -29,7 +29,7 @@ loadButton.addEventListener('click', function (event) {
 
                 let img = document.createElement('img');
                 img.classList.add('card-img-top');
-                img.src = k.pictures.length !== 0 ? k.pictures[0].name : 'http://placehold.it/300x200';
+                img.src = k.pictures.length !== 0 ? "/uploads/pictures/" + k.pictures[0].name : "http://placehold.it/300x200";
 
                 let div3 = document.createElement('div');
                 div3.classList.add("card-body");
@@ -37,28 +37,46 @@ loadButton.addEventListener('click', function (event) {
                 let h5 = document.createElement('h5');
                 h5.classList.add("card-title");
 
-                let link = document.createElement('a');
-                link.classList.add("card-title");
-                link.innerHTML = k.title;
-                link.href = "/figure/" + k.id;
+                let showLink = document.createElement('a');
+                showLink.classList.add("card-title");
+                showLink.innerHTML = k.title;
+                showLink.href = "/figure/" + k.id;
+
+                let updateLink = document.createElement('a');
+                updateLink.classList.add("btn", "btn-light", "btn-sm");
+                updateLink.innerHTML = "Modifier";
+                updateLink.href = "/figure/edit/" + k.id;
+
+                let deleteLink = document.createElement('a');
+                deleteLink.classList.add("btn", "btn-warning", "btn-sm");
+                deleteLink.innerHTML = "Supprimer";
+                deleteLink.href = "/figure/delete/" + k.id;
 
                 let description = document.createElement('p');
+                description.classList.add("card-text");
+                description.innerHTML = k.description.substring(0, 90);
+
                 let button = document.createElement('a');
                 button.classList.add("btn", "btn-primary", "btn-lg");
                 button.href = "http://127.0.0.1:8000/figure/" + k.id;
                 button.text = "Voir";
 
-                description.classList.add("card-text");
-                description.innerHTML = k.description;
+
 
 
                 div1.appendChild(div2);
                 div2.appendChild(img);
                 div2.appendChild(div3);
-                h5.appendChild(link);
+                h5.appendChild(showLink);
                 div3.appendChild(h5);
                 div3.appendChild(description);
                 div3.appendChild(button);
+                if (window.user) {
+                    div3.appendChild(updateLink);
+                    div3.appendChild(deleteLink);
+                }
+
+
                 more.appendChild(div1);
             });
         }
