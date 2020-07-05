@@ -199,7 +199,6 @@ class AppController extends AbstractController
         EntityManagerInterface $em
     ) {
         $data = json_decode($request->getContent(), true);
-
         // vérification token valide
         if (
             $this->isCsrfTokenValid(
@@ -231,7 +230,6 @@ class AppController extends AbstractController
         EntityManagerInterface $em
     ) {
         $data = json_decode($request->getContent(), true);
-
         // vérification token valide
         if (
             $this->isCsrfTokenValid('delete' . $video->getId(), $data['_token'])
@@ -245,6 +243,7 @@ class AppController extends AbstractController
             return new JsonResponse(['error' => 'Token invalide'], 400);
         }
     }
+
 
     /**
      * @Route("/more/{offset}", name="load_more")

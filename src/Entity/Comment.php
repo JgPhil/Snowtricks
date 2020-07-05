@@ -46,7 +46,7 @@ class Comment
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $validatedAt;
+    private $activatedAt;
 
     public function getId(): ?int
     {
@@ -101,14 +101,14 @@ class Comment
         return $this;
     }
 
-    public function getValidatedAt(): ?\DateTimeInterface
+    public function getActivatedAt(): ?\DateTimeInterface
     {
-        return $this->validatedAt;
+        return $this->activatedAt;
     }
 
-    public function setValidatedAt(?\DateTimeInterface $validatedAt): self
+    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
     {
-        $this->validatedAt = $validatedAt;
+        $this->activatedAt = $activatedAt;
 
         return $this;
     }

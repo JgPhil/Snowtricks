@@ -84,13 +84,9 @@
 			</div>
 		</div>
 	</div>
-</div>
-{% endblock %}
-
-{% block javascript %}
+</div>{% endblock %}{% block javascript %}
 <script src=" {{ asset('/js/loadMore.js') }}"></script>
 <script>
 	window.user = {{ user|raw }};
 </script>
-<script src=" {{ asset('js/delete.js') }} "></script>
-{% endblock %}
+<script src=" {{ asset('js/delete.js') }} "></script>{% endblock %}
