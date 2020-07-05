@@ -71,7 +71,7 @@ loadButton.addEventListener('click', function (event) {
                 div3.appendChild(h5);
                 div3.appendChild(description);
                 div3.appendChild(button);
-                if (window.user) {
+                if (window.user) { //if user logged in
                     div3.appendChild(updateLink);
                     div3.appendChild(deleteLink);
                 }

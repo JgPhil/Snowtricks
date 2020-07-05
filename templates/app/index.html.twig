@@ -55,7 +55,7 @@
 
 					<div class="col-md-6 col-lg-4">
 						<div class="card mb-4 ">
-							<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}} ">
+							<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
 							<div class="card-body">
 								<h5 class="card-title">
 									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
@@ -68,7 +68,7 @@
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 								{% if app.user %}
 									<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-									<a href="{{ path('figure_delete', { id: figure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+									<a href="{{ path('figure_delete', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Supprimer</a>
 								{% endif %}
 							</div>
 						</div>
@@ -84,8 +84,13 @@
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}{% block javascript %}
+</div>
+{% endblock %}
+
+{% block javascript %}
 <script src=" {{ asset('/js/loadMore.js') }}"></script>
 <script>
 	window.user = {{ user|raw }};
-</script>{% endblock %}
+</script>
+<script src=" {{ asset('js/delete.js') }} "></script>
+{% endblock %}

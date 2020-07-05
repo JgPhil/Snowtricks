@@ -43,6 +43,11 @@ class Comment
      */
     private $author;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $validatedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +97,18 @@ class Comment
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getValidatedAt(): ?\DateTimeInterface
+    {
+        return $this->validatedAt;
+    }
+
+    public function setValidatedAt(?\DateTimeInterface $validatedAt): self
+    {
+        $this->validatedAt = $validatedAt;
 
         return $this;
     }

@@ -9,7 +9,7 @@ window.onload = () => {
         link.addEventListener("click", function (e) {
             e.preventDefault();
             //Confirmation ?
-            if (confirm("Voulez-vous vraiment supprimer l'image ?")) {
+            if (confirm("Voulez-vous vraiment supprimer l'élément ?")) {
                 //On envoie une requète Ajax vers le href du lien avec la méthode DELETE
                 fetch(this.getAttribute("href"), {
                     method: "DELETE",
@@ -22,11 +22,13 @@ window.onload = () => {
                     //Récupération de la réponse en JSON
                     response => response.json()
                 ).then(data => {
-                    if (data.success) {
+                    if (data.success && this.parentElement.classList.contains("img-thumbnail")) {
                         //on supprime la div parent
                         this.parentElement.remove();
+                    } else if (data.success) {
+                        this.parentElement.parentElement.parentElement.remove();
+                        document.location.reload(true);
                     } else {
-                        //alert(data.error);
                         alert(data.error)
                     }
                 }).catch(e => alert(e))

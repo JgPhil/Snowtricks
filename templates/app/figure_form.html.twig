@@ -26,7 +26,7 @@
 			<h2>Images</h2>
 
 			{% for picture in trick.pictures %}
-				<div>
+				<div class="img-thumbnail">
 					<img src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
 					<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ picture.id)}}">Supprimer</a>
 				</div>
@@ -38,7 +38,7 @@
 			<h2>Vidéos</h2>
 
 			{% for video in trick.videos %}
-				<div>
+				<div class="img-thumbnail">>
 					<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 					<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
 				</div>
@@ -62,5 +62,5 @@
 	{% endif %}
 {% endblock %}
 {% block javascript %}
-	<script src=" {{ asset('js/media_delete.js') }} "></script>
+	<script src=" {{ asset('js/delete.js') }} "></script>
 {% endblock %}

@@ -56,7 +56,7 @@
 
 
 		{% for comment in figure.comments %}
-
+			{% if (comment.validatedAt) %}
 			<div class="media mb-4">
 				<img src="" class="d-flex mr-3 rounded-circle">
 				<div class="media-body">
@@ -70,6 +70,7 @@
 
 				</div>
 			</div>
+			{% endif %}
 		{% endfor %}
 	</div>
 	<hr>

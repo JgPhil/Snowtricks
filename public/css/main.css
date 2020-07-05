@@ -18,6 +18,11 @@
   margin-bottom: 15em;
 }
 
+.card-img-top {
+  width: 100%;
+  height: 15vw;
+  object-fit: cover;
+}
 
 .toto {
   margin-top: 85px;

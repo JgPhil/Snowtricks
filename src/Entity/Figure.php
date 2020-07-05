@@ -54,13 +54,13 @@ class Figure
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure",orphanRemoval=true, cascade={"persist"})
      * @Groups("figure_read")
      */
     private $pictures;
 
     /**
-     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure",orphanRemoval=true, cascade={"persist"})
      * @Groups("figure_read")
      */
     private $videos;
@@ -70,6 +70,11 @@ class Figure
      * @Groups("figure_read")
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $activatedAt;
 
 
     public function __construct()
@@ -234,6 +239,18 @@ class Figure
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getActivatedAt(): ?\DateTimeInterface
+    {
+        return $this->activatedAt;
+    }
+
+    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
+    {
+        $this->activatedAt = $activatedAt;
 
         return $this;
     }

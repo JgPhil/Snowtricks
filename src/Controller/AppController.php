@@ -26,7 +26,8 @@ class AppController extends AbstractController
         FigureRepository $repo,
         SerializerInterface $serializer
     ) {
-        $figures = $repo->findBy([], ['createdAt' => 'DESC'], 6);
+        //$figures = $repo->findBy([], ['createdAt' => 'DESC'], 6);
+        $figures = $repo->findActiveFigures();
         $lastFigure = $figures[array_key_first($figures)];
 
         return $this->render('app/index.html.twig', [
@@ -172,16 +173,19 @@ class AppController extends AbstractController
         Request $request,
         Figure $figure
     ) {
+        $data = json_decode($request->getContent(), true);
         if (
             $this->isCsrfTokenValid(
                 'delete' . $figure->getId(),
-                $request->$request->get('_token')
+                $data['_token']
             )
         ) {
-            $em->remove($figure);
+            $figure->setActivatedAt(null);
             $em->flush();
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token invalide'], 400);
         }
-        return $this->redirectToRoute('home');
     }
 
     /**
