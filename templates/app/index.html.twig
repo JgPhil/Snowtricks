@@ -49,6 +49,7 @@
 			<div class="row mt-4" id="js-more">
 
 				{% for figure in figures %}
+					{% set picturePath = null %}
 					{% if figure.pictures is not empty %}
 						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
 					{% endif %}
@@ -68,7 +69,7 @@
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 								{% if app.user %}
 									<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-									<a href="{{ path('figure_delete', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Supprimer</a>
+									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Supprimer</a>
 								{% endif %}
 							</div>
 						</div>
@@ -84,9 +85,11 @@
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}{% block javascript %}
-<script src=" {{ asset('/js/loadMore.js') }}"></script>
-<script>
-	window.user = {{ user|raw }};
-</script>
-<script src=" {{ asset('js/delete.js') }} "></script>{% endblock %}
+{% endblock %}
+{% block javascript %}
+	<script src=" {{ asset('/js/loadMore.js') }}"></script>
+	<script>
+		window.user = {{ user|raw }};
+	</script>
+	<script src=" {{ asset('js/delete.js') }} "></script>
+{% endblock %}

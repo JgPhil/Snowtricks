@@ -94,10 +94,6 @@ class User implements UserInterface
      */
     private $token;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $activatedAt;
 
 
     public function getId(): ?int
@@ -280,16 +276,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getActivatedAt(): ?\DateTimeInterface
-    {
-        return $this->activatedAt;
-    }
 
-    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
-    {
-        $this->activatedAt = $activatedAt;
-
-        return $this;
-    }
 
 }

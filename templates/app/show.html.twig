@@ -31,7 +31,7 @@
 				</div>
 
 				<hr>
-				<img class="img-fluid rounded" src="{{ figure.picture.name|default('http://placehold.it/1000x500') }}" alt="{{ figure.picture.alt|default('Une image de la figure {{figure.title}} ') }} ">
+				<img class="img-fluid rounded" src="{{ figure.picture.name|default('http://placehold.it/1000x500') }}" alt="Une image de la figure {{figure.title}} ') }} ">
 				<hr>
 
 				<!-- Post Content -->
@@ -56,7 +56,7 @@
 
 
 		{% for comment in figure.comments %}
-			{% if (comment.validatedAt) %}
+			{% if (comment.activatedAt) %}
 			<div class="media mb-4">
 				<img src="" class="d-flex mr-3 rounded-circle">
 				<div class="media-body">

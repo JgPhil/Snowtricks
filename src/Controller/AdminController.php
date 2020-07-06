@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Video;
 use App\Entity\Figure;
 use App\Entity\Comment;
+use App\Entity\Picture;
 use App\Repository\UserRepository;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -58,9 +59,7 @@ class AdminController extends AbstractController
 
 
 
-    /**
-     * 
-     */
+    
     public function activateEntity($entity)
     {
         $request = Request::createFromGlobals();
@@ -73,7 +72,11 @@ class AdminController extends AbstractController
                 $data['_token']
             )
         ) {
-            $entity->setActivatedAt(new \DateTime());
+            if ($entity instanceof User) {
+                $entity->setToken(null);
+            } else {
+                $entity->setActivatedAt(new \DateTime());
+            }
             $em->flush();
             return new JsonResponse(['success' => 1]);
         } else {
@@ -98,6 +101,30 @@ class AdminController extends AbstractController
         return $this->desactivateEntity($user);
     }
 
+    /**
+     * @Route("/figure/desactivate/{id}", name="admin_figure_desactivate")
+     */
+    public function descativateFigure(Figure $figure)
+    {
+        return $this->desactivateEntity($figure);
+    }
+
+    /**
+     * @Route("/delete/picture/{id}", name="picture_delete")
+     */
+    public function deletePicture(Picture $picture)
+    {
+        return $this->desactivateEntity($picture);
+    }
+
+    /**
+     * @Route("/delete/video/{id}", name="video_delete")
+     */
+    public function deleteVideo(Picture $video)
+    {
+        return $this->desactivateEntity($video);
+    }
+
 
 
     private function desactivateEntity($entity)
@@ -112,7 +139,19 @@ class AdminController extends AbstractController
                 $data['_token']
             )
         ) {
-            $entity->setActivatedAt(null);
+            if ($entity instanceof Picture) {
+                $name = $entity->getName();
+                //suppression du fichier dans le dossier uploads
+                unlink($this->getParameter('pictures_directory') . '/' . $name);
+                // suppression de l'entrée en base
+                $em->remove($entity);
+            } elseif ($entity instanceof Video) {
+                $em->remove($entity);
+            } elseif ($entity instanceof User) {
+                $entity->setToken(null);
+            } else {
+                $entity->setActivatedAt(null);
+            }
             $em->flush();
             return new JsonResponse(['success' => 1]);
         } else {
