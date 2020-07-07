@@ -36,8 +36,7 @@
 				</p>
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-					{% if app.user %}
-					
+					{% if app.user %}					
 						<a href="{{ path('figure_edit', { id: figures[0].id }) }}"<i class="fas fa-pencil-alt fa-2x"></i></a>
 						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}" ><i class="fas fa-trash-alt fa-2x"></i></a>
 					{% endif %}
@@ -65,9 +64,7 @@
 										{{ figure.id }}
 									</a>
 								</h5>
-								<p class="card-text">
-									{{ figure.description|u.truncate(90, '...') }}
-								</p>
+								
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 								{% if app.user %}
 									<a href="{{ path('figure_edit', { id: figure.id }) }}"><i class="fas fa-pencil-alt fa-2x"></i></a>
@@ -81,7 +78,7 @@
 			</div>
 			<div class="row">
 				<div class="col text-center">
-					<a class="btn btn-success"  href="/more/?offset=25" id="js-load">
+					<a class="btn btn-success" id="js-load">
 						Load More</a>
 				</div>
 			</div>

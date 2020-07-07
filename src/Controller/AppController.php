@@ -174,7 +174,7 @@ class AppController extends AbstractController
      * @param [type] $offset
      * @return void
      */
-    public function sliceFigures(FigureRepository $repo, $offset = 6)
+    public function sliceFigures(FigureRepository $repo, $offset)
     {
         return $this->json(
             [

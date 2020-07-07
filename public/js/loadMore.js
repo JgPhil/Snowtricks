@@ -8,13 +8,11 @@ loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
 
-    let url = this.href;
-    
-    if (more.childElementCount > 6) {
-        let lastFigureURLArray = more.lastChild.lastChild.lastChild.lastElementChild.href.split('/');  // the last figure url link splitted into an array
-        offset = lastFigureURLArray.pop() - 1; // search the last occurence in the array -> figureID
-        url = "/more/?offset=" + offset; // construct the url with the last figureID to get new figures in database
-    }
+    let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.href.split('/');
+    //the last figure url link splitted into an array
+    let offset = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
+    let url = "/more/" + offset; // construct the url with the last figureID to get new figures in database
+
     xhr.open("GET", url);
     xhr.onreadystatechange = function () {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
@@ -56,7 +54,7 @@ loadButton.addEventListener('click', function (event) {
                 let fasDeleteIcon = document.createElement('i');
                 fasDeleteIcon.classList.add("fas", "fa-trash-alt", "fa-2x");
 
-                let deleteLink = document.createElement('a');                
+                let deleteLink = document.createElement('a');
                 deleteLink.href = "/figure/delete/" + k.id;
 
 
