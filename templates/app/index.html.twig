@@ -21,22 +21,25 @@
 		{% endfor %}
 
 		<!-- FIGURE A LA UNE -->
-		<div class="jumbotron" style="background: url(' {{ " /uploads/pictures/" ~ lastFigure.pictures.first.name|default('http://placehold.it/1080x800') }} ') no-repeat center;">
+
+		{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
+		<div class="jumbotron" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
 				<h1 class="display-4">
-					<a href="{{ path( 'trick_show', { id: lastFigure.id } ) }}" style="color: white">
-						{{ lastFigure.title }}
+					<a href="{{ path( 'trick_show', { id: figures[0].id } ) }}" style="color: white">
+						{{ figures[0].id }}
 					</a>
 				</h1>
 				<hr>
 				<p class="lead">
-					{{ lastFigure.description }}
+					{{ figures[0].description }}
 				</p>
 				<p class="lead">
-					<a href="{{ path('trick_show', { id: lastFigure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 					{% if app.user %}
-						<a href="{{ path('figure_edit', { id: lastFigure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-						<a href="{{ path('figure_delete', { id: lastFigure.id }) }}" class="btn btn-warning btn-sm">Supprimer</a>
+					
+						<a href="{{ path('figure_edit', { id: figures[0].id }) }}"<i class="fas fa-pencil-alt fa-2x"></i></a>
+						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}" ><i class="fas fa-trash-alt fa-2x"></i></a>
 					{% endif %}
 				</p>
 			</div>
@@ -47,8 +50,7 @@
 
 		<div class="container">
 			<div class="row mt-4" id="js-more">
-
-				{% for figure in figures %}
+				{% for figure in figures|slice(1) %}
 					{% set picturePath = null %}
 					{% if figure.pictures is not empty %}
 						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
@@ -60,7 +62,7 @@
 							<div class="card-body">
 								<h5 class="card-title">
 									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
-										{{ figure.title }}
+										{{ figure.id }}
 									</a>
 								</h5>
 								<p class="card-text">
@@ -68,8 +70,8 @@
 								</p>
 								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 								{% if app.user %}
-									<a href="{{ path('figure_edit', { id: figure.id }) }}" class="btn btn-light btn-sm">Modifier</a>
-									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Supprimer</a>
+									<a href="{{ path('figure_edit', { id: figure.id }) }}"><i class="fas fa-pencil-alt fa-2x"></i></a>
+									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}"><i class="fas fa-trash-alt fa-2x"></i></a>
 								{% endif %}
 							</div>
 						</div>
@@ -79,7 +81,7 @@
 			</div>
 			<div class="row">
 				<div class="col text-center">
-					<a class="btn btn-success" {% if firstFigure is defined %} href=" {{ path('load_more', {offset: firstFigure.id } ) }}" {% else %} href="/more/2" {% endif %} id="js-load">
+					<a class="btn btn-success"  href="/more/?offset=25" id="js-load">
 						Load More</a>
 				</div>
 			</div>

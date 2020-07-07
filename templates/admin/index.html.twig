@@ -32,8 +32,10 @@
 							<td>
 								{% if figure.getActivatedAt is not null %}
 									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
+									<a href="{{ path('admin_figure_activate', { id: figure.id }) }}"hidden activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>
 								{% else %}
-									<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>
+									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
+									<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>									
 								{% endif %}
 							</td>
 						</tr>
@@ -68,8 +70,10 @@
 							<td>
 								{% if comment.getActivatedAt is not null %}
 									<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
+									<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
 								{% else %}
-									<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
+									<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}"hidden activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
+									<a href="{{ path('admin_comment_activate', { id: comment.id }) }}"  activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
 								{% endif %}
 							</td>
 						</tr>
@@ -97,11 +101,14 @@
 							<td>{{user.id }}</td>
 							<td>{{user.username }}</td>
 							<td>{{user.createdAt|date}}</td>
+							<td>{{user.email}}</td>
 							<td>{{user.roles[0] }}</td>
 							<td>
-								{% if user.getActivatedAt is not null %}
+								{% if user.token is null %}
 									<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
+									<a href="{{ path('admin_user_activate', { id: user.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
 								{% else %}
+									<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 									<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
 								{% endif %}
 							</td>
@@ -114,12 +121,7 @@
 	</div>
 {% endblock %}
 
-{% block javascript %}
-	<script>
-		let figures = <?php echo json_encode($figures); ?> ;
-		let comments = <?php echo json_encode($comments); ?> ;
-		let users = <?php echo json_encode($users); ?> ;
-	</script>
+{% block javascript %}	
 	<script src=" {{ asset('js/activation.js') }} "></script>
 	<script src=" {{ asset('js/pagination.js') }}"></script>
 {% endblock %}

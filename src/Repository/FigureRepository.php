@@ -26,8 +26,29 @@ class FigureRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
-            ->orderBy('f.activatedAt', 'ASC')
+            ->orderBy('f.createdAt', 'DESC')
             ->setMaxResults(6)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findSliceFigures($offset)
+    {   
+        $count = $this->createQueryBuilder('f')
+        ->select('COUNT(f)')
+        ->getQuery()
+        ->getSingleScalarResult();
+
+
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->setFirstResult($offset)
+            ->setMaxResults(6)
+            ->orderBy('f.id', 'DESC')
             ->getQuery()
             ->getResult();
     }

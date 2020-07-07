@@ -7,9 +7,11 @@ use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * @UniqueEntity(fields="title", message= "Ce nom de figure existe déja")
  */
 class Figure
 {
@@ -75,6 +77,11 @@ class Figure
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $activatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastModificationAt;
 
 
     public function __construct()
@@ -251,6 +258,18 @@ class Figure
     public function setActivatedAt(?\DateTimeInterface $activatedAt): self
     {
         $this->activatedAt = $activatedAt;
+
+        return $this;
+    }
+
+    public function getLastModificationAt(): ?\DateTimeInterface
+    {
+        return $this->lastModificationAt;
+    }
+
+    public function setLastModificationAt(?\DateTimeInterface $lastModificationAt): self
+    {
+        $this->lastModificationAt = $lastModificationAt;
 
         return $this;
     }

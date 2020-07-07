@@ -60,7 +60,7 @@ class AdminController extends AbstractController
 
 
     
-    public function activateEntity($entity)
+    private function activateEntity($entity)
     {
         $request = Request::createFromGlobals();
         $em = $this->getDoctrine()->getManager();
@@ -148,7 +148,7 @@ class AdminController extends AbstractController
             } elseif ($entity instanceof Video) {
                 $em->remove($entity);
             } elseif ($entity instanceof User) {
-                $entity->setToken(null);
+                $entity->setToken(md5(uniqid()));
             } else {
                 $entity->setActivatedAt(null);
             }

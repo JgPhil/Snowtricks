@@ -9,9 +9,10 @@ loadButton.addEventListener('click', function (event) {
     event.preventDefault();
 
     let url = this.href;
+    
     if (more.childElementCount > 6) {
         let lastFigureURLArray = more.lastChild.lastChild.lastChild.lastElementChild.href.split('/');  // the last figure url link splitted into an array
-        offset = lastFigureURLArray.pop(); // search the last occurence in the array -> figureID
+        offset = lastFigureURLArray.pop() - 1; // search the last occurence in the array -> figureID
         url = "/more/?offset=" + offset; // construct the url with the last figureID to get new figures in database
     }
     xhr.open("GET", url);
@@ -39,18 +40,25 @@ loadButton.addEventListener('click', function (event) {
 
                 let showLink = document.createElement('a');
                 showLink.classList.add("card-title");
-                showLink.innerHTML = k.title;
+                showLink.innerHTML = k.id;
                 showLink.href = "/figure/" + k.id;
 
+
+                //Update icon
+                let fasUpdateIcon = document.createElement('i');
+                fasUpdateIcon.classList.add("fas", "fa-pencil-alt", "fa-2x");
+
                 let updateLink = document.createElement('a');
-                updateLink.classList.add("btn", "btn-light", "btn-sm");
-                updateLink.innerHTML = "Modifier";
                 updateLink.href = "/figure/edit/" + k.id;
 
-                let deleteLink = document.createElement('a');
-                deleteLink.classList.add("btn", "btn-warning", "btn-sm");
-                deleteLink.innerHTML = "Supprimer";
+
+                //Delete Icon
+                let fasDeleteIcon = document.createElement('i');
+                fasDeleteIcon.classList.add("fas", "fa-trash-alt", "fa-2x");
+
+                let deleteLink = document.createElement('a');                
                 deleteLink.href = "/figure/delete/" + k.id;
+
 
                 let description = document.createElement('p');
                 description.classList.add("card-text");
@@ -72,6 +80,8 @@ loadButton.addEventListener('click', function (event) {
                 div3.appendChild(description);
                 div3.appendChild(button);
                 if (window.user) { //if user logged in
+                    updateLink.appendChild(fasUpdateIcon);
+                    deleteLink.appendChild(fasDeleteIcon);
                     div3.appendChild(updateLink);
                     div3.appendChild(deleteLink);
                 }

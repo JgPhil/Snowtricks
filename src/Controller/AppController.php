@@ -26,13 +26,10 @@ class AppController extends AbstractController
         FigureRepository $repo,
         SerializerInterface $serializer
     ) {
-        //$figures = $repo->findBy([], ['createdAt' => 'DESC'], 6);
         $figures = $repo->findActiveFigures();
-        $lastFigure = $figures[array_key_first($figures)];
 
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
-            'lastFigure' => $lastFigure,
             'user' => $serializer->serialize($this->getUser(), 'json', [
                 'groups' => 'user_read',
             ]),
@@ -69,9 +66,12 @@ class AppController extends AbstractController
                 $figure->addPicture($pic);
             }
             //video
-            $video = new Video();
-            $video->setUrl($videoUrl);
-            $figure->addVideo($video);
+            if ($videoUrl) {
+                $video = new Video();
+                $video->setUrl($videoUrl);
+                $figure->addVideo($video);
+            }
+
 
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
@@ -154,7 +154,7 @@ class AppController extends AbstractController
                 $figure->addVideo($video);
             }
 
-            $figure->setCreatedAt(new \DateTime());
+            $figure->setLastModificationAt(new \DateTime());
             $em->flush();
             $this->addFlash('message', 'Votre figure a bien été modifiée');
             return $this->redirectToRoute('home');
@@ -178,12 +178,7 @@ class AppController extends AbstractController
     {
         return $this->json(
             [
-                'sliceFigures' => $repo->findBy(
-                    [],
-                    ['createdAt' => 'DESC'],
-                    6,
-                    $offset
-                ),
+                'sliceFigures' => $repo->findSliceFigures($offset),
             ],
             200,
             [],
