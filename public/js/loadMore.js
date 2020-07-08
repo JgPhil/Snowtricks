@@ -11,7 +11,7 @@ loadButton.addEventListener('click', function (event) {
     let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.href.split('/');
     //the last figure url link splitted into an array
     let offset = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
-    let url = "/more/" + offset; // construct the url with the last figureID to get new figures in database
+    let url = "/more/figures/" + offset; // construct the url with the last figureID to get new figures in database
 
     xhr.open("GET", url);
     xhr.onreadystatechange = function () {

@@ -27,18 +27,20 @@
 			<div class="container-full-bg">
 				<h1 class="display-4">
 					<a href="{{ path( 'trick_show', { id: figures[0].id } ) }}" style="color: white">
-						{{ figures[0].id }}
+						{{ figures[0].title }}
 					</a>
 				</h1>
 				<hr>
 				<p class="lead">
-					{{ figures[0].description }}
+					{{ figures[0].description|u.truncate(80) }}
 				</p>
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-					{% if app.user %}					
-						<a href="{{ path('figure_edit', { id: figures[0].id }) }}"<i class="fas fa-pencil-alt fa-2x"></i></a>
-						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}" ><i class="fas fa-trash-alt fa-2x"></i></a>
+					{% if app.user %}
+						<a href="{{ path('figure_edit', { id: figures[0].id }) }}"><i class="fas fa-pencil-alt fa-2x"></i></a>
+						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}">
+							<i class="fas fa-trash-alt fa-2x"></i>
+						</a>
 					{% endif %}
 				</p>
 			</div>
@@ -50,29 +52,35 @@
 		<div class="container">
 			<div class="row mt-4" id="js-more">
 				{% for figure in figures|slice(1) %}
-					{% set picturePath = null %}
-					{% if figure.pictures is not empty %}
-						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
-					{% endif %}
+					{% if figure.activatedAt != null %}
+						{% set picturePath = null %}
+						{% if figure.pictures is not empty %}
+							{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
+						{% endif %}
 
-					<div class="col-md-6 col-lg-4">
-						<div class="card mb-4 ">
-							<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
-							<div class="card-body">
-								<h5 class="card-title">
-									<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
-										{{ figure.id }}
-									</a>
-								</h5>
-								
-								<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-								{% if app.user %}
-									<a href="{{ path('figure_edit', { id: figure.id }) }}"><i class="fas fa-pencil-alt fa-2x"></i></a>
-									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}"><i class="fas fa-trash-alt fa-2x"></i></a>
-								{% endif %}
+						<div class="col-md-6 col-lg-4">
+							<div class="card mb-4 ">
+								<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
+								<div class="card-body">
+									<h5 class="card-title">
+										<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
+											{{ figure.id }}
+										</a>
+									</h5>
+
+									<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+									{% if app.user %}
+										<a href="{{ path('figure_edit', { id: figure.id }) }}">
+											<i class="fas fa-pencil-alt fa-2x"></i>
+										</a>
+										<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
+											<i class="fas fa-trash-alt fa-2x"></i>
+										</a>
+									{% endif %}
+								</div>
 							</div>
 						</div>
-					</div>
+					{% endif %}
 				{% endfor %}
 
 			</div>

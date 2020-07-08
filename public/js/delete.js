@@ -27,7 +27,7 @@ window.onload = () => {
                         this.parentElement.remove();
                     } else if (data.success) {
                         this.parentElement.parentElement.parentElement.remove();
-                        document.location.reload(true);
+                        document.location.reload(false);
                     } else {
                         alert(data.error)
                     }

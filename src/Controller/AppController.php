@@ -168,21 +168,23 @@ class AppController extends AbstractController
 
 
     /**
-     * @Route("/more/{offset}", name="load_more")
+     * @Route("/more/figures/{offset}", name="load_more")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceFigures(FigureRepository $repo, $offset)
+    public function sliceActiveFigures(FigureRepository $repo, $offset)
     {
         return $this->json(
             [
-                'sliceFigures' => $repo->findSliceFigures($offset),
+                'sliceFigures' => $repo->findActiveSliceFigures($offset),
             ],
             200,
             [],
             ['groups' => 'figure_read']
         );
     }
+
+
 }

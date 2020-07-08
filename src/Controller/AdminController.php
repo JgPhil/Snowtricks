@@ -22,9 +22,9 @@ class AdminController extends AbstractController
      */
     public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep)
     {
-        $figures = $figRep->findAll();
-        $users = $usRep->findAll();
-        $comments = $comRep->findAll();
+        $figures = $figRep->findBy([], ['createdAt' => 'DESC'], 5);
+        $users = $usRep->findBy([], ['createdAt' => 'DESC'], 5);
+        $comments = $comRep->findBy([], ['createdAt' => 'DESC'], 5);
 
         return $this->render('admin/index.html.twig', [
             'figures' => $figures,
@@ -59,7 +59,7 @@ class AdminController extends AbstractController
 
 
 
-    
+
     private function activateEntity($entity)
     {
         $request = Request::createFromGlobals();
@@ -157,5 +157,62 @@ class AdminController extends AbstractController
         } else {
             return new JsonResponse(['error' => 'Token invalide'], 400);
         }
+    }
+
+    /**
+     * @Route("/admin/more/figures/{offset}", name="admin_load_more_figures")
+     *
+     * @param FigureRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function sliceFigures(FigureRepository $repo, $offset)
+    {
+        return $this->json(
+            [
+                'slice' => $repo->findSliceFigures($offset),
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
+    }
+
+    /**
+     * @Route("/admin/more/comments/{offset}", name="admin_load_more_comments")
+     *
+     * @param CommentRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function sliceComments(CommentRepository $repo, $offset)
+    {
+        return $this->json(
+            [
+                'sliceComments' => $repo->findSliceComments($offset),
+            ],
+            200,
+            [],
+            ['groups' => 'comment_read']
+        );
+    }
+
+    /**
+     * @Route("/admin/more/users/{offset}", name="admin_load_more_users")
+     *
+     * @param UserRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function sliceUsers(UserRepository $repo, $offset)
+    {
+        return $this->json(
+            [
+                'sliceUsers' => $repo->findSliceUsers($offset),
+            ],
+            200,
+            [],
+            ['groups' => 'user_read']
+        );
     }
 }

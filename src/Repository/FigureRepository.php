@@ -35,11 +35,26 @@ class FigureRepository extends ServiceEntityRepository
     /**
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findSliceFigures($offset)
+    public function findActiveSliceFigures($offset)
     {
 
          return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(6)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult(); 
+    }
+
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findSliceFigures($offset)
+    {
+
+         return $this->createQueryBuilder('f')
             ->andWhere('f.id < :offset')
             ->orderBy('f.id', 'DESC')
             ->setMaxResults(6)
