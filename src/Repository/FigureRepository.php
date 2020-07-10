@@ -57,7 +57,7 @@ class FigureRepository extends ServiceEntityRepository
          return $this->createQueryBuilder('f')
             ->andWhere('f.id < :offset')
             ->orderBy('f.id', 'DESC')
-            ->setMaxResults(6)
+            ->setMaxResults(5)
             ->setParameter('offset', $offset)
             ->getQuery()
             ->getResult(); 

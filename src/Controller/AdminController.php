@@ -20,11 +20,11 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep)
+    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset=0)
     {
-        $figures = $figRep->findBy([], ['createdAt' => 'DESC'], 5);
-        $users = $usRep->findBy([], ['createdAt' => 'DESC'], 5);
-        $comments = $comRep->findBy([], ['createdAt' => 'DESC'], 5);
+        $figures = $figRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
+        $users = $usRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
+        $comments = $comRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
 
         return $this->render('admin/index.html.twig', [
             'figures' => $figures,

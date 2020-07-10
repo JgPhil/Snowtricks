@@ -10,15 +10,84 @@
 {% block body %}
 
 
+	{% for message in app.flashes('message') %}
+		<div class="flash-info">
+			<div class="alert alert-success">{{ message }}</div>
+		</div>
+	{% endfor %}
+
+	{% set pictureJumbotron = figure.pictures.first ? " /uploads/pictures/" ~ figure.pictures.first.name : '' %}
+	<div class="jumbotron container align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;">
+		<div>
+			<h1 class="display-4">
+				<a href="{{ path( 'trick_show', { id: figure.id } ) }}" style="color: white">
+					{{ figure.title }}
+				</a>
+			</h1>
+			<hr>
+			<p class="lead">
+				{{ figure.description|u.truncate(80) }}
+			</p>
+			<p class="lead">
+				<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
+				{% if app.user %}
+					<a href="{{ path('figure_edit', { id: figure.id }) }}">
+						<i class="fas fa-pencil-alt fa-2x"></i>
+					</a>
+					<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}">
+						<i class="fas fa-trash-alt fa-2x"></i>
+					</a>
+				{% endif %}
+			</p>
+		</div>
+	</div>
+
+
 	<div class="container">
-		{% for message in app.flashes('message') %}
-			<div class="flash-info">
-				<div class="alert alert-success">{{ message }}</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="row">
+					{% for picture in figure.pictures %}
+						<div class="col-sm-4">
+							{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
+							<div class="card mb-4 ">
+								<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
+							</div>
+							{% if app.user %}
+								<div class="media-container">
+									<a href="{{ path('figure_edit', { id: figure.id }) }}">
+										<i class="fas fa-pencil-alt fa-2x"></i>
+									</a>
+									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
+										<i class="fas fa-trash-alt fa-2x"></i>
+									</a>
+								</div>
+							{% endif %}
+
+						</div>
+					{% endfor %}
+				</div>
 			</div>
-		{% endfor %}
+
+			<div class="col-md-6">
+				<div class="row">
+					{% for video in figure.videos %}
+						<div class="card mb-4 col-sm-4">
+							<div class="iframe-container">
+								<iframe width="280" height="158" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
 		<div class="row">
 			<div class="col-lg-8">
-				<h1 class="display-4 mt-4">{{ figure.title|title}}</h1>
 				<p>Categorie :
 					{{ figure.category.title }}par</p>
 				<p class="lead">{{ figure.author.username }}</p>
@@ -30,33 +99,29 @@
 					{{ figure.createdAt|date('H:i') }}
 				</div>
 
-				<hr>
-				<img class="img-fluid rounded" src="{{ figure.picture.name|default('http://placehold.it/1000x500') }}" alt="Une image de la figure {{figure.title}} ') }} ">
-				<hr>
 
 				<!-- Post Content -->
 				<p class="lead">{{ figure.description }}</p>
 			</div>
 		</div>
+	</div>
+	<hr>
 
-
-		<hr>
-
-		<h3>Commentaires</h3>
-		<hr>
-		{{ form_start(commentForm) }}
-		<div class="row d-flex align-items-center">
-			<div class="col-md-10">
-				{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
-			</div>
-			<button type="submit" class="btn btn-success" >Envoyer</button>
+	<h3>Commentaires</h3>
+	<hr>
+	{{ form_start(commentForm) }}
+	<div class="row d-flex align-items-center">
+		<div class="col-md-10">
+			{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
 		</div>
+		<button type="submit" class="btn btn-success">Envoyer</button>
+	</div>
 
-		{{ form_end(commentForm) }}
+	{{ form_end(commentForm) }}
 
 
-		{% for comment in figure.comments %}
-			{% if (comment.activatedAt) %}
+	{% for comment in figure.comments %}
+		{% if (comment.activatedAt) %}
 			<div class="media mb-4">
 				<img src="" class="d-flex mr-3 rounded-circle">
 				<div class="media-body">
@@ -70,8 +135,7 @@
 
 				</div>
 			</div>
-			{% endif %}
-		{% endfor %}
-	</div>
-	<hr>
-</div>{% endblock %}
+		{% endif %}
+	{% endfor %}
+</div>
+<hr></div>{% endblock %}
