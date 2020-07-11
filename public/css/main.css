@@ -64,11 +64,11 @@
 }
 
 table {
-  height: 320px;
+  height: 510px;
 }
 
 tr {
-  height: 55px;
+  height: 85px;
   overflow-y:auto;
   overflow-x:hidden;
 }
