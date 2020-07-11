@@ -20,22 +20,36 @@ class CommentRepository extends ServiceEntityRepository
     }
 
 
-/**
+    /**
      * @return Comment[] Returns an array of Comment objects
      */
-    public function findSliceComments($offset)
+    public function nextSlice($offset)
     {
 
-         return $this->createQueryBuilder('c')
-            ->andWhere('c.id < :offset')
-            ->orderBy('c.id', 'DESC')
-            ->setMaxResults(6)
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(5)
             ->setParameter('offset', $offset)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 
 
+    /**
+     * 
+     */
+    public function prvsSlice($offset)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id > :offset')
+            ->orderBy('f.id', 'ASC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
 
     // /**
     //  * @return Comment[] Returns an array of Comment objects

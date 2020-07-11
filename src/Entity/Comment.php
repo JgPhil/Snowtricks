@@ -14,37 +14,39 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"comment_read"})
      */
     private $figure;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"figure_read"})
+     * @Groups({"figure_read", "comment_read"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"comment_read"})
      */
     private $activatedAt;
 

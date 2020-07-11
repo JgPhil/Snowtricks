@@ -20,11 +20,11 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset=0)
+    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset = 0)
     {
-        $figures = $figRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
-        $users = $usRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
-        $comments = $comRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
+        $figures = $figRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        $users = $usRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        $comments = $comRep->findBy([], ['id' => 'DESC'], 5, $offset);
 
         return $this->render('admin/index.html.twig', [
             'figures' => $figures,
@@ -166,16 +166,9 @@ class AdminController extends AbstractController
      * @param [type] $offset
      * @return void
      */
-    public function nextsliceFigures(FigureRepository $repo, $offset)
+    public function nextSliceFigures(FigureRepository $repo, $offset)
     {
-        return $this->json(
-            [
-                'slice' => $repo->nextSliceFigures($offset),
-            ],
-            200,
-            [],
-            ['groups' => 'figure_read']
-        );
+        return $this->nextSliceEntity($repo, $offset);
     }
 
     /**
@@ -185,53 +178,106 @@ class AdminController extends AbstractController
      * @param [type] $offset
      * @return void
      */
-    public function prvsliceFigures(FigureRepository $repo, $offset)
+    public function prvsSliceFigures(FigureRepository $repo, $offset)
     {
-        return $this->json(
-            [
-                'slice' => $repo->prvsSliceFigures($offset),
-            ],
-            200,
-            [],
-            ['groups' => 'figure_read']
-        );
+        return $this->prvsSliceEntity($repo, $offset);
     }
 
+
+
     /**
-     * @Route("/admin/more/comments/{offset}", name="admin_load_more_comments")
+     * @Route("/admin/next/comments/{offset}", name="admin_load_next_comments")
      *
      * @param CommentRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceComments(CommentRepository $repo, $offset)
+    public function nextSliceComments(CommentRepository $repo, $offset)
     {
-        return $this->json(
-            [
-                'sliceComments' => $repo->findSliceComments($offset),
-            ],
-            200,
-            [],
-            ['groups' => 'comment_read']
-        );
+        return $this->nextSliceEntity($repo, $offset);
     }
 
     /**
-     * @Route("/admin/more/users/{offset}", name="admin_load_more_users")
+     * @Route("/admin/prvs/comments/{offset}", name="admin_load_prvs_comments")
+     *
+     * @param CommentRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function prvsSliceComments(CommentRepository $repo, $offset)
+    {
+        return $this->prvsSliceEntity($repo, $offset);
+    }
+
+
+
+    /**
+     * @Route("/admin/next/users/{offset}", name="admin_load_next_users")
      *
      * @param UserRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceUsers(UserRepository $repo, $offset)
+    public function nextSliceUsers(UserRepository $repo, $offset)
     {
+        return $this->nextSliceEntity($repo, $offset);
+    }
+
+    /**
+     * @Route("/admin/prvs/users/{offset}", name="admin_load_prvs_users")
+     *
+     * @param UserRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function prvsSliceUsers(UserRepository $repo, $offset)
+    {
+        return $this->prvsSliceEntity($repo, $offset);
+    }
+
+
+
+    private function nextSliceEntity($repo, $offset)
+    {
+        $group = $this->wichGroup($repo);
         return $this->json(
             [
-                'sliceUsers' => $repo->findSliceUsers($offset),
+                'slice' => $repo->nextSlice($offset),
             ],
             200,
             [],
-            ['groups' => 'user_read']
+            ['groups' => $group]
         );
+    }
+
+
+    private function prvsSliceEntity($repo, $offset)
+    {
+        $group = $this->wichGroup($repo);
+        return $this->json(
+            [
+                'slice' => $repo->prvsSlice($offset),
+            ],
+            200,
+            [],
+            ['groups' => $group]
+        );
+    }
+
+
+    private function wichGroup($repo)
+    {
+        switch ($repo) {
+            case $repo instanceof UserRepository:
+                $group = "user_read";
+                break;
+            case $repo instanceof CommentRepository:
+                $group = "comment_read";
+                break;
+            case $repo instanceof FigureRepository:
+                $group = "figure_read";
+                break;
+        }
+        return $group;
     }
 }

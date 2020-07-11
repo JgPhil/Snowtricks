@@ -62,3 +62,17 @@
   display: flex;
   justify-content: center;
 }
+
+table {
+  height: 320px;
+}
+
+tr {
+  height: 55px;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+th {
+  background-color: azure;
+}

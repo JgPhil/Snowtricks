@@ -25,13 +25,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $username;
 
@@ -275,7 +275,4 @@ class User implements UserInterface
 
         return $this;
     }
-
-
-
 }

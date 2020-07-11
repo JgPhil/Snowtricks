@@ -51,7 +51,7 @@ class FigureRepository extends ServiceEntityRepository
     /**
      * @return Figure[] Returns an array of Figure objects
      */
-    public function nextSliceFigures($offset)
+    public function nextSlice($offset)
     {
 
          return $this->createQueryBuilder('f')
@@ -67,7 +67,7 @@ class FigureRepository extends ServiceEntityRepository
     /**
      * @return Figure[] Returns an array of Figure objects
      */
-    public function prvsSliceFigures($offset)
+    public function prvsSlice($offset)
     {
 
          return $this->createQueryBuilder('f')
