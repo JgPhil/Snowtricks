@@ -31,6 +31,7 @@ let usersOffset = usersElement.nextElementSibling.lastElementChild.lastElementCh
 //Next Pagination
 nextFigurePagination.addEventListener('click', function (event) {
 
+    prvsFigurePagination.removeAttribute("hidden");
     figuresOffset = figuresElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
 
 
@@ -39,7 +40,7 @@ nextFigurePagination.addEventListener('click', function (event) {
 
     //AJAX QUERY
 
-    fetch('/admin/more/figures/' + figuresOffset, {
+    fetch('/admin/next/figures/' + figuresOffset, {
         method: 'GET',
         headers: {
             "X-Requested-Width": "XMLHttpRequest",
@@ -48,18 +49,60 @@ nextFigurePagination.addEventListener('click', function (event) {
     }).then(
         response => response.json()
     ).then(data => {
-        //effacement des 5 éléments précédents
-        for (let i = 5; i > 0; i--) {
+        if (data.slice.length < 5) {
+            nextFigurePagination.setAttribute("hidden", true)
+        }
+        //effacement des éléments précédents
+        for (let i = tBodies.length; i >= 1; i--) {
             tBodies[i - 1].remove();
         }
         //création d'une ligne par élément récupéré
         data.slice.forEach(e => {
             tbody = trArray(e);
-        });;
+        });
+
+
+
+
+
     }).catch(e => alert(e));
+})
 
 
+//Previous Pagination
+prvsFigurePagination.addEventListener('click', function (event) {
 
+    nextFigurePagination.removeAttribute("hidden");
+    figuresOffset = figuresElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    //AJAX QUERY
+
+    fetch('/admin/prvs/figures/' + figuresOffset, {
+        method: 'GET',
+        headers: {
+            "X-Requested-Width": "XMLHttpRequest",
+            "Content-Type": "application/json"
+        },
+    }).then(
+        response => response.json()
+    ).then(data => {
+        if (data.slice.length < 1) {
+            alert("Pas d'entrées plus récentes !")
+        }
+        else {
+            //effacement des 5 éléments précédents
+            for (let i = tBodies.length; i >= 1; i--) {
+                tBodies[i - 1].remove();
+            }
+            //création d'une ligne par élément récupéré
+            data.slice.reverse().forEach(e => {
+                trArray(e);
+            });
+        }
+    }).catch(e => alert(e));
 })
 
 

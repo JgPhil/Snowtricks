@@ -22,9 +22,9 @@ class AdminController extends AbstractController
      */
     public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset=0)
     {
-        $figures = $figRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
-        $users = $usRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
-        $comments = $comRep->findBy([], ['createdAt' => 'DESC'] ,5 , $offset);
+        $figures = $figRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
+        $users = $usRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
+        $comments = $comRep->findBy([], ['id' => 'DESC'] ,5 , $offset);
 
         return $this->render('admin/index.html.twig', [
             'figures' => $figures,
@@ -160,17 +160,36 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/more/figures/{offset}", name="admin_load_more_figures")
+     * @Route("/admin/next/figures/{offset}", name="admin_load_next_figures")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceFigures(FigureRepository $repo, $offset)
+    public function nextsliceFigures(FigureRepository $repo, $offset)
     {
         return $this->json(
             [
-                'slice' => $repo->findSliceFigures($offset),
+                'slice' => $repo->nextSliceFigures($offset),
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
+    }
+
+    /**
+     * @Route("/admin/prvs/figures/{offset}", name="admin_load_prvs_figures")
+     *
+     * @param FigureRepository $repo
+     * @param [type] $offset
+     * @return void
+     */
+    public function prvsliceFigures(FigureRepository $repo, $offset)
+    {
+        return $this->json(
+            [
+                'slice' => $repo->prvsSliceFigures($offset),
             ],
             200,
             [],
