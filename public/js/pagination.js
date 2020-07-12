@@ -37,28 +37,7 @@ nextFiguresPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
-
-    fetch('/admin/next/figures/' + figuresOffset, {
-        method: 'GET',
-        headers: {
-            "X-Requested-Width": "XMLHttpRequest",
-            "Content-Type": "application/json"
-        },
-    }).then(
-        response => response.json()
-    ).then(data => {
-        if (data.slice.length < 5) {
-            nextFiguresPagination.setAttribute("hidden", true)
-        }
-        //effacement des éléments précédents
-        for (let i = figuresTBodies.length; i >= 1; i--) {
-            figuresTBodies[i - 1].remove();
-        }
-        //création d'une ligne par élément récupéré
-        data.slice.forEach(e => {
-            tbody = figureRows(e);
-        });
-    }).catch(e => alert(e));
+    ajaxQuery('/admin/next/figures/', figuresOffset, figuresTBodies, nextFiguresPagination);
 })
 
 //Previous  Pagination
@@ -71,30 +50,7 @@ prvsFiguresPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
-
-    fetch('/admin/prvs/figures/' + figuresOffset, {
-        method: 'GET',
-        headers: {
-            "X-Requested-Width": "XMLHttpRequest",
-            "Content-Type": "application/json"
-        },
-    }).then(
-        response => response.json()
-    ).then(data => {
-        if (data.slice.length < 1) {
-            alert("Pas d'entrées plus récentes !")
-        }
-        else {
-            //effacement des 5 éléments précédents
-            for (let i = figuresTBodies.length; i >= 1; i--) {
-                figuresTBodies[i - 1].remove();
-            }
-            //création d'une ligne par élément récupéré
-            data.slice.reverse().forEach(e => {
-                figureRows(e);
-            });
-        }
-    }).catch(e => alert(e));
+    ajaxQuery('/admin/prvs/figures/', figuresOffset, figuresTBodies, prvsFiguresPagination, true);
 })
 
 
@@ -111,28 +67,7 @@ nextCommentsPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
-
-    fetch('/admin/next/comments/' + commentsOffset, {
-        method: 'GET',
-        headers: {
-            "X-Requested-Width": "XMLHttpRequest",
-            "Content-Type": "application/json"
-        },
-    }).then(
-        response => response.json()
-    ).then(data => {
-        if (data.slice.length < 5) {
-            nextCommentsPagination.setAttribute("hidden", true)
-        }
-        //effacement des éléments précédents
-        for (let i = commentsTBodies.length; i >= 1; i--) {
-            commentsTBodies[i - 1].remove();
-        }
-        //création d'une ligne par élément récupéré
-        data.slice.forEach(c => {
-            commentRows(c);
-        });
-    }).catch(e => alert(e));
+    ajaxQuery('/admin/next/comments/', commentsOffset, commentsTBodies, nextCommentsPagination);
 })
 
 //Previous  Pagination
@@ -145,30 +80,8 @@ prvsCommentsPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
+    ajaxQuery('/admin/prvs/comments/', commentsOffset, commentsTBodies, prvsCommentsPagination, true);
 
-    fetch('/admin/prvs/comments/' + commentsOffset, {
-        method: 'GET',
-        headers: {
-            "X-Requested-Width": "XMLHttpRequest",
-            "Content-Type": "application/json"
-        },
-    }).then(
-        response => response.json()
-    ).then(data => {
-        if (data.slice.length < 1) {
-            alert("Pas d'entrées plus récentes !")
-        }
-        else {
-            //effacement des 5 éléments précédents
-            for (let i = commentsTBodies.length; i >= 1; i--) {
-                commentsTBodies[i - 1].remove();
-            }
-            //création d'une ligne par élément récupéré
-            data.slice.reverse().forEach(c => {
-                commentRows(c);
-            });
-        }
-    }).catch(e => alert(e));
 })
 
 
@@ -186,28 +99,8 @@ nextUsersPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
+    ajaxQuery('/admin/next/users/', usersOffset, usersTBodies, nextUsersPagination)
 
-    fetch('/admin/next/users/' + usersOffset, {
-        method: 'GET',
-        headers: {
-            "X-Requested-Width": "XMLHttpRequest",
-            "Content-Type": "application/json"
-        },
-    }).then(
-        response => response.json()
-    ).then(data => {
-        if (data.slice.length < 5) {
-            nextUsersPagination.setAttribute("hidden", true)
-        }
-        //effacement des éléments précédents
-        for (let i = usersTBodies.length; i >= 1; i--) {
-            usersTBodies[i - 1].remove();
-        }
-        //création d'une ligne par élément récupéré
-        data.slice.forEach(u => {
-            userRows(u);
-        });
-    }).catch(e => alert(e));
 })
 
 //Previous  Pagination
@@ -220,8 +113,15 @@ prvsUsersPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
+    ajaxQuery('/admin/prvs/users/', usersOffset, usersTBodies, prvsUsersPagination, true);
+})
 
-    fetch('/admin/prvs/users/' + usersOffset, {
+
+
+//-----//--//--//--AJAX_QUERY---//--//--//--//-------------//
+const ajaxQuery = function (url, offset, tBodies, pgnButton, prvs = false) {
+
+    fetch(url + offset, {
         method: 'GET',
         headers: {
             "X-Requested-Width": "XMLHttpRequest",
@@ -230,25 +130,46 @@ prvsUsersPagination.addEventListener('click', function (event) {
     }).then(
         response => response.json()
     ).then(data => {
-        if (data.slice.length < 1) {
-            alert("Pas d'entrées plus récentes !")
+        if (data.slice.length < 5) {
+            pgnButton.setAttribute("hidden", true);
         }
         else {
             //effacement des 5 éléments précédents
-            for (let i = usersTBodies.length; i >= 1; i--) {
-                usersTBodies[i - 1].remove();
+            for (let i = tBodies.length; i >= 1; i--) {
+                tBodies[i - 1].remove();
             }
-            //création d'une ligne par élément récupéré
-            data.slice.reverse().forEach(e => {
-                userRows(e);
-            });
+            // Si c'est un click "Previous" => on retourne le résultat pour avoir les éléments par ordre DESC
+            if (prvs) {
+                data.slice.reverse().forEach(e => {  //création d'une ligne par élément récupéré
+                    if (tBodies === usersTBodies) {
+                        userRows(e);
+                    } else if (tBodies === commentsTBodies) {
+                        commentRows(e);
+                    } else {
+                        figureRows(e);
+                    }
+
+                });
+            } else {
+                data.slice.forEach(e => {
+                    if (tBodies === usersTBodies) {
+                        userRows(e);
+                    } else if (tBodies === commentsTBodies) {
+                        commentRows(e);
+                    } else {
+                        figureRows(e);
+                    }
+
+                });
+            }
+
         }
     }).catch(e => alert(e));
-})
+
+}
 
 
-
-//-----//--//--//--ROWS_GENERATING---//--//--//--//-------------//
+//-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
 
 //figures 
 const figureRows = function (e) {

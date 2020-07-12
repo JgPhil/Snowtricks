@@ -33,7 +33,7 @@ window.onload = () => {
                         "X-Requested-Width": "XMLHttpRequest",
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ "_token": this.dataset.token })
+                    body: JSON.stringify({ "_token": this.dataset.token })//Récupération de la valeur de la function csrf_token() dans la variable "data[_token]"
                 }).then(
                     //Récupération de la réponse en JSON
                     response => response.json()

@@ -76,3 +76,7 @@ tr {
 th {
   background-color: azure;
 }
+
+button {
+  margin-right: 5px;
+}
