@@ -8,7 +8,7 @@ loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
 
-    let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.href.split('/');
+    let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.firstElementChild.href.split('/');
     //the last figure url link splitted into an array
     let offset = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
     let url = "/more/figures/" + offset; // construct the url with the last figureID to get new figures in database
@@ -33,13 +33,19 @@ loadButton.addEventListener('click', function (event) {
                 let div3 = document.createElement('div');
                 div3.classList.add("card-body");
 
-                let h5 = document.createElement('h5');
-                h5.classList.add("card-title");
+                let div4 = document.createElement('div');
+                div4.classList.add("row");
 
-                let showLink = document.createElement('a');
-                showLink.classList.add("card-title");
-                showLink.innerHTML = k.id;
-                showLink.href = "/figure/" + k.id;
+                let div5 = document.createElement('div');
+                div5.classList.add("col-5");
+
+                let h5 = document.createElement('h5');
+                h5.classList.add("col-7");
+
+                let title = document.createElement('a');
+                title.classList.add("card-title");
+                title.innerHTML = k.title;
+                title.href = "/figure/" + k.id;
 
 
                 //Update icon
@@ -48,6 +54,7 @@ loadButton.addEventListener('click', function (event) {
 
                 let updateLink = document.createElement('a');
                 updateLink.href = "/figure/edit/" + k.id;
+                updateLink.classList.add("p-1");
 
 
                 //Delete Icon
@@ -56,32 +63,21 @@ loadButton.addEventListener('click', function (event) {
 
                 let deleteLink = document.createElement('a');
                 deleteLink.href = "/figure/delete/" + k.id;
-
-
-                let description = document.createElement('p');
-                description.classList.add("card-text");
-                description.innerHTML = k.description.substring(0, 90);
-
-                let button = document.createElement('a');
-                button.classList.add("btn", "btn-primary", "btn-lg");
-                button.href = "http://127.0.0.1:8000/figure/" + k.id;
-                button.text = "Voir";
-
-
+                deleteLink.classList.add("p-1");
 
 
                 div1.appendChild(div2);
                 div2.appendChild(img);
                 div2.appendChild(div3);
-                h5.appendChild(showLink);
-                div3.appendChild(h5);
-                div3.appendChild(description);
-                div3.appendChild(button);
+                div3.appendChild(div4);
+                h5.appendChild(title);
+                div4.appendChild(h5);
+                div4.appendChild(div5);
                 if (window.user) { //if user logged in
                     updateLink.appendChild(fasUpdateIcon);
                     deleteLink.appendChild(fasDeleteIcon);
-                    div3.appendChild(updateLink);
-                    div3.appendChild(deleteLink);
+                    div5.appendChild(updateLink);
+                    div5.appendChild(deleteLink);
                 }
 
 

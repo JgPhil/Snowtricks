@@ -90,7 +90,7 @@
 			<div class="col-lg-8">
 				<p>Categorie :
 					{{ figure.category.title }}par</p>
-				<p class="lead">{{ figure.author.username }}</p>
+				<p class="lead">Créé par {{ figure.author.username }}</p>
 				<!-- Date/Time -->
 				<div class="metadata">
 					Posté le
@@ -105,37 +105,41 @@
 			</div>
 		</div>
 	</div>
+
+	<hr>
+	<h3 class="d-flex justify-content-center">Commentaires</h3>
 	<hr>
 
-	<h3>Commentaires</h3>
-	<hr>
-	{{ form_start(commentForm) }}
-	<div class="row d-flex align-items-center">
-		<div class="col-md-10">
-			{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
-		</div>
-		<button type="submit" class="btn btn-success">Envoyer</button>
-	</div>
+	<div class="container">
 
-	{{ form_end(commentForm) }}
-
-
-	{% for comment in figure.comments %}
-		{% if (comment.activatedAt) %}
-			<div class="media mb-4">
-				<img src="" class="d-flex mr-3 rounded-circle">
-				<div class="media-body">
-
-					<h5 class="mt-0">{{ comment.author.username }}</h5>
-					(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
-					</small>)
-
-
-					{{ comment.content | raw }}
-
-				</div>
+		{{ form_start(commentForm) }}
+		<div class="row d-flex align-items-center">
+			<div class="col-md-10">
+				{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
 			</div>
-		{% endif %}
-	{% endfor %}
+			<button type="submit" class="btn btn-success">Envoyer</button>
+		</div>
+
+		{{ form_end(commentForm) }}
+
+
+		{% for comment in figure.comments %}
+			{% if (comment.activatedAt) %}
+				<div class="media mb-4">
+					<img src="" class="d-flex mr-3 rounded-circle">
+					<div class="media-body">
+
+						<h5 class="mt-0">{{ comment.author.username }}</h5>
+						(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
+						</small>)
+
+
+						{{ comment.content | raw }}
+
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
 </div>
 <hr></div>{% endblock %}

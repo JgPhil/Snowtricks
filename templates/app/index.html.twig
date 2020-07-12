@@ -37,7 +37,9 @@
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 					{% if app.user %}
-						<a href="{{ path('figure_edit', { id: figures[0].id }) }}"><i class="fas fa-pencil-alt fa-2x"></i></a>
+						<a href="{{ path('figure_edit', { id: figures[0].id }) }}">
+							<i class="fas fa-pencil-alt fa-2x"></i>
+						</a>
 						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}">
 							<i class="fas fa-trash-alt fa-2x"></i>
 						</a>
@@ -62,21 +64,26 @@
 							<div class="card mb-4 ">
 								<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
 								<div class="card-body">
-									<h5 class="card-title">
-										<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
-											{{ figure.id }}
-										</a>
-									</h5>
+									<div class="row ">
+										<h5 class="col-7">
+											<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
+												{{ figure.title }}
+											</a>
+										</h5>
+										{% if app.user %}
+											<div class="col-5">
+												<a href="{{ path('figure_edit', { id: figure.id }) }}" class="p-1">
+													<i class="fas fa-pencil-alt fa-2x"></i>
+												</a>
+												<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
+													<i class="fas fa-trash-alt fa-2x"></i>
+												</a>
+											</div>
+										{% endif %}
 
-									<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-									{% if app.user %}
-										<a href="{{ path('figure_edit', { id: figure.id }) }}">
-											<i class="fas fa-pencil-alt fa-2x"></i>
-										</a>
-										<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
-											<i class="fas fa-trash-alt fa-2x"></i>
-										</a>
-									{% endif %}
+									</div>
+
+
 								</div>
 							</div>
 						</div>
