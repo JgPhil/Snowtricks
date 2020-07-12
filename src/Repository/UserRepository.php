@@ -30,6 +30,38 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->getOneOrNullResult();
     }
 
+
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function nextSlice($offset)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function prvsSlice($offset)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id > :offset')
+            ->orderBy('f.id', 'ASC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

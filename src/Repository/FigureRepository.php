@@ -19,32 +19,63 @@ class FigureRepository extends ServiceEntityRepository
         parent::__construct($registry, Figure::class);
     }
 
-    // /**
-    //  * @return Figure[] Returns an array of Figure objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findActiveFigures()
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(7)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Figure
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findActiveSliceFigures($offset)
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
+
+         return $this->createQueryBuilder('f')
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(6)
+            ->setParameter('offset', $offset)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult(); 
     }
-    */
+
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function nextSlice($offset)
+    {
+
+         return $this->createQueryBuilder('f')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult(); 
+    }
+
+
+    /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function prvsSlice($offset)
+    {
+
+         return $this->createQueryBuilder('f')
+            ->andWhere('f.id > :offset')
+            ->orderBy('f.id', 'ASC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult(); 
+    }
 }

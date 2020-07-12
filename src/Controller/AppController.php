@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Video;
 use App\Entity\Figure;
+use App\Entity\Comment;
+use App\Entity\Picture;
+use App\Form\FigureType;
+use App\Form\CommentType;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
-use Doctrine\ORM\Repository\RepositoryFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,44 +22,169 @@ class AppController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(FigureRepository $repo)
-    {
-        $figures = $repo->findBy([], ['createdAt' => 'DESC'], 6);
-        $lastFigure = $figures[array_key_first($figures)];
+    public function index(
+        FigureRepository $repo,
+        SerializerInterface $serializer
+    ) {
+        $figures = $repo->findActiveFigures();
 
         return $this->render('app/index.html.twig', [
             'figures' => $figures,
-            'lastFigure' => $lastFigure,
+            'user' => $serializer->serialize($this->getUser(), 'json', [
+                'groups' => 'user_read',
+            ]),
         ]);
     }
 
     /**
      * @Route("/figure/new", name="figure_create")
      */
-    public function create()
+    public function create(EntityManagerInterface $em, Request $request)
     {
-        return $this->render('app/create.html.twig');
+        $figure = new Figure();
+        $form = $this->createForm(FigureType::class, $figure);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //Récupération des images
+            $pictures = $form->get('pictures')->getData();
+            $videoUrl = $form->get('videos')->getData();
+
+            //Images
+            foreach ($pictures as $picture) {
+                //nouveau nom de fichier
+                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                //copie dans dossier uploads
+                $picture->move(
+                    $this->getParameter('pictures_directory'),
+                    $filename
+                );
+                //stockage du nom du fichier dans la base de donnée
+                $pic = new Picture();
+                $pic->setName($filename);
+                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                $figure->addPicture($pic);
+            }
+            //video
+            if ($videoUrl) {
+                $video = new Video();
+                $video->setUrl($videoUrl);
+                $figure->addVideo($video);
+            }
+
+
+            $figure->setCreatedAt(new \DateTime());
+            $figure->setAuthor($this->getUser());
+
+            $em->persist($figure);
+            $em->flush();
+            $this->addFlash('message', 'Votre figure a bien été ajoutée');
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('app/figure_form.html.twig', [
+            'figureForm' => $form->createView(),
+        ]);
     }
 
     /**
      * @Route("/figure/{id}", name="trick_show")
      */
-    public function show(Figure $figure)
-    {
+    public function show(
+        Figure $figure,
+        Request $request,
+        EntityManagerInterface $manager
+    ) {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setFigure($figure);
+            $comment->setAuthor($this->getUser());
+
+            $manager->persist($comment);
+            $manager->flush();
+            $this->addFlash('message', 'Message posté !');
+            return $this->redirectToRoute('trick_show', [
+                'id' => $figure->getId(),
+            ]);
+        }
+
         return $this->render('app/show.html.twig', [
             'figure' => $figure,
+            'commentForm' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/more/{offset}", name="load_more")
+     * @Route("figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
+     */
+    public function edit(
+        EntityManagerInterface $em,
+        Request $request,
+        Figure $figure
+    ) {
+        $form = $this->createForm(FigureType::class, $figure);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //Récupération des images
+            $pictures = $form->get('pictures')->getData();
+            $videoUrl = $form->get('videos')->getData();
+
+            //Images
+            foreach ($pictures as $picture) {
+                //nouveau nom de fichier
+                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                //copie dans dossier uploads
+                $picture->move(
+                    $this->getParameter('pictures_directory'),
+                    $filename
+                );
+                //stockage du nom du fichier dans la base de donnée
+                $pic = new Picture();
+                $pic->setName($filename);
+                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                $figure->addPicture($pic);
+            }
+            //video
+            if ($videoUrl) {
+                $video = new Video();
+                $video->setUrl($videoUrl);
+                $figure->addVideo($video);
+            }
+
+            $figure->setLastModificationAt(new \DateTime());
+            $em->flush();
+            $this->addFlash('message', 'Votre figure a bien été modifiée');
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('app/figure_form.html.twig', [
+            'figureForm' => $form->createView(),
+            'trick' => $figure,
+        ]);
+    }
+
+
+
+    /**
+     * @Route("/more/figures/{offset}", name="load_more")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceFigures(FigureRepository $repo, $offset = 6)
+    public function sliceActiveFigures(FigureRepository $repo, $offset)
     {
-        return $this->json($repo->findBy([], ['createdAt' => 'DESC'], 6, $offset), 200, [], ['groups' => 'figure_read']);
+        return $this->json(
+            [
+                'sliceFigures' => $repo->findActiveSliceFigures($offset),
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
     }
+
+
 }

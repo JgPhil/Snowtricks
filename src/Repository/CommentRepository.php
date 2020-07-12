@@ -19,6 +19,38 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+
+    /**
+     * @return Comment[] Returns an array of Comment objects
+     */
+    public function nextSlice($offset)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id < :offset')
+            ->orderBy('f.id', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * 
+     */
+    public function prvsSlice($offset)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id > :offset')
+            ->orderBy('f.id', 'ASC')
+            ->setMaxResults(5)
+            ->setParameter('offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

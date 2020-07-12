@@ -1,0 +1,66 @@
+{% extends "base.html.twig" %}
+{% set route = app.request.attributes.get('_route') %}
+{% set title = route == "figure_create" ? "Nouvelle figure" : "Modifier la figure" %}
+
+
+{% form_theme figureForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title "Poster"%}
+
+{% block body %}
+
+
+	<div class="container mt-4">
+		<h1>{{ title }}
+		</h1>
+		{{ form_start(figureForm) }}
+
+		{{ form_row(figureForm.title) }}
+		{{ form_row(figureForm.description) }}
+		{{ form_row(figureForm.category) }}
+
+
+		{% if app.request.attributes.get('_route') ==  "figure_edit"  %}
+
+
+			<h2>Images</h2>
+
+			{% for picture in trick.pictures %}
+				<div class="img-thumbnail">
+					<img src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
+					<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ picture.id)}}">Supprimer</a>
+				</div>
+			{% endfor %}
+
+			{{ form_row(figureForm.pictures) }}
+
+
+			<h2>Vidéos</h2>
+
+			{% for video in trick.videos %}
+				<div class="img-thumbnail">>
+					<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
+				</div>
+			{% endfor %}
+
+			{% for video in figureForm.videos %}
+				<li>{{ form_row(video) }}</li>
+			{% endfor %}
+
+			{{ form_end(figureForm) }}
+
+		{% else %}
+
+
+			{{ form_row(figureForm.pictures) }}
+			{{ form_row(figureForm.videos) }}
+			{{ form_row(figureForm.submit) }}
+
+			{{ form_end(figureForm) }}
+		</div>
+	{% endif %}
+{% endblock %}
+{% block javascript %}
+	<script src=" {{ asset('js/delete.js') }} "></script>
+{% endblock %}

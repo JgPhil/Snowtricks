@@ -1,20 +1,82 @@
 .jumbotron {
   background-image: cover;
   width: 100%;
-  height: 100vh;
+  height: 70vh;
   top: 0;
   left: 0;
   z-index: -1;
-  text-shadow: black 0.3em 0.3em 0.3em;
-  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* text-shadow: black 0.3em 0.3em 0.3em; */
+  /* color: white; */
 }
 
-.login_form,.registration_form{
-  margin-top:5em;
+.centering {
+  text-align: center;
+}
+
+.login_form,
+.registration_form {
+  margin-top: 5em;
   margin-bottom: 15em;
 }
 
+.card-img-top {
+  width: 100%;
+  height: 10vw;
+  object-fit: cover;
+}
 
 .toto {
-  padding-top: 50px;
+  margin-top: 85px;
+}
+
+.iframe-container {
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative;
+}
+
+.iframe-container iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.media-container {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+}
+
+.media-container a {
+  width: 5em;
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  height: 510px;
+}
+
+tr {
+  height: 85px;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+th {
+  background-color: azure;
+}
+
+button {
+  margin-right: 5px;
 }

@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * @UniqueEntity(fields="title", message= "Ce nom de figure existe déja")
  */
 class Figure
 {
@@ -17,32 +19,32 @@ class Figure
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $title;
 
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", orphanRemoval=true)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $comments;
 
@@ -54,13 +56,13 @@ class Figure
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="figure",orphanRemoval=true, cascade={"persist"})
      * @Groups("figure_read")
      */
     private $pictures;
 
     /**
-     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure",orphanRemoval=true, cascade={"persist"})
      * @Groups("figure_read")
      */
     private $videos;
@@ -70,6 +72,18 @@ class Figure
      * @Groups("figure_read")
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("figure_read")
+     */
+    private $activatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("figure_read")
+     */
+    private $lastModificationAt;
 
 
     public function __construct()
@@ -234,6 +248,30 @@ class Figure
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getActivatedAt(): ?\DateTimeInterface
+    {
+        return $this->activatedAt;
+    }
+
+    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
+    {
+        $this->activatedAt = $activatedAt;
+
+        return $this;
+    }
+
+    public function getLastModificationAt(): ?\DateTimeInterface
+    {
+        return $this->lastModificationAt;
+    }
+
+    public function setLastModificationAt(?\DateTimeInterface $lastModificationAt): self
+    {
+        $this->lastModificationAt = $lastModificationAt;
 
         return $this;
     }
