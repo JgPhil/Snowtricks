@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Figure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,47 @@ class CommentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Comment::class);
+    }
+
+
+    public function firstComments($figure)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
+            ->orderBy('f.createdAt', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('figureId' , $figure->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function nextForumCommentSlice($figureId, $offset)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->andWhere('f.id < :offset')
+            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
+            ->orderBy('f.createdAt', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('figureId' , $figureId)
+            ->setParameter(':offset', $offset)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function prvsForumCommentSlice($figureId, $offset)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.activatedAt IS NOT NULL')
+            ->andWhere('f.id > :offset')
+            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
+            ->orderBy('f.createdAt', 'DESC')
+            ->setMaxResults(5)
+            ->setParameter('figureId' , $figureId)
+            ->setParameter(':offset', $offset)
+            ->getQuery()
+            ->getResult();
     }
 
 

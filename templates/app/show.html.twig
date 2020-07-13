@@ -29,6 +29,8 @@
 				{{ figure.description|u.truncate(80) }}
 			</p>
 			<p class="lead">
+				<div hidden id="figureId">
+					{{ figure.id }}</div>
 				<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 				{% if app.user %}
 					<a href="{{ path('figure_edit', { id: figure.id }) }}">
@@ -90,7 +92,8 @@
 			<div class="col-lg-8">
 				<p>Categorie :
 					{{ figure.category.title }}par</p>
-				<p class="lead">Créé par {{ figure.author.username }}</p>
+				<p class="lead">Créé par
+					{{ figure.author.username }}</p>
 				<!-- Date/Time -->
 				<div class="metadata">
 					Posté le
@@ -112,34 +115,48 @@
 
 	<div class="container">
 
-		{{ form_start(commentForm) }}
-		<div class="row d-flex align-items-center">
-			<div class="col-md-10">
-				{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+		{% if app.user %}
+			{{ form_start(commentForm) }}
+			<div class="row d-flex align-items-center">
+				<div class="col-md-10">
+					{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+				</div>
+				<button type="submit" class="btn btn-success">Envoyer</button>
 			</div>
-			<button type="submit" class="btn btn-success">Envoyer</button>
-		</div>
 
-		{{ form_end(commentForm) }}
+			{{ form_end(commentForm) }}
+		{% endif %}
 
+		<div id="forumComments">
+			{% for comment in comments %}
 
-		{% for comment in figure.comments %}
-			{% if (comment.activatedAt) %}
-				<div class="media mb-4">
+				<div class="media mb-4 ">
+					<div hidden>
+						{{ comment.id }}
+					</div>
+
 					<img src="" class="d-flex mr-3 rounded-circle">
 					<div class="media-body">
-
-						<h5 class="mt-0">{{ comment.author.username }}</h5>
-						(<small>{{comment.createdAt | date('d/m/Y à H:i')}}
-						</small>)
-
-
-						{{ comment.content | raw }}
-
+						<h5 class="mt-0">{{ comment.author.username }}
+							(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
+							</small>)</h5>
+						<p>{{ comment.content | raw }}</p>
 					</div>
 				</div>
-			{% endif %}
-		{% endfor %}
+
+			{% endfor %}
+		</div>
+
+		<div class="pagination_btn">
+			<button class="btn btn-primary" id="prvs_forum_comments_pgn" hidden>Préc.</button>
+			<button class="btn btn-primary" id="next_forum_comments_pgn">Suiv.</button>
+		</div>
 	</div>
-</div>
-<hr></div>{% endblock %}
+
+	<hr>
+
+{% endblock %}
+
+{% block javascript %}
+	<script src=" {{ asset('js/comments_pagination.js') }}"></script>
+{% endblock %}

@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Picture;
 use App\Form\FigureType;
 use App\Form\CommentType;
+use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,9 +93,11 @@ class AppController extends AbstractController
     public function show(
         Figure $figure,
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        CommentRepository $commentRepo
     ) {
         $comment = new Comment();
+        $comments = $commentRepo->firstComments($figure);
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,6 +116,8 @@ class AppController extends AbstractController
         return $this->render('app/show.html.twig', [
             'figure' => $figure,
             'commentForm' => $form->createView(),
+            'comments' => $comments
+
         ]);
     }
 
@@ -168,7 +173,7 @@ class AppController extends AbstractController
 
 
     /**
-     * @Route("/more/figures/{offset}", name="load_more")
+     * @Route("/more/figures/{offset}", name="load_more_figures")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
@@ -186,5 +191,35 @@ class AppController extends AbstractController
         );
     }
 
+
+    /**
+     * @Route("/next/comments/{figureId}/{offset}", name="load_next_comments")
+     */
+    public function nextComments(CommentRepository $repo, $figureId,  $offset)
+    {
+        return $this->json(
+            [
+                'slice' => $repo->nextForumCommentSlice($figureId, $offset)
+            ],
+            200,
+            [],
+            ['groups' => 'comment_read']
+        );
+    }
+
+    /**
+     * @Route("/prvs/comments/{figureId}/{offset}", name="load_prvs_comments")
+     */
+    public function prvsComments(CommentRepository $repo, $figureId, $offset)
+    {
+        return $this->json(
+            [
+                'slice' => $repo->prvsForumCommentSlice($figureId, $offset)
+            ],
+            200,
+            [],
+            ['groups' => 'comment_read']
+        );
+    }
 
 }
