@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Figure
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

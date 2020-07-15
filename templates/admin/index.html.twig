@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% set maxPerPage = 5 %}
+
+
 {% block title %}
 	Administration
 {% endblock %}
@@ -29,8 +32,7 @@
 								<tr>
 									<td>{{figure.id }}</td>
 									<td>{{figure.title }}</td>
-									<td>{{figure.category.title}}
-									</td>
+									<td>{{figure.category.title}}</td>
 									<td>{{figure.createdAt|date }}</td>
 									<td>{{figure.author.username }}</td>
 									<td>
@@ -43,18 +45,31 @@
 										{% endif %}
 									</td>
 								</tr>
+							</tbody>
+						{% endfor %}
+					</div>
 
-							{% endfor %}
-						</div>
-					</tbody>
 				</table>
 			</div>
 
-			<div class="pagination_btn">
-				<button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button>
-				<button class="btn btn-primary" id="next_figures_pgn">Suiv.</button>
+			{# <div class="pagination_btn">
+				<button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button> #}
+				<script>
+				let figuresCurrentPage = 1
+				</script>
+				<input type="text" hidden data-figurescount {{ figuresCount }}>
+
+				<a href="" data-figure>prev</a>
+				{% for i in 1..(figuresCount / maxPerPage|round(0,'floor')) %}
+					<a href="" data-figure>{{i}}</a>
+				{% endfor %}
+				<a href="" data-figure>next</a>
+
+
+			{# 	<button class="btn btn-primary" id="next_figures_pgn">Suiv.</button> #}
 			</div>
 		</div>
+
 
 		<div class="mb-5">
 			<div>
@@ -73,15 +88,19 @@
 						{% for comment in comments %}
 							<tbody>
 								<tr>
-									<td>{{comment.id }}</td>
-									<td>{{comment.content }}</td>
-									<td>{{comment.createdAt|date}}</td>
-									<td>{{comment.author.username }}</td>
+									<td>
+										{{comment.id}}</td>
+									<td>
+										{{comment.content}}</td>
+									<td>
+										{{comment.createdAt | date}}</td>
+									<td>
+										{{comment.author.username}}</td>
 									<td>
 										{% if comment.getActivatedAt is not null %}
 											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
-										{% else %}
+										{% else  %}
 											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
@@ -97,10 +116,7 @@
 				<button class="btn btn-primary" id="prvs_comments_pgn" hidden>Préc.</button>
 				<button class="btn btn-primary" id="next_comments_pgn">Suiv.</button>
 			</div>
-
 		</div>
-
-
 		<div class="mb-5">
 			<div>
 				<h2>Utilisateurs</h2>
@@ -119,16 +135,16 @@
 						{% for user in users %}
 							<tbody>
 								<tr>
-									<td>{{user.id }}</td>
-									<td>{{user.username }}</td>
-									<td>{{user.createdAt|date}}</td>
+									<td>{{user.id}}</td>
+									<td>{{user.username}}</td>
+									<td>{{user.createdAt | date}}</td>
 									<td>{{user.email}}</td>
-									<td>{{user.roles[0] }}</td>
+									<td>{{user.roles[0]}}</td>
 									<td>
 										{% if user.token is null %}
 											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_user_activate', { id: user.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
-										{% else %}
+										{% else  %}
 											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
@@ -139,16 +155,13 @@
 					</div>
 				</table>
 			</div>
-
-			<div class="pagination_btn" >
-				<button class="btn btn-primary" id="prvs_users_pgn"  hidden>Préc.</button>
+			<div class="pagination_btn">
+				<button class="btn btn-primary" id="prvs_users_pgn" hidden>Préc.</button>
 				<button class="btn btn-primary" id="next_users_pgn">Suiv.</button>
 			</div>
 		</div>
-
 	</div>
 {% endblock %}
-
 {% block javascript %}
 	<script src=" {{ asset('js/activation.js') }} "></script>
 	<script src=" {{ asset('js/admin_pagination.js') }}"></script>

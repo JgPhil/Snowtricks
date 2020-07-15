@@ -1,4 +1,4 @@
-//wrappers
+/* //wrappers
 const figuresElement = document.getElementById("js-figures");
 const commentsElement = document.getElementById("js-comments");
 const usersElement = document.getElementById("js-users");
@@ -19,9 +19,56 @@ let usersContent = usersElement.nextElementSibling.tBodies;
 
 let figuresOffset = "";
 let commentsOffset = "";
-let usersOffset = "";
+let usersOffset = ""; */
+
+/////////////////////////////////////////Nouvel essai
+
+let figurePaginationlinks = document.querySelectorAll("[data-figure]");
+let figuresCount = document.querySelector("[data-figuresCount");/* 
+let figuresCurrentPage = document.querySelector("[data-figuresCurrentPage"); */
+let figuresPage = null;
+
+for (figurePaginationlink of figurePaginationlinks) {
+    figurePaginationlink.addEventListener('click', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (!Number.isInteger(this.textContent)) {
+            if (this.textContent === 'prev') {
+                if (figuresCurrentPage != 1) {
+                    figuresPage = figuresCurrentPage - 1;
+                    figuresCurrentPage -= 1;
+                } else {
+                    alert('pas d\'entrées plus récentes')
+                }
+            } else {
+                figuresPage = figuresCurrentPage + 1
+                figuresCurrentPage += 1;
+            }
+        } else {
+            figuresPage = this.textContent;
+        }
 
 
+        fetch('/admin/next/figures/' + figuresPage, {
+            method: 'GET',
+            headers: {
+                "X-Requested-Width": "XMLHttpRequest",
+                "Content-Type": "application/json"
+            },
+        }).then(
+            response => response.json()
+        ).then(data => {
+            console.log(data)
+        })
+    })
+}
+
+
+
+
+
+/*
 
 //--//--//------FIGURES---------/--//--//--//-----------
 
@@ -36,7 +83,7 @@ nextFiguresPagination.addEventListener('click', function (event) {
     event.preventDefault();
 
     //AJAX QUERY
-    ajaxQuery('/admin/next/figures/', figuresOffset, figuresContent, nextFiguresPagination);
+    ajaxQuery('/admin/next/figures/', figuresPage, figuresContent, nextFiguresPagination);
 })
 
 //Previous  Pagination
@@ -112,14 +159,14 @@ prvsUsersPagination.addEventListener('click', function (event) {
 
     //AJAX QUERY
     ajaxQuery('/admin/prvs/users/', usersOffset, usersContent, prvsUsersPagination, true);
-})
+}) */
 
 
-
+/*
 //-----//--//--//--AJAX_QUERY---//--//--//--//-------------//
-const ajaxQuery = function (url, offset, content, pgnButton, prvs = false) {
+const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
 
-    fetch(url + offset, {
+    fetch(url + page, {
         method: 'GET',
         headers: {
             "X-Requested-Width": "XMLHttpRequest",
@@ -164,12 +211,12 @@ const ajaxQuery = function (url, offset, content, pgnButton, prvs = false) {
         }
     }).catch(e => alert(e));
 
-}
+} */
 
-
+/*
 //-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
 
-//figures 
+//figures
 const figureRows = function (e) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr")
@@ -254,7 +301,7 @@ const commentRows = function (c) {
 //comments forum
 
 
-//users 
+//users
 const userRows = function (u) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr")
@@ -298,3 +345,4 @@ const userRows = function (u) {
 }
 
 
+ */

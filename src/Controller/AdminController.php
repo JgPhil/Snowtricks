@@ -20,18 +20,26 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset = 0)
+    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep)
     {
-        $figures = $figRep->findBy([], ['id' => 'DESC'], 5, $offset);
-        $users = $usRep->findBy([], ['id' => 'DESC'], 5, $offset);
-        $comments = $comRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        $figures = $figRep->findBy([], ['id' => 'DESC'], 5);
+        $users = $usRep->findBy([], ['id' => 'DESC'], 5);
+        $comments = $comRep->findBy([], ['id' => 'DESC'], 5);
+
+
 
         return $this->render('admin/index.html.twig', [
             'figures' => $figures,
+            'figuresCount' => count($figRep->findAll()),
             'users' => $users,
-            'comments' => $comments
+            'usersCount' => count($usRep->findAll()),
+            'comments' => $comments,
+            'commentsCount' => count($comRep->findAll()) 
         ]);
     }
+
+
+
 
     /**
      * @Route("/figure/activate/{id}", name="admin_figure_activate")
@@ -160,15 +168,22 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/next/figures/{offset}", name="admin_load_next_figures")
+     * @Route("/admin/next/figures/{page}", name="admin_load_next_figures")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function nextSliceFigures(FigureRepository $repo, $offset)
+    public function nextSliceFigures($page)
     {
-        return $this->nextSliceEntity($repo, $offset);
+        $repo = $this->getDoctrine()->getRepository(Figure::class);
+        return $this->json([
+            'figuresList' => $repo->getList($page),            
+        ],
+        200,
+        [],
+        ['groups' => 'figure_read'])
+         ;
     }
 
     /**
