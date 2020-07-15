@@ -20,18 +20,54 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep, $offset = 0)
+    public function index(UserRepository $usRep, CommentRepository $comRep, $offset = 0)
     {
-        $figures = $figRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        //$figures = $figRep->findBy([], ['id' => 'DESC'], 5, $offset);
         $users = $usRep->findBy([], ['id' => 'DESC'], 5, $offset);
         $comments = $comRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        $jsonResponse = json_decode($this->getFiguresPaginated(1)->getContent(), true);
 
         return $this->render('admin/index.html.twig', [
-            'figures' => $figures,
+            'figures' => $jsonResponse['figures'],
+            'pagination' => $jsonResponse['pagination'],
+            'figures_count' => $jsonResponse['figures_count'],
             'users' => $users,
             'comments' => $comments
         ]);
     }
+
+
+    /**
+     * @Route("/figures/page/{page}", name="admin_figures_paginated")
+     */
+    public function getFiguresPaginated($page = 1)
+    {
+        $repo = $this->getDoctrine()->getRepository(Figure::class);
+        $maxPerPage = '5';
+        $figures_count = $repo->countTotalFigures();
+        $figures = $repo->getFigures($page, $maxPerPage);
+
+        $pagination = array(
+            'page' => $page,
+            'route' => "admin_figures_paginated",
+            'pages_count' => ceil($figures_count / $maxPerPage),
+            'route_params' => array()
+        );
+
+        return  $this->json(
+            [
+                'figures_count' => $figures_count,
+                'figures' => $figures,
+                'pagination' => $pagination
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
+    }
+
+
+
 
     /**
      * @Route("/figure/activate/{id}", name="admin_figure_activate")

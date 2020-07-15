@@ -34,7 +34,7 @@
 									<td>{{figure.createdAt|date }}</td>
 									<td>{{figure.author.username }}</td>
 									<td>
-										{% if figure.getActivatedAt is not null %}
+										{% if figure.activatedAt is not null %}
 											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>
 										{% else %}
@@ -51,11 +51,30 @@
 			</div>
 
 			<div class="pagination_btn">
-				<button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button>
-				<button class="btn btn-primary" id="next_figures_pgn">Suiv.</button>
+				{# <button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button> #}
+				{# <button class="btn btn-primary" id="next_figures_pgn">Suiv.</button> #}
+
+
+				<div class="pagination">
+					<div class="pagination-buttons link_blog text-center">
+					{% if pagination.page > 1 %}
+					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': pagination.page - 1 })) }}"><<a>
+					{% endif %}
+
+					{% if figures_count != 0 %}
+					{% for p in range(max(pagination.page-2, 1), min(pagination.page+2, pagination.pages_count)) %}
+						<a{% if p == pagination.page %} class="current-page"{% endif %} href="{{ path(pagination.route, pagination.route_params|merge({'page': p })) }}">{{ p }}</a>
+					{% endfor %}
+					{% endif %}
+
+					{% if pagination.page < pagination.pages_count %}
+					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': pagination.page + 1 })) }}" id="next_figures_pgn">></a>
+					{% endif %}
+					</div>
+				</div>
 			</div>
 		</div>
-
+{# 
 		<div class="mb-5">
 			<div>
 				<h2>Commentaires</h2>
@@ -144,7 +163,7 @@
 				<button class="btn btn-primary" id="prvs_users_pgn"  hidden>Préc.</button>
 				<button class="btn btn-primary" id="next_users_pgn">Suiv.</button>
 			</div>
-		</div>
+		</div> #}
 
 	</div>
 {% endblock %}
