@@ -1,6 +1,6 @@
-/* //wrappers
+//wrappers
 const figuresElement = document.getElementById("js-figures");
-const commentsElement = document.getElementById("js-comments");
+/* const commentsElement = document.getElementById("js-comments");
 const usersElement = document.getElementById("js-users");
 
 //pagination buttons
@@ -12,14 +12,14 @@ const prvsCommentsPagination = document.getElementById("prvs_comments_pgn");
 
 const nextUsersPagination = document.getElementById("next_users_pgn");
 const prvsUsersPagination = document.getElementById("prvs_users_pgn");
-
+ */
 let figuresContent = figuresElement.nextElementSibling.tBodies;
-let commentsContent = commentsElement.nextElementSibling.tBodies;
-let usersContent = usersElement.nextElementSibling.tBodies;
+/* let commentsContent = commentsElement.nextElementSibling.tBodies;
+let usersContent = usersElement.nextElementSibling.tBodies; */
 
-let figuresOffset = "";
+let figuresOffset = "";/* 
 let commentsOffset = "";
-let usersOffset = ""; */
+let usersOffset = "";  */
 
 /////////////////////////////////////////Nouvel essai
 
@@ -33,20 +33,20 @@ for (figurePaginationlink of figurePaginationlinks) {
         event.stopPropagation();
         event.preventDefault();
 
-        if (!Number.isInteger(this.textContent)) {
-            if (this.textContent === 'prev') {
+        if (Number.isInteger(parseInt(this.textContent))) {
+            figuresPage = this.textContent;
+        } else {
+            if (this.textContent == 'prev') { //prev  btn
                 if (figuresCurrentPage != 1) {
                     figuresPage = figuresCurrentPage - 1;
                     figuresCurrentPage -= 1;
                 } else {
                     alert('pas d\'entrées plus récentes')
                 }
-            } else {
+            } else { //next btn
                 figuresPage = figuresCurrentPage + 1
                 figuresCurrentPage += 1;
             }
-        } else {
-            figuresPage = this.textContent;
         }
 
 
@@ -59,7 +59,16 @@ for (figurePaginationlink of figurePaginationlinks) {
         }).then(
             response => response.json()
         ).then(data => {
-            console.log(data)
+
+            //effacement des 5 éléments précédents
+            for (let i = figuresContent.length; i >= 1; i--) {
+                figuresContent[i - 1].remove();
+            }
+
+            data.figuresList.forEach(e => {
+                figureRows(e);
+
+            })
         })
     })
 }
@@ -69,94 +78,94 @@ for (figurePaginationlink of figurePaginationlinks) {
 
 
 /*
-
+ 
 //--//--//------FIGURES---------/--//--//--//-----------
-
+ 
 //Next  Pagination
 nextFiguresPagination.addEventListener('click', function (event) {
-
+ 
     prvsFiguresPagination.removeAttribute("hidden");
     figuresOffset = figuresElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
-
-
+ 
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/next/figures/', figuresPage, figuresContent, nextFiguresPagination);
 })
-
+ 
 //Previous  Pagination
 prvsFiguresPagination.addEventListener('click', function (event) {
-
+ 
     nextFiguresPagination.removeAttribute("hidden");
     figuresOffset = figuresElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
-
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/prvs/figures/', figuresOffset, figuresContent, prvsFiguresPagination, true);
 })
-
-
-
+ 
+ 
+ 
 //--//--//------ADMIN_PANEL_COMMENTS---------/--//--//--//-----------
-
+ 
 //Next  Pagination
 nextCommentsPagination.addEventListener('click', function (event) {
-
+ 
     prvsCommentsPagination.removeAttribute("hidden");
     commentsOffset = commentsElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
-
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/next/comments/', commentsOffset, commentsContent, nextCommentsPagination);
 })
-
+ 
 //Previous  Pagination
 prvsCommentsPagination.addEventListener('click', function (event) {
-
+ 
     nextCommentsPagination.removeAttribute("hidden");
     commentsOffset = commentsElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
-
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/prvs/comments/', commentsOffset, commentsContent, prvsCommentsPagination, true);
-
+ 
 })
-
-
+ 
+ 
 //--//--//------USERS---------/--//--//--//-----------
-
+ 
 //Next  Pagination
 nextUsersPagination.addEventListener('click', function (event) {
-
+ 
     prvsUsersPagination.removeAttribute("hidden");
     usersOffset = usersElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
-
-
+ 
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/next/users/', usersOffset, usersContent, nextUsersPagination)
-
+ 
 })
-
+ 
 //Previous  Pagination
 prvsUsersPagination.addEventListener('click', function (event) {
-
+ 
     nextUsersPagination.removeAttribute("hidden");
     usersOffset = usersElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
-
+ 
     event.stopPropagation();
     event.preventDefault();
-
+ 
     //AJAX QUERY
     ajaxQuery('/admin/prvs/users/', usersOffset, usersContent, prvsUsersPagination, true);
 }) */
@@ -165,7 +174,7 @@ prvsUsersPagination.addEventListener('click', function (event) {
 /*
 //-----//--//--//--AJAX_QUERY---//--//--//--//-------------//
 const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
-
+ 
     fetch(url + page, {
         method: 'GET',
         headers: {
@@ -193,7 +202,7 @@ const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
                     } else {
                         figureRows(e);
                     }
-
+ 
                 });
             } else {
                 data.slice.forEach(e => {
@@ -204,16 +213,16 @@ const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
                     } else {
                         figureRows(e);
                     }
-
+ 
                 });
             }
-
+ 
         }
     }).catch(e => alert(e));
-
+ 
 } */
 
-/*
+
 //-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
 
 //figures
@@ -345,4 +354,3 @@ const userRows = function (u) {
 }
 
 
- */
