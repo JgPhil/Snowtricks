@@ -53,11 +53,12 @@
 			<div class="pagination_btn">
 				{# <button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button> #}
 				{# <button class="btn btn-primary" id="next_figures_pgn">Suiv.</button> #}
-
-
+	
 				<div class="pagination">
 					<div class="pagination-buttons link_blog text-center">
+
 					{% if pagination.page > 1 %}
+					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': 1})) }}"><<</a>
 					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': pagination.page - 1 })) }}"><<a>
 					{% endif %}
 
@@ -69,13 +70,14 @@
 
 					{% if pagination.page < pagination.pages_count %}
 					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': pagination.page + 1 })) }}" id="next_figures_pgn">></a>
+					<a href="{{ path(pagination.route, pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a>
 					{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
-{# 
-		<div class="mb-5">
+
+		{# <div class="mb-5">
 			<div>
 				<h2>Commentaires</h2>
 				<table class="table">
@@ -163,8 +165,8 @@
 				<button class="btn btn-primary" id="prvs_users_pgn"  hidden>Préc.</button>
 				<button class="btn btn-primary" id="next_users_pgn">Suiv.</button>
 			</div>
-		</div> #}
-
+		</div>
+ #}
 	</div>
 {% endblock %}
 

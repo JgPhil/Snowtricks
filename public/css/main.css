@@ -84,3 +84,16 @@ th {
 button {
   margin-right: 5px;
 }
+
+.link_blog{
+  margin-top: 60px;
+  font-size: 1.8em;
+}
+
+.link_blog a:hover{
+  color:#59727D;
+}
+
+.current-page{
+  font-weight:bold;
+}

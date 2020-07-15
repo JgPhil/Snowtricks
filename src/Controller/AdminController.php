@@ -18,27 +18,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/figures/page/{page}", name="admin")
      */
-    public function index(UserRepository $usRep, CommentRepository $comRep, $offset = 0)
+    public function index($page = 1)
     {
         //$figures = $figRep->findBy([], ['id' => 'DESC'], 5, $offset);
-        $users = $usRep->findBy([], ['id' => 'DESC'], 5, $offset);
-        $comments = $comRep->findBy([], ['id' => 'DESC'], 5, $offset);
-        $jsonResponse = json_decode($this->getFiguresPaginated(1)->getContent(), true);
+        //$users = $usRep->findBy([], ['id' => 'DESC'], 5, $offset);
+        //$comments = $comRep->findBy([], ['id' => 'DESC'], 5, $offset);
+
+        $maxPerPage = '5';
+        $repo = $this->getDoctrine()->getRepository(Figure::class);
+        $jsonResponse = json_decode($this->getFiguresPaginated()->getContent(), true);
+        $figures_count = $repo->countTotalFigures();
+        $figures = $repo->getFigures($page, $maxPerPage);
+
+        $pagination = array(
+            'page' => $page,
+            'route' => "admin",
+            'pages_count' => ceil($figures_count / $maxPerPage),
+            'route_params' => array()
+        );
 
         return $this->render('admin/index.html.twig', [
-            'figures' => $jsonResponse['figures'],
-            'pagination' => $jsonResponse['pagination'],
-            'figures_count' => $jsonResponse['figures_count'],
-            'users' => $users,
-            'comments' => $comments
+            'figures' => $figures,
+            'pagination' => $pagination,
+            'figures_count' => $figures_count,
         ]);
     }
 
 
     /**
-     * @Route("/figures/page/{page}", name="admin_figures_paginated")
+     * @Route("/admin/figures/page/{page}", name="admin_figures_paginated")
      */
     public function getFiguresPaginated($page = 1)
     {
@@ -67,7 +77,31 @@ class AdminController extends AbstractController
     }
 
 
+    private function getEntityPaginated($repo, $page)
+    {
+        $repo = $this->getDoctrine()->getRepository(Figure::class);
+        $maxPerPage = '5';
+        $entities_count = $repo->countTotalFigures();
+        $entity = $repo->getSome($page, $maxPerPage);
 
+        $pagination = array(
+            'page' => $page,
+            'route' => "admin_figures_paginated",
+            'pages_count' => ceil($figures_count / $maxPerPage),
+            'route_params' => array()
+        );
+
+        return  $this->json(
+            [
+                'figures_count' => $figures_count,
+                'figures' => $figures,
+                'pagination' => $pagination
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
+    }
 
     /**
      * @Route("/figure/activate/{id}", name="admin_figure_activate")
