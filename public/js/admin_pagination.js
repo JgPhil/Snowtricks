@@ -17,19 +17,19 @@ let figuresPageTarget = null;
 
 let commentPaginationlinks = document.querySelectorAll("[data-commentBtns]");
 let commentsCount = document.querySelector("[data-commentsCount").getAttribute("data-commentsCount");
-let commentsCurrentCount = 1;
+let commentsCurrentPage = 1;
 let commentsPageTarget = null;
 
 let userPaginationlinks = document.querySelectorAll("[data-userBtns]");
 let usersCount = document.querySelector("[data-usersCount").getAttribute("data-usersCount");
-let usersCurrentCount = 1;
+let usersCurrentPage = 1;
 let usersPageTarget = null;
 
 let pageTarget = null;
 let currentPage = null;
 let elementsCount = null;
 let maxPerPage = 5;
-
+let arrow = null;
 
 
 
@@ -40,11 +40,16 @@ for (figurePaginationlink of figurePaginationlinks) {
         event.preventDefault();
         event.stopPropagation();
 
-        figuresPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+        if (this.classList.contains('prev')) {
+            arrow = "prev";
+        } else if (this.classList.contains('next')) {
+            arrow = "next";
+        }
 
-        [currentPage, pageTarget] = paginationLogic(figuresCurrentPage, figuresPageTarget, figuresCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+        figuresPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+        [currentPage, pageTarget] = paginationLogic(figuresCurrentPage, figuresPageTarget, figuresCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
 
-        figuresCurrentPage = currentPage;
+        figuresCurrentPage = parseInt(currentPage, 10);
         figuresPageTarget = pageTarget;
 
         ajaxQuery('/admin/next/figures/', figuresPageTarget, figuresContent); //on va chercher les éléments en base
@@ -59,11 +64,17 @@ for (commentPaginationlink of commentPaginationlinks) {
         event.preventDefault();
         event.stopPropagation();
 
-        commentsPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+        if (this.classList.contains('prev')) {
+            arrow = "prev";
+        } else if (this.classList.contains('next')) {
+            arrow = "next";
+        }
 
-        [currentPage, pageTarget] = paginationLogic(commentsCurrentPage, commentsPageTarget, commentsCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+        commentsPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
 
-        commentsCurrentPage = currentPage;
+        [currentPage, pageTarget] = paginationLogic(commentsCurrentPage, commentsPageTarget, commentsCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+
+        commentsCurrentPage = parseInt(currentPage, 10);
         commentsPageTarget = pageTarget;
 
 
@@ -79,11 +90,17 @@ for (userPaginationlink of userPaginationlinks) {
         event.preventDefault();
         event.stopPropagation();
 
-        usersPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+        if (this.classList.contains('prev')) {
+            arrow = "prev";
+        } else if (this.classList.contains('next')) {
+            arrow = "next";
+        }
 
-        [currentPage, pageTarget] = paginationLogic(usersCurrentPage, usersPageTarget, usersCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+        usersPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
 
-        usersCurrentPage = currentPage;
+        [currentPage, pageTarget] = paginationLogic(usersCurrentPage, usersPageTarget, usersCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+
+        usersCurrentPage = parseInt(currentPage, 10);
         usersPageTarget = pageTarget;
 
         ajaxQuery('/admin/next/users/', usersPageTarget, usersContent); //on va chercher les éléments en base
@@ -95,12 +112,10 @@ for (userPaginationlink of userPaginationlinks) {
 //---------------------LOGIC--------------------//
 
 
-const paginationLogic = function (currentPage, pageTarget, elementsCount) {
+const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow = null) {
 
-    if (Number.isInteger(parseInt(pageTarget))) {
-        currentPage = pageTarget;
-    } else {
-        if (pageTarget == "prev") { //prev  btn
+    if (arrow) {
+        if (arrow == "prev") { //prev  btn
             if (currentPage != 1) {
                 pageTarget = currentPage - 1;
                 currentPage -= 1;
@@ -117,6 +132,9 @@ const paginationLogic = function (currentPage, pageTarget, elementsCount) {
                 currentPage += 1;
             }
         }
+        arrow = null;
+    } else { //targetPage  is a number
+        currentPage = pageTarget;
     }
 
     return [currentPage, pageTarget];
@@ -137,7 +155,6 @@ const ajaxQuery = function (url, pageTarget, content) {
     }).then(
         response => response.json()
     ).then(data => {
-        console.log(data);
         //effacement des 5 éléments précédents
         for (let i = content.length; i >= 1; i--) {
             content[i - 1].remove();

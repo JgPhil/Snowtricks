@@ -53,13 +53,13 @@
 
 				<input type="text" hidden data-figurescount={{ figuresCount }}>
 
-				<a href="" data-figureBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				<a href="" data-figureBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
 				
 				{% for i in 1..((figuresCount / maxPerPage)|round(0,'ceil')) %}
 					<a href="" data-figureBtns class="link_blog">{{i}}</a>
 				{% endfor %}
 
-				<a href="" data-figureBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
+				<a href="" data-figureBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
 
 
@@ -102,17 +102,14 @@
 				</table>
 
 			</div>
-				<script>
-				let commentsCurrentPage = 1;
-				</script>
 				
 				<input type="text" hidden data-commentsCount={{ commentsCount }}>
 
-				<a href="" data-commentBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				<a href="" data-commentBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
 				{% for i in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
 					<a href="" data-commentBtns class="link_blog">{{i}}</a>
 				{% endfor %}
-				<a href="" data-commentBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
+				<a href="" data-commentBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
 		<div class="mb-5">
 			<div>
@@ -150,18 +147,14 @@
 						{% endfor %}
 				</table>
 			</div>
-
-				<script>
-				let usersCurrentPage = 1;
-				</script>
 				
 				<input type="text" hidden data-usersCount={{ usersCount }}>
 
-				<a href="" data-userBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				<a href="" data-userBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
 				{% for i in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
 					<a href="" data-userBtns class="link_blog">{{i}}</a>
 				{% endfor %}
-				<a href="" data-userBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
+				<a href="" data-userBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
 	</div>
 {% endblock %}
