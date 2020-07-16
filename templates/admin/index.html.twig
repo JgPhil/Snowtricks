@@ -14,7 +14,7 @@
 		<div class="mb-5">
 			<div>
 				<h2>Figures</h2>
-				<table class="table">
+				<table class="table" id="js-figures">
 					<thead>
 						<tr>
 							<th>ID</th>
@@ -26,7 +26,6 @@
 						</tr>
 					</thead>
 
-					<div id="js-figures">
 						{% for figure in figures %}
 							<tbody>
 								<tr>
@@ -37,44 +36,37 @@
 									<td>{{figure.author.username }}</td>
 									<td>
 										{% if figure.getActivatedAt is not null %}
-											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true"  class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" hidden activation="false"  class="btn btn-success btn-sm">Activer</a>
 										{% else %}
-											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ figure.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ figure.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" hidden activation="true"  class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
 								</tr>
 							</tbody>
 						{% endfor %}
-					</div>
+					
 
 				</table>
 			</div>
 
-			{# <div class="pagination_btn">
-				<button class="btn btn-primary" id="prvs_figures_pgn" hidden>Préc.</button> #}
-				<script>
-				let figuresCurrentPage = 1
-				</script>
-				<input type="text" hidden data-figurescount {{ figuresCount }}>
+				<input type="text" hidden data-figurescount={{ figuresCount }}>
 
-				<a href="" data-figure>prev</a>
-				{% for i in 1..(figuresCount / maxPerPage|round(0,'floor')) %}
-					<a href="" data-figure>{{i}}</a>
+				<a href="" data-figureBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				
+				{% for i in 1..((figuresCount / maxPerPage)|round(0,'ceil')) %}
+					<a href="" data-figureBtns class="link_blog">{{i}}</a>
 				{% endfor %}
-				<a href="" data-figure>next</a>
 
-
-			{# 	<button class="btn btn-primary" id="next_figures_pgn">Suiv.</button> #}
-			</div>
+				<a href="" data-figureBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
 		</div>
 
 
 		<div class="mb-5">
 			<div>
 				<h2>Commentaires</h2>
-				<table class="table">
+				<table class="table" id="js-comments">
 					<thead>
 						<tr>
 							<th>ID</th>
@@ -84,7 +76,6 @@
 							<th>Activation</th>
 						</tr>
 					</thead>
-					<div id="js-comments">
 						{% for comment in comments %}
 							<tbody>
 								<tr>
@@ -98,29 +89,35 @@
 										{{comment.author.username}}</td>
 									<td>
 										{% if comment.getActivatedAt is not null %}
-											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" hidden activation="false"  class="btn btn-success btn-sm">Activer</a>
 										{% else  %}
-											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ comment.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ comment.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" hidden activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
 								</tr>
 							</tbody>
 						{% endfor %}
-					</div>
 				</table>
-			</div>
 
-			<div class="pagination_btn">
-				<button class="btn btn-primary" id="prvs_comments_pgn" hidden>Préc.</button>
-				<button class="btn btn-primary" id="next_comments_pgn">Suiv.</button>
 			</div>
+				<script>
+				let commentsCurrentPage = 1;
+				</script>
+				
+				<input type="text" hidden data-commentsCount={{ commentsCount }}>
+
+				<a href="" data-commentBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				{% for i in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
+					<a href="" data-commentBtns class="link_blog">{{i}}</a>
+				{% endfor %}
+				<a href="" data-commentBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
 		</div>
 		<div class="mb-5">
 			<div>
 				<h2>Utilisateurs</h2>
-				<table class="table">
+				<table class="table" id="js-users">
 					<thead>
 						<tr>
 							<th>ID</th>
@@ -131,7 +128,6 @@
 							<th>Activation</th>
 						</tr>
 					</thead>
-					<div id="js-users">
 						{% for user in users %}
 							<tbody>
 								<tr>
@@ -142,26 +138,34 @@
 									<td>{{user.roles[0]}}</td>
 									<td>
 										{% if user.token is null %}
-											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_user_activate', { id: user.id }) }}" hidden activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_user_activate', { id: user.id }) }}" hidden activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% else  %}
-											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" hidden activation="true" data-token="{{ csrf_token('delete' ~ user.id)}}" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" data-token="{{ csrf_token('activate' ~ user.id)}}" class="btn btn-success btn-sm">Activer</a>
+											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" hidden activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+											<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
 								</tr>
 							</tbody>
 						{% endfor %}
-					</div>
 				</table>
 			</div>
-			<div class="pagination_btn">
-				<button class="btn btn-primary" id="prvs_users_pgn" hidden>Préc.</button>
-				<button class="btn btn-primary" id="next_users_pgn">Suiv.</button>
-			</div>
+
+				<script>
+				let usersCurrentPage = 1;
+				</script>
+				
+				<input type="text" hidden data-usersCount={{ usersCount }}>
+
+				<a href="" data-userBtns class="link_blog"><i class="fas fa-angle-left"></i></a>
+				{% for i in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
+					<a href="" data-userBtns class="link_blog">{{i}}</a>
+				{% endfor %}
+				<a href="" data-userBtns class="link_blog"><i class="fas fa-angle-right"></i></a>
 		</div>
 	</div>
 {% endblock %}
+
 {% block javascript %}
 	<script src=" {{ asset('js/activation.js') }} "></script>
 	<script src=" {{ asset('js/admin_pagination.js') }}"></script>

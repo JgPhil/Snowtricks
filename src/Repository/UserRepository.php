@@ -32,6 +32,21 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
 
     /**
+     * 
+     */
+    public function getList($page=1)
+    {     
+        $maxPerPage = 5;
+
+        return $this->createQueryBuilder('f')
+            ->setFirstResult(($page-1) * $maxPerPage)
+            ->orderBy('f.createdAt', 'DESC')
+            ->setMaxResults($maxPerPage)
+            ->getQuery()
+            ->getResult(); 
+    }
+
+    /**
      * @return User[] Returns an array of User objects
      */
     public function nextSlice($offset)

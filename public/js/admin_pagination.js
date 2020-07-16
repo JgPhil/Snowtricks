@@ -1,181 +1,134 @@
 //wrappers
 const figuresElement = document.getElementById("js-figures");
-/* const commentsElement = document.getElementById("js-comments");
+const commentsElement = document.getElementById("js-comments");
 const usersElement = document.getElementById("js-users");
 
-//pagination buttons
-const nextFiguresPagination = document.getElementById("next_figures_pgn");
-const prvsFiguresPagination = document.getElementById("prvs_figures_pgn");
 
-const nextCommentsPagination = document.getElementById("next_comments_pgn");
-const prvsCommentsPagination = document.getElementById("prvs_comments_pgn");
+let figuresContent = figuresElement.tBodies;
+let commentsContent = commentsElement.tBodies;
+let usersContent = usersElement.tBodies;
 
-const nextUsersPagination = document.getElementById("next_users_pgn");
-const prvsUsersPagination = document.getElementById("prvs_users_pgn");
- */
-let figuresContent = figuresElement.nextElementSibling.tBodies;
-/* let commentsContent = commentsElement.nextElementSibling.tBodies;
-let usersContent = usersElement.nextElementSibling.tBodies; */
 
-let figuresOffset = "";/* 
-let commentsOffset = "";
-let usersOffset = "";  */
 
-/////////////////////////////////////////Nouvel essai
+let figurePaginationlinks = document.querySelectorAll("[data-figureBtns]");
+let figuresCount = document.querySelector("[data-figuresCount").getAttribute("data-figuresCount");
+let figuresCurrentPage = 1;
+let figuresPageTarget = null;
 
-let figurePaginationlinks = document.querySelectorAll("[data-figure]");
-let figuresCount = document.querySelector("[data-figuresCount");/* 
-let figuresCurrentPage = document.querySelector("[data-figuresCurrentPage"); */
-let figuresPage = null;
+let commentPaginationlinks = document.querySelectorAll("[data-commentBtns]");
+let commentsCount = document.querySelector("[data-commentsCount").getAttribute("data-commentsCount");
+let commentsCurrentCount = 1;
+let commentsPageTarget = null;
+
+let userPaginationlinks = document.querySelectorAll("[data-userBtns]");
+let usersCount = document.querySelector("[data-usersCount").getAttribute("data-usersCount");
+let usersCurrentCount = 1;
+let usersPageTarget = null;
+
+let pageTarget = null;
+let currentPage = null;
+let elementsCount = null;
+let maxPerPage = 5;
+
+
+
+
+//--------------FIGURES----------------//
 
 for (figurePaginationlink of figurePaginationlinks) {
     figurePaginationlink.addEventListener('click', function (event) {
-        event.stopPropagation();
         event.preventDefault();
+        event.stopPropagation();
 
-        if (Number.isInteger(parseInt(this.textContent))) {
-            figuresPage = this.textContent;
-        } else {
-            if (this.textContent == 'prev') { //prev  btn
-                if (figuresCurrentPage != 1) {
-                    figuresPage = figuresCurrentPage - 1;
-                    figuresCurrentPage -= 1;
-                } else {
-                    alert('pas d\'entrées plus récentes')
-                }
-            } else { //next btn
-                figuresPage = figuresCurrentPage + 1
-                figuresCurrentPage += 1;
-            }
-        }
+        figuresPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+
+        [currentPage, pageTarget] = paginationLogic(figuresCurrentPage, figuresPageTarget, figuresCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+
+        figuresCurrentPage = currentPage;
+        figuresPageTarget = pageTarget;
+
+        ajaxQuery('/admin/next/figures/', figuresPageTarget, figuresContent); //on va chercher les éléments en base
+    })
+}
 
 
-        fetch('/admin/next/figures/' + figuresPage, {
-            method: 'GET',
-            headers: {
-                "X-Requested-Width": "XMLHttpRequest",
-                "Content-Type": "application/json"
-            },
-        }).then(
-            response => response.json()
-        ).then(data => {
+//--------------COMMENTS----------------//
 
-            //effacement des 5 éléments précédents
-            for (let i = figuresContent.length; i >= 1; i--) {
-                figuresContent[i - 1].remove();
-            }
+for (commentPaginationlink of commentPaginationlinks) {
+    commentPaginationlink.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-            data.figuresList.forEach(e => {
-                figureRows(e);
+        commentsPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
 
-            })
-        })
+        [currentPage, pageTarget] = paginationLogic(commentsCurrentPage, commentsPageTarget, commentsCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+
+        commentsCurrentPage = currentPage;
+        commentsPageTarget = pageTarget;
+
+
+        ajaxQuery('/admin/next/comments/', commentsPageTarget, commentsContent); //on va chercher les éléments en base
+    })
+}
+
+
+//--------------USERS----------------//
+
+for (userPaginationlink of userPaginationlinks) {
+    userPaginationlink.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        usersPageTarget = this.textContent; //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+
+        [currentPage, pageTarget] = paginationLogic(usersCurrentPage, usersPageTarget, usersCount); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+
+        usersCurrentPage = currentPage;
+        usersPageTarget = pageTarget;
+
+        ajaxQuery('/admin/next/users/', usersPageTarget, usersContent); //on va chercher les éléments en base
     })
 }
 
 
 
+//---------------------LOGIC--------------------//
 
 
-/*
- 
-//--//--//------FIGURES---------/--//--//--//-----------
- 
-//Next  Pagination
-nextFiguresPagination.addEventListener('click', function (event) {
- 
-    prvsFiguresPagination.removeAttribute("hidden");
-    figuresOffset = figuresElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
- 
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/next/figures/', figuresPage, figuresContent, nextFiguresPagination);
-})
- 
-//Previous  Pagination
-prvsFiguresPagination.addEventListener('click', function (event) {
- 
-    nextFiguresPagination.removeAttribute("hidden");
-    figuresOffset = figuresElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/prvs/figures/', figuresOffset, figuresContent, prvsFiguresPagination, true);
-})
- 
- 
- 
-//--//--//------ADMIN_PANEL_COMMENTS---------/--//--//--//-----------
- 
-//Next  Pagination
-nextCommentsPagination.addEventListener('click', function (event) {
- 
-    prvsCommentsPagination.removeAttribute("hidden");
-    commentsOffset = commentsElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/next/comments/', commentsOffset, commentsContent, nextCommentsPagination);
-})
- 
-//Previous  Pagination
-prvsCommentsPagination.addEventListener('click', function (event) {
- 
-    nextCommentsPagination.removeAttribute("hidden");
-    commentsOffset = commentsElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/prvs/comments/', commentsOffset, commentsContent, prvsCommentsPagination, true);
- 
-})
- 
- 
-//--//--//------USERS---------/--//--//--//-----------
- 
-//Next  Pagination
-nextUsersPagination.addEventListener('click', function (event) {
- 
-    prvsUsersPagination.removeAttribute("hidden");
-    usersOffset = usersElement.nextElementSibling.lastElementChild.lastElementChild.firstElementChild.textContent;
- 
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/next/users/', usersOffset, usersContent, nextUsersPagination)
- 
-})
- 
-//Previous  Pagination
-prvsUsersPagination.addEventListener('click', function (event) {
- 
-    nextUsersPagination.removeAttribute("hidden");
-    usersOffset = usersElement.nextElementSibling.tBodies[0].firstElementChild.firstElementChild.textContent;
- 
-    event.stopPropagation();
-    event.preventDefault();
- 
-    //AJAX QUERY
-    ajaxQuery('/admin/prvs/users/', usersOffset, usersContent, prvsUsersPagination, true);
-}) */
+const paginationLogic = function (currentPage, pageTarget, elementsCount) {
+
+    if (Number.isInteger(parseInt(pageTarget))) {
+        currentPage = pageTarget;
+    } else {
+        if (pageTarget == "prev") { //prev  btn
+            if (currentPage != 1) {
+                pageTarget = currentPage - 1;
+                currentPage -= 1;
+            } else {
+                alert('pas d\'entrées plus récentes')
+                pageTarget = 1;
+            }
+        } else { //next btn
+            if ((currentPage + 1) > (Math.ceil(elementsCount / maxPerPage))) {
+                alert('Vous êtes arrivé au bout du tunnel !');
+                pageTarget = Math.ceil(elementsCount / maxPerPage);
+            } else {
+                pageTarget = currentPage + 1
+                currentPage += 1;
+            }
+        }
+    }
+
+    return [currentPage, pageTarget];
+}
 
 
-/*
-//-----//--//--//--AJAX_QUERY---//--//--//--//-------------//
-const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
- 
-    fetch(url + page, {
+
+//------------FETCH DATA & DELETE ROWS----------------//
+
+
+const ajaxQuery = function (url, pageTarget, content) {
+    fetch(url + pageTarget, {
         method: 'GET',
         headers: {
             "X-Requested-Width": "XMLHttpRequest",
@@ -184,43 +137,26 @@ const ajaxQuery = function (url, page, content, pgnButton, prvs = false) {
     }).then(
         response => response.json()
     ).then(data => {
-        if (data.slice.length < 5) {
-            pgnButton.setAttribute("hidden", true);
+        console.log(data);
+        //effacement des 5 éléments précédents
+        for (let i = content.length; i >= 1; i--) {
+            content[i - 1].remove();
         }
-        else {
-            //effacement des 5 éléments précédents
-            for (let i = content.length; i >= 1; i--) {
-                content[i - 1].remove();
-            }
-            // Si c'est un click "Previous" => on retourne le résultat pour avoir les éléments par ordre DESC
-            if (prvs) {
-                data.slice.reverse().forEach(e => {  //création d'une ligne par élément récupéré
-                    if (content === usersContent) {
-                        userRows(e);
-                    } else if (content === commentsContent) {
-                        commentRows(e);
-                    } else {
-                        figureRows(e);
-                    }
- 
-                });
+
+        data.slice.forEach(e => {
+            if (content === usersContent) {
+                userRows(e);
+            } else if (content === commentsContent) {
+                commentRows(e);
             } else {
-                data.slice.forEach(e => {
-                    if (content === usersContent) {
-                        userRows(e);
-                    } else if (content === commentsContent) {
-                        commentRows(e);
-                    } else {
-                        figureRows(e);
-                    }
- 
-                });
+                figureRows(e);
             }
- 
-        }
-    }).catch(e => alert(e));
- 
-} */
+
+        })
+    })
+}
+
+
 
 
 //-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
@@ -256,7 +192,7 @@ const figureRows = function (e) {
     }
 
 
-    figuresElement.nextElementSibling.append(tbody);
+    figuresElement.append(tbody);
     tbody.appendChild(tr);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -297,7 +233,7 @@ const commentRows = function (c) {
     }
 
 
-    commentsElement.nextElementSibling.append(tbody);
+    commentsElement.append(tbody);
     tbody.appendChild(tr);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -306,9 +242,6 @@ const commentRows = function (c) {
     tr.appendChild(activationlink);
 
 }
-
-//comments forum
-
 
 //users
 const userRows = function (u) {
@@ -342,7 +275,7 @@ const userRows = function (u) {
     }
 
 
-    usersElement.nextElementSibling.append(tbody);
+    usersElement.append(tbody);
     tbody.appendChild(tr);
     tr.appendChild(td1);
     tr.appendChild(td2);

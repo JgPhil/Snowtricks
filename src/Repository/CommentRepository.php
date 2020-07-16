@@ -33,6 +33,22 @@ class CommentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+    /**
+     * 
+     */
+    public function getList($page=1)
+    {     
+        $maxPerPage = 5;
+
+        return $this->createQueryBuilder('f')
+            ->setFirstResult(($page-1) * $maxPerPage)
+            ->orderBy('f.createdAt', 'DESC')
+            ->setMaxResults($maxPerPage)
+            ->getQuery()
+            ->getResult(); 
+    }
+
     public function nextForumCommentSlice($figureId, $offset)
     {
         return $this->createQueryBuilder('f')

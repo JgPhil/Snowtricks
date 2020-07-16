@@ -22,9 +22,9 @@ class AdminController extends AbstractController
      */
     public function index(FigureRepository $figRep, UserRepository $usRep, CommentRepository $comRep)
     {
-        $figures = $figRep->findBy([], ['id' => 'DESC'], 5);
-        $users = $usRep->findBy([], ['id' => 'DESC'], 5);
-        $comments = $comRep->findBy([], ['id' => 'DESC'], 5);
+        $figures = $figRep->findBy([], ['createdAt' => 'DESC'], 5);
+        $users = $usRep->findBy([], ['createdAt' => 'DESC'], 5);
+        $comments = $comRep->findBy([], ['createdAt' => 'DESC'], 5);
 
 
 
@@ -34,7 +34,7 @@ class AdminController extends AbstractController
             'users' => $users,
             'usersCount' => count($usRep->findAll()),
             'comments' => $comments,
-            'commentsCount' => count($comRep->findAll()) 
+            'commentsCount' => count($comRep->findAll())
         ]);
     }
 
@@ -70,26 +70,17 @@ class AdminController extends AbstractController
 
     private function activateEntity($entity)
     {
-        $request = Request::createFromGlobals();
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $em = $this->getDoctrine()->getManager();
 
-        $data = json_decode($request->getContent(), true);
-        if (
-            $this->isCsrfTokenValid(
-                'activate' . $entity->getId(),
-                $data['_token']
-            )
-        ) {
-            if ($entity instanceof User) {
-                $entity->setToken(null);
-            } else {
-                $entity->setActivatedAt(new \DateTime());
-            }
-            $em->flush();
-            return new JsonResponse(['success' => 1]);
+        if ($entity instanceof User) {
+            $entity->setToken(null);
         } else {
-            return new JsonResponse(['error' => 'Token invalide'], 400);
+            $entity->setActivatedAt(new \DateTime());
         }
+        $em->flush();
+        return new JsonResponse(['success' => 1]);
     }
 
 
@@ -137,34 +128,25 @@ class AdminController extends AbstractController
 
     private function desactivateEntity($entity)
     {
-        $request = Request::createFromGlobals();
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $em = $this->getDoctrine()->getManager();
 
-        $data = json_decode($request->getContent(), true);
-        if (
-            $this->isCsrfTokenValid(
-                'delete' . $entity->getId(),
-                $data['_token']
-            )
-        ) {
-            if ($entity instanceof Picture) {
-                $name = $entity->getName();
-                //suppression du fichier dans le dossier uploads
-                unlink($this->getParameter('pictures_directory') . '/' . $name);
-                // suppression de l'entrée en base
-                $em->remove($entity);
-            } elseif ($entity instanceof Video) {
-                $em->remove($entity);
-            } elseif ($entity instanceof User) {
-                $entity->setToken(md5(uniqid()));
-            } else {
-                $entity->setActivatedAt(null);
-            }
-            $em->flush();
-            return new JsonResponse(['success' => 1]);
+        if ($entity instanceof Picture) {
+            $name = $entity->getName();
+            //suppression du fichier dans le dossier uploads
+            unlink($this->getParameter('pictures_directory') . '/' . $name);
+            // suppression de l'entrée en base
+            $em->remove($entity);
+        } elseif ($entity instanceof Video) {
+            $em->remove($entity);
+        } elseif ($entity instanceof User) {
+            $entity->setToken(md5(uniqid()));
         } else {
-            return new JsonResponse(['error' => 'Token invalide'], 400);
+            $entity->setActivatedAt(null);
         }
+        $em->flush();
+        return new JsonResponse(['success' => 1]);
     }
 
     /**
@@ -177,13 +159,14 @@ class AdminController extends AbstractController
     public function nextSliceFigures($page)
     {
         $repo = $this->getDoctrine()->getRepository(Figure::class);
-        return $this->json([
-            'figuresList' => $repo->getList($page),            
-        ],
-        200,
-        [],
-        ['groups' => 'figure_read'])
-         ;
+        return $this->json(
+            [
+                'slice' => $repo->getList($page),
+            ],
+            200,
+            [],
+            ['groups' => 'figure_read']
+        );
     }
 
     /**
@@ -201,15 +184,22 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/admin/next/comments/{offset}", name="admin_load_next_comments")
+     * @Route("/admin/next/comments/{page}", name="admin_load_next_comments")
      *
      * @param CommentRepository $repo
-     * @param [type] $offset
      * @return void
      */
-    public function nextSliceComments(CommentRepository $repo, $offset)
+    public function nextSliceComments($page)
     {
-        return $this->nextSliceEntity($repo, $offset);
+        $repo = $this->getDoctrine()->getRepository(Comment::class);
+        return $this->json(
+            [
+                'slice' => $repo->getList($page),
+            ],
+            200,
+            [],
+            ['groups' => 'comment_read']
+        );
     }
 
     /**
@@ -227,15 +217,22 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/admin/next/users/{offset}", name="admin_load_next_users")
+     * @Route("/admin/next/users/{page}", name="admin_load_next_users")
      *
      * @param UserRepository $repo
-     * @param [type] $offset
      * @return void
      */
-    public function nextSliceUsers(UserRepository $repo, $offset)
+    public function nextSliceUsers($page)
     {
-        return $this->nextSliceEntity($repo, $offset);
+        $repo = $this->getDoctrine()->getRepository(User::class);
+        return $this->json(
+            [
+                'slice' => $repo->getList($page),
+            ],
+            200,
+            [],
+            ['groups' => 'user_read']
+        );
     }
 
     /**
