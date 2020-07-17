@@ -2,7 +2,10 @@
 const figuresElement = document.getElementById("js-figures");
 const commentsElement = document.getElementById("js-comments");
 const usersElement = document.getElementById("js-users");
+const maxPerPage = 5;
+const tables = document.querySelectorAll("table");
 
+let links = document.querySelectorAll("[activation]");
 
 let figuresContent = figuresElement.tBodies;
 let commentsContent = commentsElement.tBodies;
@@ -11,16 +14,19 @@ let usersContent = usersElement.tBodies;
 
 
 let figurePaginationlinks = document.querySelectorAll("[data-figureBtns]");
+figurePaginationlinks[1].classList.add("font-weight-bolder");
 let figuresCount = document.querySelector("[data-figuresCount").getAttribute("data-figuresCount");
 let figuresCurrentPage = 1;
 let figuresPageTarget = null;
 
 let commentPaginationlinks = document.querySelectorAll("[data-commentBtns]");
+commentPaginationlinks[1].classList.add("font-weight-bolder");
 let commentsCount = document.querySelector("[data-commentsCount").getAttribute("data-commentsCount");
 let commentsCurrentPage = 1;
 let commentsPageTarget = null;
 
 let userPaginationlinks = document.querySelectorAll("[data-userBtns]");
+userPaginationlinks[1].classList.add("font-weight-bolder");
 let usersCount = document.querySelector("[data-usersCount").getAttribute("data-usersCount");
 let usersCurrentPage = 1;
 let usersPageTarget = null;
@@ -28,10 +34,9 @@ let usersPageTarget = null;
 let pageTarget = null;
 let currentPage = null;
 let elementsCount = null;
-let maxPerPage = 5;
 let arrow = null;
-
-
+let confirmation = null;
+let method = null;
 
 //--------------FIGURES----------------//
 
@@ -49,11 +54,14 @@ for (figurePaginationlink of figurePaginationlinks) {
         figuresPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
         [currentPage, pageTarget] = paginationLogic(figuresCurrentPage, figuresPageTarget, figuresCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
 
+        arrow = null;
         figuresCurrentPage = parseInt(currentPage, 10);
         figuresPageTarget = pageTarget;
 
         ajaxQuery('/admin/next/figures/', figuresPageTarget, figuresContent); //on va chercher les éléments en base
+
     })
+
 }
 
 
@@ -71,9 +79,9 @@ for (commentPaginationlink of commentPaginationlinks) {
         }
 
         commentsPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
-
         [currentPage, pageTarget] = paginationLogic(commentsCurrentPage, commentsPageTarget, commentsCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
 
+        arrow = null;
         commentsCurrentPage = parseInt(currentPage, 10);
         commentsPageTarget = pageTarget;
 
@@ -97,9 +105,9 @@ for (userPaginationlink of userPaginationlinks) {
         }
 
         usersPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
-
         [currentPage, pageTarget] = paginationLogic(usersCurrentPage, usersPageTarget, usersCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
 
+        arrow = null;
         usersCurrentPage = parseInt(currentPage, 10);
         usersPageTarget = pageTarget;
 
@@ -112,7 +120,7 @@ for (userPaginationlink of userPaginationlinks) {
 //---------------------LOGIC--------------------//
 
 
-const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow = null) {
+const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow) {
 
     if (arrow) {
         if (arrow == "prev") { //prev  btn
@@ -132,11 +140,9 @@ const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow 
                 currentPage += 1;
             }
         }
-        arrow = null;
     } else { //targetPage  is a number
         currentPage = pageTarget;
     }
-
     return [currentPage, pageTarget];
 }
 
@@ -170,7 +176,11 @@ const ajaxQuery = function (url, pageTarget, content) {
             }
 
         })
+        // Integration des nouveaux liens créés via JavaScript
+        links = document.querySelectorAll("[activation]");
     })
+
+
 }
 
 
@@ -218,6 +228,15 @@ const figureRows = function (e) {
     tr.appendChild(td5);
     tr.appendChild(activationlink);
 
+
+    // Bold current page
+    for (let f of figurePaginationlinks) {
+        f.classList.remove("font-weight-bolder");
+        if (parseInt(f.textContent, 10) === figuresCurrentPage) {
+            f.classList.add("font-weight-bolder");
+        }
+    }
+
 }
 
 //comments admin panel
@@ -257,6 +276,16 @@ const commentRows = function (c) {
     tr.appendChild(td3);
     tr.appendChild(td4);
     tr.appendChild(activationlink);
+
+
+    // Bold current page
+
+    for (let f of commentPaginationlinks) {
+        f.classList.remove("font-weight-bolder");
+        if (parseInt(f.textContent, 10) === commentsCurrentPage) {
+            f.classList.add("font-weight-bolder");
+        }
+    }
 
 }
 
@@ -301,6 +330,74 @@ const userRows = function (u) {
     tr.appendChild(td5);
     tr.appendChild(activationlink);
 
+
+    // Bold current Page
+
+    for (let f of userPaginationlinks) {
+        f.classList.remove("font-weight-bolder");
+        if (parseInt(f.textContent, 10) === usersCurrentPage) {
+            f.classList.add("font-weight-bolder");
+        }
+    }
+
+}
+
+
+//on écoute le click sur l'élément parent car les liens sont ajoutés dynamiquement lors du changement de page !
+
+for (table of tables) {
+
+    table.addEventListener("click", function (e) {
+        if (e.target && e.target.matches("a")) {
+            e.preventDefault();
+            e.stopPropagation();
+            link = e.target;
+            //if activation
+            if (link.attributes.activation.value == "true") {
+                confirmation = "Voulez-vous vraiment désactiver l'élément ?";
+                methodR = "DELETE";
+            } else {
+                confirmation = "Voulez-vous vraiment activer l'élément ?";
+                methodR = "PUT";
+
+            }
+
+            //Confirmation ?
+            if (confirm(confirmation)) {
+                //On envoie une requète Ajax vers le href du lien avec la méthode DELETE
+                fetch(link.getAttribute("href"), {
+                    method: methodR,
+                    headers: {
+                        "X-Requested-Width": "XMLHttpRequest",
+                        "Content-Type": "application/json"
+                    }
+                }).then(
+                    //Récupération de la réponse en JSON
+                    response => response.json()
+                ).catch(e => alert(e))
+                linkSWapp(link);
+            }
+        }
+    })
+}
+
+
+//Cacher un bouton et afficher l'autre
+
+const linkSWapp = function (link) {
+
+    if (link.textContent === "Désactiver") {
+        link.textContent = "Activer"
+        link.href.split('/')[3] = "activate";
+        link.attributes.activation.value = false;
+        link.classList.replace("btn-warning", "btn-success");
+    }
+    else {
+        link.textContent = "Désactiver";
+        link.href.split('/')[3] = "desactivate";
+        link.attributes.activation.value = true;
+        link.classList.replace("btn-success", "btn-warning");
+    }
 }
 
 

@@ -37,9 +37,7 @@
 									<td>
 										{% if figure.getActivatedAt is not null %}
 											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true"  class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" hidden activation="false"  class="btn btn-success btn-sm">Activer</a>
 										{% else %}
-											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" hidden activation="true"  class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
@@ -90,9 +88,7 @@
 									<td>
 										{% if comment.getActivatedAt is not null %}
 											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" hidden activation="false"  class="btn btn-success btn-sm">Activer</a>
 										{% else  %}
-											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" hidden activation="true" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
@@ -106,8 +102,8 @@
 				<input type="text" hidden data-commentsCount={{ commentsCount }}>
 
 				<a href="" data-commentBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
-				{% for i in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
-					<a href="" data-commentBtns class="link_blog">{{i}}</a>
+				{% for j in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
+					<a href="" data-commentBtns class="link_blog">{{j}}</a>
 				{% endfor %}
 				<a href="" data-commentBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
@@ -136,9 +132,7 @@
 									<td>
 										{% if user.token is null %}
 											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
-											<a href="{{ path('admin_user_activate', { id: user.id }) }}" hidden activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% else  %}
-											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" hidden activation="true" class="btn btn-warning btn-sm">Désactiver</a>
 											<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 										{% endif %}
 									</td>
@@ -151,8 +145,8 @@
 				<input type="text" hidden data-usersCount={{ usersCount }}>
 
 				<a href="" data-userBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
-				{% for i in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
-					<a href="" data-userBtns class="link_blog">{{i}}</a>
+				{% for k in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
+					<a href="" data-userBtns class="link_blog">{{k}}</a>
 				{% endfor %}
 				<a href="" data-userBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
@@ -160,6 +154,5 @@
 {% endblock %}
 
 {% block javascript %}
-	<script src=" {{ asset('js/activation.js') }} "></script>
 	<script src=" {{ asset('js/admin_pagination.js') }}"></script>
 {% endblock %}
