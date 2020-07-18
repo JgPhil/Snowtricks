@@ -5,12 +5,9 @@ const usersElement = document.getElementById("js-users");
 const maxPerPage = 5;
 const tables = document.querySelectorAll("table");
 
-let links = document.querySelectorAll("[activation]");
-
 let figuresContent = figuresElement.tBodies;
 let commentsContent = commentsElement.tBodies;
 let usersContent = usersElement.tBodies;
-
 
 
 let figurePaginationlinks = document.querySelectorAll("[data-figureBtns]");
@@ -36,7 +33,6 @@ let currentPage = null;
 let elementsCount = null;
 let arrow = null;
 let confirmation = null;
-let method = null;
 
 //--------------FIGURES----------------//
 
@@ -123,18 +119,18 @@ for (userPaginationlink of userPaginationlinks) {
 const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow) {
 
     if (arrow) {
-        if (arrow == "prev") { //prev  btn
+        if (arrow == "prev") { //is prev btn
             if (currentPage != 1) {
                 pageTarget = currentPage - 1;
                 currentPage -= 1;
             } else {
-                alert('pas d\'entrées plus récentes')
                 pageTarget = 1;
+                return [currentPage, pageTarget]; //first page  => return
             }
-        } else { //next btn
-            if ((currentPage + 1) > (Math.ceil(elementsCount / maxPerPage))) {
-                alert('Vous êtes arrivé au bout du tunnel !');
+        } else { //is next btn
+            if ((currentPage + 1) > (Math.ceil(elementsCount / maxPerPage))) { //last page => return
                 pageTarget = Math.ceil(elementsCount / maxPerPage);
+                return [currentPage, pageTarget];
             } else {
                 pageTarget = currentPage + 1
                 currentPage += 1;
@@ -278,7 +274,7 @@ const commentRows = function (c) {
     tr.appendChild(activationlink);
 
 
-    // Bold current page
+    // Bold font  current page
 
     for (let f of commentPaginationlinks) {
         f.classList.remove("font-weight-bolder");

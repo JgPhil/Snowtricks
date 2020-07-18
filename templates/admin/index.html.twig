@@ -10,8 +10,8 @@
 {% block body %}
 	<div class="container">
 
-
-		<div class="mb-5">
+	<h1 class="admin-title">Administration</h1>
+		<div class="mb-5 block-table">
 			<div>
 				<h2>Figures</h2>
 				<table class="table" id="js-figures">
@@ -61,7 +61,7 @@
 		</div>
 
 
-		<div class="mb-5">
+		<div class="mb-5 block-table">
 			<div>
 				<h2>Commentaires</h2>
 				<table class="table" id="js-comments">
@@ -97,8 +97,8 @@
 						{% endfor %}
 				</table>
 
-			</div>
-				
+			</div>				
+			
 				<input type="text" hidden data-commentsCount={{ commentsCount }}>
 
 				<a href="" data-commentBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
@@ -107,7 +107,7 @@
 				{% endfor %}
 				<a href="" data-commentBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
 		</div>
-		<div class="mb-5">
+		<div class="mb-5 block-table">
 			<div>
 				<h2>Utilisateurs</h2>
 				<table class="table" id="js-users">

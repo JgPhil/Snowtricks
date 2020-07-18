@@ -73,8 +73,11 @@ table {
 
 tr {
   height: 85px;
-  overflow-y:auto;
-  overflow-x:hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  justify-content: center;
+  text-align: center;
 }
 
 th {
@@ -88,4 +91,35 @@ button {
 .link_blog {
   font-size: 1.7em;
   margin-left: 0.5em;
+}
+
+.block-table {
+  border: solid;
+  border-radius: 32px;
+  padding: 1em;
+  border-color: #2780e3;
+}
+
+.admin-title {
+  font-size: 3em;
+  font-weight: bolder;
+  background-image: url("../uploads/pictures/Snowboard.png");
+  background-size: 10em, contain ;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: aliceblue;
+  height: 85px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 1em;
+  border-radius: 32px;
+}
+
+h2 {
+  text-align: center;
+  font-weight: 700;
+  background-color: #ffa700;
+  border-radius: 32px;
 }
