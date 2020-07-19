@@ -3,8 +3,13 @@ const xhr = new XMLHttpRequest();
 let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
+
 let scrollUpBtn = document.getElementById("js-btn-scroll-up");
 
+scrollUpBtn.addEventListener('click', function(){
+    scrollUpBtn.style.display = 'none';
+  })
+  
 loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
