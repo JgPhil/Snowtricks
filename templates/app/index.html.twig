@@ -25,15 +25,19 @@
 		{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
 		<div class="jumbotron" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;">
 			<div class="container-full-bg">
+
 				<h1 class="display-4">
 					<a href="{{ path( 'trick_show', { id: figures[0].id } ) }}" style="color: white">
 						{{ figures[0].title }}
 					</a>
 				</h1>
+
 				<hr>
+
 				<p class="lead">
 					{{ figures[0].description|u.truncate(80) }}
 				</p>
+
 				<p class="lead">
 					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
 					{% if app.user %}
@@ -45,13 +49,18 @@
 						</a>
 					{% endif %}
 				</p>
+
+				{# SCROLL DOWN BUTTON  #}
+				<a class="btn-scroll scroll-down" href="#js-more">
+					<i class="fas fa-arrow-down"></i>
+				</a>
+
 			</div>
 		</div>
 
 		<!-- TOUTES LES FIGURES -->
-		<h1 class="text-center">Toutes les figures</h1>
 
-		<div class="container">
+		<div class="container" id="block-figures">
 			<div class="row mt-4" id="js-more">
 				{% for figure in figures|slice(1) %}
 					{% if figure.activatedAt != null %}
@@ -89,13 +98,19 @@
 						</div>
 					{% endif %}
 				{% endfor %}
-
 			</div>
 			<div class="row">
+
 				<div class="col text-center">
 					<a class="btn btn-success" id="js-load">
 						Load More</a>
+					{# SCROLL DOWN BUTTON  #}
+					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#js-more" hidden>
+						<i class="fas fa-arrow-up"></i>
+					</a>
 				</div>
+
+
 			</div>
 		</div>
 	</div>
@@ -106,4 +121,6 @@
 	</script>
 	<script src=" {{ asset('/js/loadMore.js') }}"></script>
 	<script src=" {{ asset('js/delete.js') }} "></script>
+	<script src="{{asset('js/scroll.js')}}"></script>
+	<script src="{{asset('js/index-figures-observer.js')}}"></script>
 {% endblock %}

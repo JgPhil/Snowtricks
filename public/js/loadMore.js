@@ -3,6 +3,7 @@ const xhr = new XMLHttpRequest();
 let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
+let scrollUpBtn = document.getElementById("js-btn-scroll-up");
 
 loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
@@ -18,6 +19,10 @@ loadButton.addEventListener('click', function (event) {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             let response = this.response
             result = JSON.parse(response);
+
+            if (result.sliceFigures.length < 5) {
+                loadButton.style.display = 'none';
+            }
 
             result.sliceFigures.forEach(function (k) {
                 let div1 = document.createElement('div');
@@ -86,4 +91,8 @@ loadButton.addEventListener('click', function (event) {
         }
     };
     xhr.send();
+
+    if (more.childElementCount >= 10) {
+        scrollUpBtn.removeAttribute("hidden");
+    }
 });

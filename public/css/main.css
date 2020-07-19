@@ -36,6 +36,7 @@
 
 .toto {
   margin-top: 95px;
+  margin-bottom: 50px;
 }
 
 .iframe-container {
@@ -103,8 +104,8 @@ button {
 .admin-title {
   font-size: 3em;
   font-weight: bolder;
-  background-image: url("../uploads/pictures/Snowboard.png");
-  background-size: 10em, contain ;
+  background-image: url('../uploads/pictures/Snowboard.png');
+  background-size: 10em, contain;
   background-repeat: no-repeat;
   background-position: center;
   color: aliceblue;
@@ -123,3 +124,102 @@ h2 {
   background-color: #ffa700;
   border-radius: 32px;
 }
+
+a.btn-scroll {
+  font-size: 3em;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+a.scroll-down {
+  bottom: 140px;
+  right: 11em;
+  margin: auto;
+  position: absolute;
+  padding-top: 400px;
+  z-index: 9;
+  -webkit-animation: scroll_down_btn-animation 2s infinite;
+  animation: scroll_down_btn-animation 2s infinite;
+}
+
+a.scroll-up {
+  position: fixed;
+  bottom: 2.5em;
+  -webkit-animation: scroll_up_btn-animation 2s infinite;
+  animation: scroll_up_btn-animation 2s infinite;
+}
+
+
+@keyframes scroll_down_btn-animation {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes scroll_down_btn-animation {
+  0% {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    -webkit-transform: translate(0, 20px);
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scroll_up_btn-animation {
+  100% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  0% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes scroll_up_btn-animation {
+  100% {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  40% {
+    -webkit-transform: translate(0, 20px);
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  0% {
+    opacity: 0;
+  }
+}
+
