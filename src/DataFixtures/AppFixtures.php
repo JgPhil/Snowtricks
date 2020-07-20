@@ -38,7 +38,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     );
                 $manager->persist($figure);
 
-                for ($k = 0; $k < mt_rand(2, 5); $k++) {
+                for ($k = 0; $k < mt_rand(20, 40); $k++) {
                     $comment = new Comment();
                     $now = new \DateTime();
                     $days = $now->diff($figure->getCreatedAt())->days;

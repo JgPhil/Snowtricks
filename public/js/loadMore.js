@@ -4,6 +4,8 @@ let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
 
+
+
 loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -18,6 +20,10 @@ loadButton.addEventListener('click', function (event) {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             let response = this.response
             result = JSON.parse(response);
+
+            if (result.sliceFigures.length < 5) {
+                loadButton.style.display = 'none';
+            }
 
             result.sliceFigures.forEach(function (k) {
                 let div1 = document.createElement('div');
@@ -84,6 +90,12 @@ loadButton.addEventListener('click', function (event) {
                 more.appendChild(div1);
             });
         }
+
+        if (more.childElementCount >= 10) {
+            scrollUpBtn.removeAttribute("hidden");
+        }
     };
     xhr.send();
+
+
 });

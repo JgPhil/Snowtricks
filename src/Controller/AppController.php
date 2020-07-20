@@ -193,28 +193,15 @@ class AppController extends AbstractController
 
 
     /**
-     * @Route("/next/comments/{figureId}/{offset}", name="load_next_comments")
+     * @Route("/figure/{id}/next/comments/{lastCommentId}", name="load_next_comments")
      */
-    public function nextComments(CommentRepository $repo, $figureId,  $offset)
-    {
-        return $this->json(
-            [
-                'slice' => $repo->nextForumCommentSlice($figureId, $offset)
-            ],
-            200,
-            [],
-            ['groups' => 'comment_read']
-        );
-    }
+    public function nextComments(CommentRepository $repo, Figure $figure , $lastCommentId)
+    {       
+        $comment = $repo->find($lastCommentId);
 
-    /**
-     * @Route("/prvs/comments/{figureId}/{offset}", name="load_prvs_comments")
-     */
-    public function prvsComments(CommentRepository $repo, $figureId, $offset)
-    {
         return $this->json(
             [
-                'slice' => $repo->prvsForumCommentSlice($figureId, $offset)
+                'slice' => $repo->nextForumCommentSlice($figure, $comment)
             ],
             200,
             [],

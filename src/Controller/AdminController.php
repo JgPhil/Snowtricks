@@ -170,20 +170,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/prvs/figures/{offset}", name="admin_load_prvs_figures")
-     *
-     * @param FigureRepository $repo
-     * @param [type] $offset
-     * @return void
-     */
-    public function prvsSliceFigures(FigureRepository $repo, $offset)
-    {
-        return $this->prvsSliceEntity($repo, $offset);
-    }
-
-
-
-    /**
      * @Route("/admin/next/comments/{page}", name="admin_load_next_comments")
      *
      * @param CommentRepository $repo
@@ -201,19 +187,6 @@ class AdminController extends AbstractController
             ['groups' => 'comment_read']
         );
     }
-
-    /**
-     * @Route("/admin/prvs/comments/{offset}", name="admin_load_prvs_comments")
-     *
-     * @param CommentRepository $repo
-     * @param [type] $offset
-     * @return void
-     */
-    public function prvsSliceComments(CommentRepository $repo, $offset)
-    {
-        return $this->prvsSliceEntity($repo, $offset);
-    }
-
 
 
     /**

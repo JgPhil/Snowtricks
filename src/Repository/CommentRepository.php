@@ -21,18 +21,17 @@ class CommentRepository extends ServiceEntityRepository
     }
 
 
-    public function firstComments($figure)
+    public function firstComments(Figure $figure)
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
-            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
+            ->andWhere('f.figure = :figure')
             ->orderBy('f.createdAt', 'DESC')
+            ->setParameter('figure', $figure)
             ->setMaxResults(5)
-            ->setParameter('figureId' , $figure->getId())
             ->getQuery()
             ->getResult();
     }
-
 
     /**
      * 
@@ -49,65 +48,24 @@ class CommentRepository extends ServiceEntityRepository
             ->getResult(); 
     }
 
-    public function nextForumCommentSlice($figureId, $offset)
+
+    /**
+     * Ajax callback "show.html.twig" infinite scroll
+     */
+    public function nextForumCommentSlice(Figure $figure, Comment $comment)
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
-            ->andWhere('f.id < :offset')
-            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
+            ->andWhere('f.figure = :figure')
+            ->andWhere('f.createdAt < :lastCommentDatetime')
             ->orderBy('f.createdAt', 'DESC')
             ->setMaxResults(5)
-            ->setParameter('figureId' , $figureId)
-            ->setParameter(':offset', $offset)
+            ->setParameter('figure' , $figure)
+            ->setParameter('lastCommentDatetime', $comment->getCreatedAt())
             ->getQuery()
             ->getResult();
     }
 
-    public function prvsForumCommentSlice($figureId, $offset)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.activatedAt IS NOT NULL')
-            ->andWhere('f.id > :offset')
-            ->leftJoin('f.figure', 'figure', 'WITH', 'figure.id = :figureId')
-            ->orderBy('f.createdAt', 'DESC')
-            ->setMaxResults(5)
-            ->setParameter('figureId' , $figureId)
-            ->setParameter(':offset', $offset)
-            ->getQuery()
-            ->getResult();
-    }
-
-
-    /**
-     * @return Comment[] Returns an array of Comment objects
-     */
-    public function nextSlice($offset)
-    {
-
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.id < :offset')
-            ->orderBy('f.id', 'DESC')
-            ->setMaxResults(5)
-            ->setParameter('offset', $offset)
-            ->getQuery()
-            ->getResult();
-    }
-
-
-    /**
-     * 
-     */
-    public function prvsSlice($offset)
-    {
-
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.id > :offset')
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(5)
-            ->setParameter('offset', $offset)
-            ->getQuery()
-            ->getResult();
-    }
 
     // /**
     //  * @return Comment[] Returns an array of Comment objects
