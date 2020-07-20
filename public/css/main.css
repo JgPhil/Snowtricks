@@ -145,6 +145,7 @@ a.scroll-down {
 
 a.scroll-up {
   position: fixed;
+  left: 50%;
   bottom: 2.5em;
   -webkit-animation: scroll_up_btn-animation 2s infinite;
   animation: scroll_up_btn-animation 2s infinite;

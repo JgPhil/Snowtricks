@@ -52,7 +52,7 @@ class CommentRepository extends ServiceEntityRepository
     /**
      * Ajax callback "show.html.twig" infinite scroll
      */
-    public function nextForumCommentSlice(Figure $figure, $comment)
+    public function nextForumCommentSlice(Figure $figure, Comment $comment)
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')

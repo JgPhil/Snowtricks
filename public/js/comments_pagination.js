@@ -1,15 +1,16 @@
 
 const forumCommentsElement = document.getElementById("forumComments");
+const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
 let figureId = document.getElementById("figureId").textContent;
-let url = '/figure/'+figureId+'/next/comments/';
-
-//--//--//------COMMENTS---------/--//--//--//-----------
-
+let url = '/figure/' + figureId + '/next/comments/';
 
 window.addEventListener('scroll', function () {
-    if (window.scrollY + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
-        commentsOffset = forumCommentsElement.lastElementChild.firstElementChild.textContent;
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) {
+        commentsOffset = forumCommentsElement.children[forumCommentsElement.children.length - 2].firstElementChild.textContent;
         ajaxQuery(url, commentsOffset);
+        if (forumCommentsElement.childElementCount >= 10) {
+            scrollUpBtn.removeAttribute("hidden");
+        }
     }
 })
 
@@ -28,9 +29,9 @@ const ajaxQuery = function (url, offset) {
         response => response.json()
     ).then(data => {
         data.slice.forEach(e => {
-                forumCommentsRows(e);
+            forumCommentsRows(e);
         });
-    })/* .catch(e => alert(e))  */;
+    }).catch(e => alert(e));
 }
 
 
@@ -54,11 +55,12 @@ const forumCommentsRows = function (e) {
     h5.classList.add("mt-0");
     h5.textContent = e.author.username + ' (';
 
+    let date = new Date(e.createdAt);
     let small = document.createElement('small');
-    small.textContent = e.createdAt + ') ';
+    small.textContent = date.toLocaleDateString('fr-FR', dateOptions) + ') ';
 
     let p = document.createElement('p');
-    p.textContent = e.id;
+    p.textContent = e.content;
 
 
 

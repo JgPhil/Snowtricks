@@ -196,7 +196,7 @@ class AppController extends AbstractController
      * @Route("/figure/{id}/next/comments/{lastCommentId}", name="load_next_comments")
      */
     public function nextComments(CommentRepository $repo, Figure $figure , $lastCommentId)
-    {        
+    {       
         $comment = $repo->find($lastCommentId);
 
         return $this->json(

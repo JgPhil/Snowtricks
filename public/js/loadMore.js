@@ -4,12 +4,8 @@ let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
 
-let scrollUpBtn = document.getElementById("js-btn-scroll-up");
 
-scrollUpBtn.addEventListener('click', function(){
-    scrollUpBtn.style.display = 'none';
-  })
-  
+
 loadButton.addEventListener('click', function (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -94,10 +90,12 @@ loadButton.addEventListener('click', function (event) {
                 more.appendChild(div1);
             });
         }
+
+        if (more.childElementCount >= 10) {
+            scrollUpBtn.removeAttribute("hidden");
+        }
     };
     xhr.send();
 
-    if (more.childElementCount >= 10) {
-        scrollUpBtn.removeAttribute("hidden");
-    }
+
 });

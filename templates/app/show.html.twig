@@ -17,7 +17,7 @@
 	{% endfor %}
 
 	{% set pictureJumbotron = figure.pictures.first ? " /uploads/pictures/" ~ figure.pictures.first.name : '' %}
-	<div class="jumbotron container align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;">
+	<div class="jumbotron container align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;" id="topJumbotron">
 		<div>
 			<h1 class="display-4">
 				<a href="{{ path( 'trick_show', { id: figure.id } ) }}" style="color: white">
@@ -143,6 +143,10 @@
 					</div>
 				</div>
 			{% endfor %}
+			{# SCROLL DOWN BUTTON  #}
+					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
+						<i class="fas fa-arrow-up"></i>
+					</a>
 		</div>
 	</div>
 
@@ -152,4 +156,5 @@
 
 {% block javascript %}
 	<script src=" {{ asset('js/comments_pagination.js') }}"></script>
+	<script src=" {{ asset('js/scrollUpBtn.js') }}"></script>
 {% endblock %}
