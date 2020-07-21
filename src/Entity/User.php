@@ -73,7 +73,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
-     * @Groups({"user_read"})
+     * @Groups({"user_read", "comment_read"})
      */
     private $pictures;
 

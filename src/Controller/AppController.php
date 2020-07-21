@@ -10,6 +10,7 @@ use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,6 +43,7 @@ class AppController extends AbstractController
      */
     public function create(EntityManagerInterface $em, Request $request)
     {
+        $order = 1;
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
@@ -51,7 +53,7 @@ class AppController extends AbstractController
             $pictures = $form->get('pictures')->getData();
             $videoUrl = $form->get('videos')->getData();
 
-            //Images
+            //Images 
             foreach ($pictures as $picture) {
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
@@ -63,8 +65,11 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
+                $pic->setSortOrder($order);
+
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
+                $order++;
             }
             //video
             if ($videoUrl) {
@@ -79,6 +84,10 @@ class AppController extends AbstractController
 
             $em->persist($figure);
             $em->flush();
+
+
+
+
             $this->addFlash('message', 'Votre figure a bien été ajoutée');
             return $this->redirectToRoute('home');
         }
@@ -120,6 +129,7 @@ class AppController extends AbstractController
 
         ]);
     }
+
 
     /**
      * @Route("figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
@@ -195,8 +205,8 @@ class AppController extends AbstractController
     /**
      * @Route("/figure/{id}/next/comments/{lastCommentId}", name="load_next_comments")
      */
-    public function nextComments(CommentRepository $repo, Figure $figure , $lastCommentId)
-    {       
+    public function nextComments(CommentRepository $repo, Figure $figure, $lastCommentId)
+    {
         $comment = $repo->find($lastCommentId);
 
         return $this->json(
@@ -209,4 +219,28 @@ class AppController extends AbstractController
         );
     }
 
+
+
+    /**
+     * @Route("/picture/{id}", name="picture_edit")
+     */
+    public function updatePicture(Picture $picture, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $pictureRepo = $this->getDoctrine()->getRepository(Picture::class);
+        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
+
+        $figure = $figureRepo->find($picture->getFigure()->getId());
+
+    
+        //récupération du rang de l'image
+        $order = $picture->getSortOrder();
+        // effacement du fichier dans le dossier Pictures
+        unlink($this->getParameter('pictures_directory') . '/' . $picture->getName());
+        //Effacement de l'entrée en base de donnée de l'image 
+        $em->remove($picture);
+
+
+
+    }
 }

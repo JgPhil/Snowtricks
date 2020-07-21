@@ -16,8 +16,7 @@ window.onload = () => {
                     headers: {
                         "X-Requested-Width": "XMLHttpRequest",
                         "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ "_token": this.dataset.token })
+                    }
                 }).then(
                     //Récupération de la réponse en JSON
                     response => response.json()

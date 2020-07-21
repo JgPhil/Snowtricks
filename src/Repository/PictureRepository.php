@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Picture;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Picture|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,17 @@ class PictureRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Picture::class);
+    }
+
+
+    public function getMaxOrderValue(Figure $figure)
+    {
+        return $this->createQueryBuilder('f')
+        ->andWhere('f.figure = :figure')
+            ->select('MAX(f.sortOrder)')
+            ->setParameter('figure', $figure)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     // /**

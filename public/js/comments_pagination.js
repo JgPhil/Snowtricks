@@ -37,6 +37,10 @@ const ajaxQuery = function (url, offset) {
 
 const forumCommentsRows = function (e) {
 
+
+    let src = e.pictures ? e.pictures[0].name : "https://eu.ui-avatars.com/api/?name=" + e.author.username;
+
+
     let div1 = document.createElement('div');
     div1.classList.add("media", "mb-4");
 
@@ -45,7 +49,7 @@ const forumCommentsRows = function (e) {
     div2.textContent = e.id;
 
     let userImg = document.createElement('img');
-    userImg.setAttribute("src", "");
+    userImg.setAttribute("src", src);
     userImg.classList.add("d-flex", "mr-3", "rounded-circle");
 
     let div3 = document.createElement('div');

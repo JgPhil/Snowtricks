@@ -22,13 +22,13 @@ class Picture
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "user_read"})
      */
     private $figure_id;
 
@@ -46,6 +46,14 @@ class Picture
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"figure_read", "user_read"})
+     */
+    private $sortOrder;
+
+    
 
     public function getId(): ?int
     {
@@ -123,4 +131,17 @@ class Picture
 
         return $this;
     }
+
+    public function getSortOrder(): ?int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(?int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+
+        return $this;
+    }
+
 }
