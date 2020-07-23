@@ -12,6 +12,7 @@ use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
 use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -149,6 +150,8 @@ class AppController extends AbstractController
 
             //Images
             foreach ($pictures as $picture) {
+
+                $maxOrder = $this->findPictureHighestOrder($figure);
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
                 //copie dans dossier uploads
@@ -159,6 +162,7 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
+                $pic->setSortOrder($maxOrder + 1);
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
             }
@@ -221,26 +225,62 @@ class AppController extends AbstractController
 
 
 
-    /**
-     * @Route("/picture/{id}", name="picture_edit")
-     */
-    public function updatePicture(Picture $picture, Request $request)
+    private function findPictureHighestOrder(Figure $figure)
     {
+
+        $pictures = $figure->getPictures();
+        // trouver le sort_order le plus élevé dans les images
+        $maxOrder = 0;
+        foreach ($pictures as $picture) {
+            if ($picture->getsortOrder() > $maxOrder) {
+                $maxOrder = $picture->getsortOrder();
+            }
+        }
+
+        return $maxOrder;
+    }
+
+
+    /**
+     * @Route("/figure/{figureId}/update/oldPicture/{oldPictureId}/oldPictureOrder/{oldPictureOrder}", name="picture_edit")
+     */
+    public function updatePicture($figureId, $oldPictureId, $oldPictureOrder, Request $request)
+    {
+
         $em = $this->getDoctrine()->getManager();
         $pictureRepo = $this->getDoctrine()->getRepository(Picture::class);
         $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
 
-        $figure = $figureRepo->find($picture->getFigure()->getId());
-
-    
-        //récupération du rang de l'image
-        $order = $picture->getSortOrder();
-        // effacement du fichier dans le dossier Pictures
-        unlink($this->getParameter('pictures_directory') . '/' . $picture->getName());
-        //Effacement de l'entrée en base de donnée de l'image 
-        $em->remove($picture);
+        $content = $request->files;
+        $uploadedFile = $content->get('file');
+        $filename = md5(uniqid()) . '.' . $uploadedFile->guessExtension();
+        $uploadedFile->move(
+            $this->getParameter('pictures_directory'),
+            $filename
+        );
 
 
+        $oldPicture = $pictureRepo->find($oldPictureId);
+        $figure = $figureRepo->find($figureId);
 
+        // effacement de de l'ancienne image dans le dossier Pictures
+        unlink($this->getParameter('pictures_directory') . '/' . $oldPicture->getName());
+        //effacement de l'entrée en base de l'ancienne image
+        $em->remove($oldPicture);
+
+
+        $newPicture = new Picture;
+        $newPicture->setSortOrder($oldPictureOrder);
+        $newPicture->setFigure($figure);
+        $newPicture->setName($filename);
+
+        $figure->addPicture($newPicture);
+
+        $em->flush();
+
+        return $this->json([
+            'message' => "Image mise à jour",
+            'newPictureFilename' => $filename
+        ], 200);
     }
 }

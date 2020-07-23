@@ -1,7 +1,7 @@
 
 window.onload = () => {
     // Gestion des liens de suppression
-    let links = document.querySelectorAll("[data-delete]")
+    let links = document.querySelectorAll("[data-delete]");
 
     //on boucle sur links
     for (link of links) {

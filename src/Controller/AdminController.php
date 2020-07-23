@@ -118,7 +118,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/delete/video/{id}", name="video_delete")
      */
-    public function deleteVideo(Picture $video)
+    public function deleteVideo(Video $video)
     {
         return $this->desactivateEntity($video);
     }

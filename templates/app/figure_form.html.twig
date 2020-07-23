@@ -13,80 +13,96 @@
 
 	<div class="container">
 		{% set defaultPicture = null %}
-		{% for picture in trick.pictures %}
-			{% if picture.sortOrder == 1 %}
-				{% set defaultPicture = picture %}
-			{% endif %}
-		{% endfor %}
+		{% if trick is defined %}
+			{% for picture in trick.pictures %}
+				{% if picture.sortOrder == 1 %}
+					{% set defaultPicture = picture %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
 		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
+
+		{#------------------------JUMBOTRON---------------------------#}
 		<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
 			<h1 class="display-4" style="color:white"></h1>
+			{% if trick is defined %}
+				<div
+					class="editButtonMenu">
 
-			<div
-				class="editButtonMenu">
-				{#-----------UPDATE PICTURE --------#}
-				<a data-toggle="collapse" href="#update_picture_input" role="button" aria-expanded="false" aria-controls="collapseExample">
-					<i class="fas fa-pencil-alt fa-2x"></i>
-				</a>
+					{#-----------UPDATE PICTURE --------#}
+					<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
+						<i class="fas fa-pencil-alt fa-2x"></i>
+					</a>
+					{#---------DELETE PICTURE---------#}
+					<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
+						<i class="fas fa-trash-alt fa-2x"></i>
+					</a>
 
-				<div class="collapse" id="update_picture_input">
-					<input type="file" id="update_picture"/>
-					<div hidden>{{ defaultPicture.sortOrder }}</div>
-					<button>Envoyer</button>
-				</div>
-				{#!---------UPDATE PICTURE---------#}
+					{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+					<div class="collapse" id={{"update_picture_input" ~ defaultPicture.id }}>
+						<input type="file" id="update_picture"/>
+						<div hidden>{{ defaultPicture.id }}</div>
+						<div hidden>{{ trick.id }}</div>
+						<div hidden>{{ defaultPicture.sortOrder }}</div>
+						<!-- Picture sortOrder -->
+						<button data-update>Envoyer</button>
+					</div>
+				{% endif %}
 
-				<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
-					<i class="fas fa-trash-alt fa-2x"></i>
-				</a>
 			</div>
 
 		</div>
 
-
 		{{ form_start(figureForm) }}
+
 		<div
 			class="row">
 
 			{# -------------------------FIGURES PICTURES------------------------ #}
 
 			<div class="col-lg-6">
-				<div class="row picture-thumbs">
+				<div class="row picture-thumbs justify-content-center">
 
-					{% for picture in trick.pictures|slice(1) %}
-						<div hidden>{{ picture.id }}</div>
-						<div class="img-thumbnail col-sm-4">
-							<img
-							src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
+					<div>
+						{{ form_row(figureForm.pictures) }}
+					</div>
+					{% if trick is defined %}
+						<div class="row">
+							{% for picture in trick.pictures|slice(1) %}
+								<div hidden>{{ picture.id }}</div>
+								<div class="col-sm-4">
+									<img
+									src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
 
-							{#-----------UPDATE PICTURE --------#}
-							<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls="collapseExample">
-								<i class="fas fa-pencil-alt fa-2x"></i>
-							</a>
-							<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
-								<i class="fas fa-trash-alt fa-2x"></i>
-							</a>
+									{#-----------UPDATE PICTURE --------#}
+									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
+										<i class="fas fa-pencil-alt fa-2x"></i>
+									</a>
+									{#!---------DELETE PICTURE---------#}
+									<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
+										<i class="fas fa-trash-alt fa-2x"></i>
+									</a>
 
-							<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
-								<input type="file" id="update_picture"/>
-								<div hidden>{{ picture.sortOrder }}</div>
-								<!-- Picture sortOrder -->
-								<button>Envoyer</button>
-							</div>
-							{#!---------UPDATE PICTURE---------#}
+									{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+									<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
+										<input type="file" id="update_picture"/>
+										<div hidden>{{ picture.id }}</div>
+										<div hidden>{{ trick.id }}</div>
+										<div hidden>{{ picture.sortOrder }}</div>
+										<!-- Picture sortOrder -->
+										<button data-update>Envoyer</button>
+									</div>
+
+
+								</div>
+
+								{% set order = order +1 %}
+							{% endfor %}
 
 						</div>
-
-						{% set order = order +1 %}
-					{% endfor %}
-
+					{% endif %}
 				</div>
-
-				<div class="col-sm-6">
-					{{ form_row(figureForm.pictures) }}
-				</div>
-
 			</div>
 			{# -------------------------FIGURES PICTURES------------------------ #}
 
@@ -94,17 +110,18 @@
 			{# -------------------------FIGURES VIDEOS------------------------ #}
 			<div class="col-lg-6">
 				<div class="row">
-					{% for video in trick.videos %}
-						<div class="img-thumbnail">
-							<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-							<button type="button" class="btn btn-info" data-toggle="modal" data-target="#uploadModal">Changer</button>
-							<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>Supprimer</a>
-						</div>
-					{% endfor %}
+					{{ form_row(figureForm.videos) }}
 
-					{% for video in figureForm.videos %}
-						<li>{{ form_row(video) }}</li>
-					{% endfor %}
+					{% if trick is defined %}
+						{% for video in trick.videos %}
+							<div>
+								<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								<button type="button" class="btn btn-info" data-toggle="modal" data-target="#uploadModal">Changer</button>
+								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>Supprimer</a>
+							</div>
+						{% endfor %}
+					{% endif %}
+
 				</div>
 			</div>
 			{# -------------------------FIGURES VIDEOS------------------------ #}
@@ -116,30 +133,18 @@
 		{{ form_row(figureForm.description) }}
 
 
-		{% if app.request.attributes.get('_route') ==  "figure_edit"  %}
-
-
-			<div class="row">
-				<div class="col-sm-6">
-					{{ form_row(figureForm.category) }}
-				</div>
-				{{ form_row(figureForm.submit) }}
+		<div class="row">
+			<div class="col-sm-3">
+				{{ form_row(figureForm.category) }}
 			</div>
-			{{ form_end(figureForm) }}
-
-		{% else %}
-
-
-			{{ form_row(figureForm.videos) }}
 			{{ form_row(figureForm.submit) }}
-
-			{{ form_end(figureForm) }}
 		</div>
+		{{ form_end(figureForm) }}
 
-	{% endif %}
 
-{% endblock %}
-{% block javascript %}
-	<script src=" {{ asset('js/delete.js') }} "></script>
-	<script src=" {{ asset('js/picture_update.js') }} "></script>
-{% endblock %}
+	{% endblock %}
+	
+	{% block javascript %}
+		<script src=" {{ asset('js/delete.js') }} "></script>
+		<script src=" {{ asset('js/picture_update.js') }} "></script>
+	{% endblock %}

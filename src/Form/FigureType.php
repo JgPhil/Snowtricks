@@ -46,7 +46,7 @@ class FigureType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
-                    'placeholder' => "Entrez l'URL de la vidéo...",                   
+                    'placeholder' => "Collez une Url ici...",                   
                     
                 ],
             ])
