@@ -54,97 +54,137 @@
 
 		</div>
 
-		{{ form_start(figureForm) }}
+		<div id="alert" class="alert alert-success"></div>
+		{#-----FLASH MESSAGES------#}
 
-		<div
-			class="row">
+		<div class="container ">
+			{{ form_start(figureForm) }}
+			<div class="row justify-content-center ">
+				<a data-toggle="collapse" href="#media-block" role="button" aria-expanded="false" aria-controls="media-block">
+					<i class="fas fa-images fa-3x"></i>
+				</a>
+			</div>
+			<div
+				class="row collapse media-block mb-4" id="media-block">
 
-			{# -------------------------FIGURES PICTURES------------------------ #}
+				{# -------------------------FIGURES PICTURES------------------------ #}
 
-			<div class="col-lg-6">
-				<div class="row picture-thumbs justify-content-center">
-
-					<div>
-						{{ form_row(figureForm.pictures) }}
+				<div class="col-lg-6 pictures-container">
+					<div class="row justify-content-center">
+						<h3>Images</h3>
 					</div>
-					{% if trick is defined %}
-						<div class="row">
-							{% for picture in trick.pictures|slice(1) %}
-								<div hidden>{{ picture.id }}</div>
-								<div class="col-sm-4">
-									<img
-									src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
+					<div class="row picture-thumbs justify-content-center">
 
-									{#-----------UPDATE PICTURE --------#}
-									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
-										<i class="fas fa-pencil-alt fa-2x"></i>
-									</a>
-									{#!---------DELETE PICTURE---------#}
-									<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
-										<i class="fas fa-trash-alt fa-2x"></i>
-									</a>
+						<div>
+							{{ form_row(figureForm.pictures) }}
+						</div>
+						{% if trick is defined %}
+							<div class="row">
+								{% for picture in trick.pictures|slice(1) %}
+									<div hidden>{{ picture.id }}</div>
+									<div class="col-sm-4">
+										<img
+										src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt={{"Image numéro" ~ picture.id}}>
 
-									{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
-									<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
-										<input type="file" id="update_picture"/>
-										<div hidden>{{ picture.id }}</div>
-										<div hidden>{{ trick.id }}</div>
-										<div hidden>{{ picture.sortOrder }}</div>
-										<!-- Picture sortOrder -->
-										<button data-update>Envoyer</button>
+										{#-----------UPDATE PICTURE --------#}
+										<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
+											<i class="fas fa-pencil-alt fa-2x"></i>
+										</a>
+										{#!---------DELETE PICTURE---------#}
+										<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
+											<i class="fas fa-trash-alt fa-2x"></i>
+										</a>
+
+										{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+										<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
+											<input type="file" id="update_picture"/>
+											<div hidden>{{ picture.id }}</div>
+											<div hidden>{{ trick.id }}</div>
+											<div hidden>{{ picture.sortOrder }}</div>
+											<!-- Picture sortOrder -->
+											<button data-update>Envoyer</button>
+										</div>
+
+
 									</div>
 
+									{% set order = order +1 %}
+								{% endfor %}
 
-								</div>
-
-								{% set order = order +1 %}
-							{% endfor %}
-
-						</div>
-					{% endif %}
+							</div>
+						{% endif %}
+					</div>
 				</div>
-			</div>
-			{# -------------------------FIGURES PICTURES------------------------ #}
+				{# -------------------------FIGURES PICTURES------------------------ #}
 
 
-			{# -------------------------FIGURES VIDEOS------------------------ #}
-			<div class="col-lg-6">
-				<div class="row">
-					{{ form_row(figureForm.videos) }}
+				{# -------------------------FIGURES VIDEOS------------------------ #}
+				<div class="col-lg-6 videos-container">
+					<div class="row justify-content-center">
+						<h3>Vidéos</h3>
+					</div>
+					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
+
+
+					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}">
+
+						{% for videoField in figureForm.videos %}
+							<li hidden>
+								{{ form_widget(videoField) }}
+								<div id={{"liDelete-" ~ videoField.vars.data.id}}></div>
+							</li>
+						{% endfor %}
+
+
+					</ul>
+
 
 					{% if trick is defined %}
 						{% for video in trick.videos %}
 							<div>
-								<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-								<button type="button" class="btn btn-info" data-toggle="modal" data-target="#uploadModal">Changer</button>
-								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>Supprimer</a>
+								<iframe width="186" height="105" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+								<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
+									<i class="fas fa-pencil-alt fa-2x"></i>
+								</a>
+
+								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
+									<i class="fas fa-trash-alt fa-2x"></i>
+								</a>
+							</div>
+
+							<div class="collapse" id={{"update_video_input" ~ video.id }}>
+								<input type="text" id="newVideoUrl"/>
+								<div hidden>{{ video.id }}</div>
+								<div hidden>{{ trick.id }}</div>
+								<button data-update>Envoyer</button>
 							</div>
 						{% endfor %}
 					{% endif %}
 
 				</div>
+				{# -------------------------FIGURES VIDEOS------------------------ #}
+
 			</div>
-			{# -------------------------FIGURES VIDEOS------------------------ #}
+
+
+			{{ form_row(figureForm.title) }}
+			{{ form_row(figureForm.description) }}
+
+
+			<div class="row">
+				<div class="col-sm-3">
+					{{ form_row(figureForm.category) }}
+				</div>
+				{{ form_row(figureForm.submit) }}
+			</div>
+			{{ form_end(figureForm) }}
 
 		</div>
-
-
-		{{ form_row(figureForm.title) }}
-		{{ form_row(figureForm.description) }}
-
-
-		<div class="row">
-			<div class="col-sm-3">
-				{{ form_row(figureForm.category) }}
-			</div>
-			{{ form_row(figureForm.submit) }}
-		</div>
-		{{ form_end(figureForm) }}
-
-
 	{% endblock %}
-	
+
 	{% block javascript %}
 		<script src=" {{ asset('js/delete.js') }} "></script>
 		<script src=" {{ asset('js/picture_update.js') }} "></script>
+		<script src=" {{ asset('js/add_video.js') }} "></script>
 	{% endblock %}

@@ -44,7 +44,7 @@ class AppController extends AbstractController
      */
     public function create(EntityManagerInterface $em, Request $request)
     {
-        $order = 1;
+        $pictureOrder = 1; //initialisation du compteur lors d'une création de figure
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
@@ -52,7 +52,7 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
-            $videoUrl = $form->get('videos')->getData();
+            $videos = $form->get('videos')->getData();
 
             //Images 
             foreach ($pictures as $picture) {
@@ -66,17 +66,18 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
-                $pic->setSortOrder($order);
+                $pic->setSortOrder($pictureOrder);
 
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
-                $order++;
+                $pictureOrder++;
             }
-            //video
-            if ($videoUrl) {
-                $video = new Video();
-                $video->setUrl($videoUrl);
-                $figure->addVideo($video);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    $video = new Video();
+                    $em->persist($video);
+                    $figure->addVideo($video);
+                }
             }
 
 
@@ -146,7 +147,7 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
-            $videoUrl = $form->get('videos')->getData();
+            $videos = $form->get('videos')->getData();
 
             //Images
             foreach ($pictures as $picture) {
@@ -166,12 +167,14 @@ class AppController extends AbstractController
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
             }
-            //video
-            if ($videoUrl) {
-                $video = new Video();
-                $video->setUrl($videoUrl);
-                $figure->addVideo($video);
+
+            if ($videos) {
+                foreach ($videos as $video) {
+                    $em->persist($video);
+                    $figure->addVideo($video);
+                }
             }
+
 
             $figure->setLastModificationAt(new \DateTime());
             $em->flush();
@@ -281,6 +284,36 @@ class AppController extends AbstractController
         return $this->json([
             'message' => "Image mise à jour",
             'newPictureFilename' => $filename
+        ], 200);
+    }
+
+
+    /**
+     * @Route("/figure/{figureId}/update/oldVideo/{oldVideoId}", name="video_edit")
+     */
+    public function updateVideo($figureId, $oldVideoId, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $videoRepo = $this->getDoctrine()->getRepository(Video::class);
+        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
+        $figure = $figureRepo->find($figureId);
+
+        $newVideoUrl = $request->getContent();
+        // Effacement de l'ancienne vidéo 
+        $em->remove($videoRepo->find($oldVideoId));
+
+        $video = new Video;
+        $video->setFigureId($figureId);
+        $video->setUrl($newVideoUrl);
+
+        $figure->addVideo($video);
+
+        $em->persist($video);
+        $em->flush();
+
+        return $this->json([
+            'newVideoUrl' => $newVideoUrl,
+            'message' => "Video mise à jour"
         ], 200);
     }
 }

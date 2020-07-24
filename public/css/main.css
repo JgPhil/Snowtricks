@@ -23,10 +23,13 @@
   right: -47%;
 }
 
+.alert {
+  padding: 0 0 0 0;
+}
 
 .meta {
   border: 1px solid black;
-  height: 2rem;
+  height: 3rem;
 }
 
 .centering {
@@ -69,6 +72,8 @@
   width: 100%;
 }
 
+
+
 .media-container {
   height: 40px;
   display: flex;
@@ -93,8 +98,9 @@
   margin: 2rem;
 }
 
-.img-thumbnail>img {
-  object-fit: contain ;
+img {
+  object-fit: contain;
+  width: 150px;
 }
 
 table {
@@ -128,6 +134,12 @@ button {
   border-radius: 32px;
   padding: 1em;
   border-color: #2780e3;
+}
+
+.pictures-container,
+.videos-container {
+  padding: 1% 5% 5% 5%;
+  border: 1px solid black;
 }
 
 .admin-title {
