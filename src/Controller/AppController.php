@@ -2,23 +2,25 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\Video;
 use App\Entity\Figure;
 use App\Entity\Comment;
 use App\Entity\Picture;
 use App\Form\FigureType;
 use App\Form\CommentType;
-use App\Repository\CommentRepository;
+use App\Form\ProfileType;
+use Doctrine\ORM\EntityManager;
 use App\Repository\FigureRepository;
+use App\Repository\CommentRepository;
 use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class AppController extends AbstractController
 {
@@ -97,6 +99,48 @@ class AppController extends AbstractController
             'figureForm' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/profile", name="profile")
+     */
+    public function profile(EntityManagerInterface $em, Request $request)
+    {
+        $user = $this->getUser();
+        $oldPicture = $user->getPictures()[0];
+        $form = $this->createForm(ProfileType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($oldPicture) {
+                $em->remove($oldPicture);
+            }
+
+            $pictureData = $form->get('pictures')->getData();
+            $filename = md5(uniqid()) . '.' . $pictureData->guessExtension();
+            $pictureData->move(
+                $this->getParameter('pictures_directory'),
+                $filename
+            );
+            $picture = new Picture;
+            $picture->setName($filename);
+            $user->addPicture($picture);
+            $em->persist($picture);
+            $em->flush();
+            
+            return $this->redirectToRoute('profile');
+        }
+
+
+        return $this->render('app/profile.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+            'oldPicture' => $oldPicture
+        ]);
+    }
+
+
+
 
     /**
      * @Route("/figure/{id}", name="trick_show")

@@ -150,7 +150,7 @@
 							{{ comment.id }}
 						</div>
 
-						{% set userPicture = comment.author.pictures.count > 0  ? "uploads/pictures/" ~ comment.author.pictures.first : null %}
+						{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
 
 						<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle">
 						<div class="media-body">
