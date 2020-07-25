@@ -31,23 +31,25 @@
 					class="editButtonMenu">
 
 					{#-----------UPDATE PICTURE --------#}
-					<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
-						<i class="fas fa-pencil-alt fa-2x"></i>
-					</a>
-					{#---------DELETE PICTURE---------#}
-					<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
-						<i class="fas fa-trash-alt fa-2x"></i>
-					</a>
+					{% if defaultPicture %}
+						<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
+							<i class="fas fa-pencil-alt fa-2x"></i>
+						</a>
+						{#---------DELETE PICTURE---------#}
+						<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
+							<i class="fas fa-trash-alt fa-2x"></i>
+						</a>
 
-					{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
-					<div class="collapse" id={{"update_picture_input" ~ defaultPicture.id }}>
-						<input type="file" id="update_picture"/>
-						<div hidden>{{ defaultPicture.id }}</div>
-						<div hidden>{{ trick.id }}</div>
-						<div hidden>{{ defaultPicture.sortOrder }}</div>
-						<!-- Picture sortOrder -->
-						<button data-update>Envoyer</button>
-					</div>
+						{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+						<div class="collapse" id={{"update_picture_input" ~ defaultPicture.id }}>
+							<input type="file" id="update_picture"/>
+							<div hidden>{{ defaultPicture.id }}</div>
+							<div hidden>{{ trick.id }}</div>
+							<div hidden>{{ defaultPicture.sortOrder }}</div>
+							<!-- Picture sortOrder -->
+							<button data-update>Envoyer</button>
+						</div>
+					{% endif %}
 				{% endif %}
 
 			</div>

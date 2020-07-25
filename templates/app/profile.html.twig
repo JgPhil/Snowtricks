@@ -5,20 +5,27 @@
 {% block body %}
 	<div class="container">
 		<div class="row justify-content-center">
-			{{ form_start(form) }}
 
-			<h1>Page de profil de
-				{{user.username}}</h1>
-			<img src=" {{ asset('/uploads/pictures/' ~ user.pictures.first.name )}}" alt="">
-			<div class="row">
-				{{ form_widget(form.pictures) }}
+			<div class="col-sm-8">
+				<h1>Page de profil de
+					{{user.username}}</h1>
 			</div>
-
-			{{ form_end(form) }}
 		</div>
+
+		<div class="row justify-content-center">
+			<div class="col-sm-8">
+				{% set userPicture = user.pictures.count > 0 ? "/uploads/pictures/" ~ user.pictures.first.name : null %}
+				<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ user.username) }}" alt="{{"image de profil de " ~ user.username}}" class="d-flex mr-3 rounded-circle">
+
+				<button class="btn btn-primary" data-toggle="collapse" href="#userPictureInput">Changer mon image</button>
+				<div class="row collapse" id="userPictureInput">
+					{{ form_start(form) }}
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+
+
 	</div>
-	{# <h2>Image de profil</h2>
-							<img src="{{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username) }}" alt="">
-						    <input type="file" id="update-picture">
-						    <a href=" {{ path('update_user_picture') }}" data-update>Ajouter/mettre à jour votre image</a>  #}
 {% endblock %}
