@@ -5,62 +5,186 @@
 
 {% form_theme figureForm 'bootstrap_4_layout.html.twig' %}
 
-{% block title "Poster"%}
+{% block title title %}
 
 {% block body %}
 
+	{% set order = 1 %}
 
-	<div class="container mt-4">
-		<h1>{{ title }}
-		</h1>
-		{{ form_start(figureForm) }}
-
-		{{ form_row(figureForm.title) }}
-		{{ form_row(figureForm.description) }}
-		{{ form_row(figureForm.category) }}
-
-
-		{% if app.request.attributes.get('_route') ==  "figure_edit"  %}
-
-
-			<h2>Images</h2>
-
+	<div class="container">
+		{% set defaultPicture = null %}
+		{% if trick is defined %}
 			{% for picture in trick.pictures %}
-				<div class="img-thumbnail">
-					<img src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="Image" width="150px">
-					<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ picture.id)}}">Supprimer</a>
-				</div>
+				{% if picture.sortOrder == 1 %}
+					{% set defaultPicture = picture %}
+				{% endif %}
 			{% endfor %}
-
-			{{ form_row(figureForm.pictures) }}
-
-
-			<h2>Vidéos</h2>
-
-			{% for video in trick.videos %}
-				<div class="img-thumbnail">>
-					<iframe width="560" height="315" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
-				</div>
-			{% endfor %}
-
-			{% for video in figureForm.videos %}
-				<li>{{ form_row(video) }}</li>
-			{% endfor %}
-
-			{{ form_end(figureForm) }}
-
-		{% else %}
+		{% endif %}
+		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
 
-			{{ form_row(figureForm.pictures) }}
-			{{ form_row(figureForm.videos) }}
-			{{ form_row(figureForm.submit) }}
+		{#------------------------JUMBOTRON---------------------------#}
+		<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+			<h1 class="display-4" style="color:white"></h1>
+			{% if trick is defined %}
+				<div
+					class="editButtonMenu">
 
-			{{ form_end(figureForm) }}
+					{#-----------UPDATE PICTURE --------#}
+					<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
+						<i class="fas fa-pencil-alt fa-2x"></i>
+					</a>
+					{#---------DELETE PICTURE---------#}
+					<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
+						<i class="fas fa-trash-alt fa-2x"></i>
+					</a>
+
+					{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+					<div class="collapse" id={{"update_picture_input" ~ defaultPicture.id }}>
+						<input type="file" id="update_picture"/>
+						<div hidden>{{ defaultPicture.id }}</div>
+						<div hidden>{{ trick.id }}</div>
+						<div hidden>{{ defaultPicture.sortOrder }}</div>
+						<!-- Picture sortOrder -->
+						<button data-update>Envoyer</button>
+					</div>
+				{% endif %}
+
+			</div>
+
 		</div>
-	{% endif %}
-{% endblock %}
-{% block javascript %}
-	<script src=" {{ asset('js/delete.js') }} "></script>
-{% endblock %}
+
+		<div id="alert" class="alert alert-success"></div>
+		{#-----FLASH MESSAGES------#}
+
+		<div class="container ">
+			{{ form_start(figureForm) }}
+			<div class="row justify-content-center ">
+				<a data-toggle="collapse" href="#media-block" role="button" aria-expanded="false" aria-controls="media-block">
+					<i class="fas fa-images fa-3x"></i>
+				</a>
+			</div>
+			<div
+				class="row collapse media-block mb-4" id="media-block">
+
+				{# -------------------------FIGURES PICTURES------------------------ #}
+
+				<div class="col-lg-6 pictures-container">
+					<div class="row justify-content-center">
+						<h3>Images</h3>
+					</div>
+					<div class="row picture-thumbs justify-content-center">
+
+						<div>
+							{{ form_row(figureForm.pictures) }}
+						</div>
+						{% if trick is defined %}
+							<div class="row">
+								{% for picture in trick.pictures|slice(1) %}
+									<div hidden>{{ picture.id }}</div>
+									<div class="col-sm-4">
+										<img
+										src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt={{"Image numéro" ~ picture.id}}>
+
+										{#-----------UPDATE PICTURE --------#}
+										<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
+											<i class="fas fa-pencil-alt fa-2x"></i>
+										</a>
+										{#!---------DELETE PICTURE---------#}
+										<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
+											<i class="fas fa-trash-alt fa-2x"></i>
+										</a>
+
+										{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
+										<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
+											<input type="file" id="update_picture"/>
+											<div hidden>{{ picture.id }}</div>
+											<div hidden>{{ trick.id }}</div>
+											<div hidden>{{ picture.sortOrder }}</div>
+											<!-- Picture sortOrder -->
+											<button data-update>Envoyer</button>
+										</div>
+
+
+									</div>
+
+									{% set order = order +1 %}
+								{% endfor %}
+
+							</div>
+						{% endif %}
+					</div>
+				</div>
+				{# -------------------------FIGURES PICTURES------------------------ #}
+
+
+				{# -------------------------FIGURES VIDEOS------------------------ #}
+				<div class="col-lg-6 videos-container">
+					<div class="row justify-content-center">
+						<h3>Vidéos</h3>
+					</div>
+					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
+
+
+					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}">
+
+						{% for videoField in figureForm.videos %}
+							<li hidden>
+								{{ form_widget(videoField) }}
+								<div id={{"liDelete-" ~ videoField.vars.data.id}}></div>
+							</li>
+						{% endfor %}
+
+
+					</ul>
+
+
+					{% if trick is defined %}
+						{% for video in trick.videos %}
+							<div>
+								<iframe width="186" height="105" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+								<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
+									<i class="fas fa-pencil-alt fa-2x"></i>
+								</a>
+
+								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
+									<i class="fas fa-trash-alt fa-2x"></i>
+								</a>
+							</div>
+
+							<div class="collapse" id={{"update_video_input" ~ video.id }}>
+								<input type="text" id="newVideoUrl"/>
+								<div hidden>{{ video.id }}</div>
+								<div hidden>{{ trick.id }}</div>
+								<button data-update>Envoyer</button>
+							</div>
+						{% endfor %}
+					{% endif %}
+
+				</div>
+				{# -------------------------FIGURES VIDEOS------------------------ #}
+
+			</div>
+
+
+			{{ form_row(figureForm.title) }}
+			{{ form_row(figureForm.description) }}
+
+
+			<div class="row">
+				<div class="col-sm-3">
+					{{ form_row(figureForm.category) }}
+				</div>
+				{{ form_row(figureForm.submit) }}
+			</div>
+			{{ form_end(figureForm) }}
+
+		</div>
+	{% endblock %}
+
+	{% block javascript %}
+		<script src=" {{ asset('js/delete.js') }} "></script>
+		<script src=" {{ asset('js/picture_update.js') }} "></script>
+		<script src=" {{ asset('js/add_video.js') }} "></script>
+	{% endblock %}

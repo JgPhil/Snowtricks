@@ -33,24 +33,29 @@ class FigureType extends AbstractType
                 'choice_label' => 'title',
             ])
             ->add('pictures', FileType::class, [
-                'label' => "Télécharger une image",
+                'label' => false,
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
-                'placeholder' => "Choisissez une ou plusieurs image(s)...",
+                    'placeholder' => "Ajouter des images..."
                 ]
             ])
-            ->add('videos', UrlType::class, [
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoType::class,
                 'label' => false,
-                'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'placeholder' => "Entrez l'URL de la vidéo...",                   
-                    
+                'entry_options' => [
+                    'attr' => [
+                        'class' => 'videoList-box'
+                    ]
                 ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => true,
+                'prototype' => true,
+                'by_reference' => false
             ])
-            
+
             ->add('submit', SubmitType::class);
     }
 

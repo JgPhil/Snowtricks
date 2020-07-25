@@ -19,101 +19,87 @@
 				<div class="alert alert-danger">{{ message }}</div>
 			</div>
 		{% endfor %}
+	</div>
+	<!-- FIGURE A LA UNE -->
 
-		<!-- FIGURE A LA UNE -->
+	{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
+	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/2500x1000') }} ') no-repeat center;" id="topJumbotron">
+		<div class="container ">
 
-		{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
-		<div class="jumbotron" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;">
-			<div class="container-full-bg">
+			<h1 class="display-4">Snowtricks</h1>
 
-				<h1 class="display-4">
-					<a href="{{ path( 'trick_show', { id: figures[0].id } ) }}" style="color: white">
-						{{ figures[0].title }}
-					</a>
-				</h1>
+			<hr>
 
-				<hr>
-
-				<p class="lead">
-					{{ figures[0].description|u.truncate(80) }}
-				</p>
-
-				<p class="lead">
-					<a href="{{ path('trick_show', { id: figures[0].id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-					{% if app.user %}
-						<a href="{{ path('figure_edit', { id: figures[0].id }) }}">
-							<i class="fas fa-pencil-alt fa-2x"></i>
-						</a>
-						<a href="{{ path('admin_figure_desactivate', { id: figures[0].id }) }}">
-							<i class="fas fa-trash-alt fa-2x"></i>
-						</a>
-					{% endif %}
-				</p>
-
-				{# SCROLL DOWN BUTTON  #}
-				<a class="btn-scroll scroll-down" href="#js-more">
-					<i class="fas fa-arrow-down"></i>
-				</a>
-
-			</div>
-		</div>
-
-		<!-- TOUTES LES FIGURES -->
-
-		<div class="container" id="block-figures">
-			<div class="row mt-4" id="js-more">
-				{% for figure in figures|slice(1) %}
-					{% if figure.activatedAt != null %}
-						{% set picturePath = null %}
-						{% if figure.pictures is not empty %}
-							{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
-						{% endif %}
-
-						<div class="col-md-6 col-lg-4">
-							<div class="card mb-4 ">
-								<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
-								<div class="card-body">
-									<div class="row ">
-										<h5 class="col-7">
-											<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
-												{{ figure.title }}
-											</a>
-										</h5>
-										{% if app.user %}
-											<div class="col-5">
-												<a href="{{ path('figure_edit', { id: figure.id }) }}" class="p-1">
-													<i class="fas fa-pencil-alt fa-2x"></i>
-												</a>
-												<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
-													<i class="fas fa-trash-alt fa-2x"></i>
-												</a>
-											</div>
-										{% endif %}
-
-									</div>
+			<p class="lead">
+				Première source de référence de figures de snowboard.
+			</p>
 
 
-								</div>
-							</div>
-						</div>
-					{% endif %}
-				{% endfor %}
-			</div>
-			<div class="row">
+			{# SCROLL DOWN BUTTON  #}
+			<a class="btn-scroll scroll-down" href="#js-more">
+				<i class="fas fa-arrow-down"></i>
+			</a>
 
-				<div class="col text-center">
-					<a class="btn btn-success" id="js-load">
-						Load More</a>
-					{# SCROLL DOWN BUTTON  #}
-					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#js-more" hidden>
-						<i class="fas fa-arrow-up"></i>
-					</a>
-				</div>
-
-
-			</div>
 		</div>
 	</div>
+
+	<!-- TOUTES LES FIGURES -->
+
+	<div class="container figures-container" id="block-figures">
+		<div class="row mt-4" id="js-more">
+			{% for figure in figures %}
+				{% if figure.activatedAt != null %}
+					{% set picturePath = null %}
+					{% if figure.pictures is not empty %}
+						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
+					{% endif %}
+
+					<div class="col-md-6 col-lg-4">
+						<div class="card mb-4 ">
+							<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
+							<div class="card-body">
+								<div class="row ">
+									<h5 class="col-7">
+										<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
+											{{ figure.title }}
+										</a>
+									</h5>
+
+									{% if app.user %}
+										<div class="col-5">
+											<a href="{{ path('figure_edit', { id: figure.id }) }}" class="p-1">
+												<i class="fas fa-pencil-alt fa-2x"></i>
+											</a>
+											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
+												<i class="fas fa-trash-alt fa-2x"></i>
+											</a>
+										</div>
+									{% endif %}
+
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="row">
+
+			<div class="col text-center">
+				<a class="btn btn-success" id="js-load">
+					Load More</a>
+				{# SCROLL DOWN BUTTON  #}
+				<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#js-more" hidden>
+					<i class="fas fa-arrow-up"></i>
+				</a>
+			</div>
+
+
+		</div>
+	</div>
+
 {% endblock %}
 {% block javascript %}
 	<script>

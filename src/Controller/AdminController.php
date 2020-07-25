@@ -67,7 +67,6 @@ class AdminController extends AbstractController
 
 
 
-
     private function activateEntity($entity)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -119,7 +118,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/delete/video/{id}", name="video_delete")
      */
-    public function deleteVideo(Picture $video)
+    public function deleteVideo(Video $video)
     {
         return $this->desactivateEntity($video);
     }
@@ -148,6 +147,7 @@ class AdminController extends AbstractController
         $em->flush();
         return new JsonResponse(['success' => 1]);
     }
+
 
     /**
      * @Route("/admin/next/figures/{page}", name="admin_load_next_figures")
@@ -206,63 +206,5 @@ class AdminController extends AbstractController
             [],
             ['groups' => 'user_read']
         );
-    }
-
-    /**
-     * @Route("/admin/prvs/users/{offset}", name="admin_load_prvs_users")
-     *
-     * @param UserRepository $repo
-     * @param [type] $offset
-     * @return void
-     */
-    public function prvsSliceUsers(UserRepository $repo, $offset)
-    {
-        return $this->prvsSliceEntity($repo, $offset);
-    }
-
-
-
-    private function nextSliceEntity($repo, $offset)
-    {
-        $group = $this->wichGroup($repo);
-        return $this->json(
-            [
-                'slice' => $repo->nextSlice($offset),
-            ],
-            200,
-            [],
-            ['groups' => $group]
-        );
-    }
-
-
-    private function prvsSliceEntity($repo, $offset)
-    {
-        $group = $this->wichGroup($repo);
-        return $this->json(
-            [
-                'slice' => $repo->prvsSlice($offset),
-            ],
-            200,
-            [],
-            ['groups' => $group]
-        );
-    }
-
-
-    private function wichGroup($repo)
-    {
-        switch ($repo) {
-            case $repo instanceof UserRepository:
-                $group = "user_read";
-                break;
-            case $repo instanceof CommentRepository:
-                $group = "comment_read";
-                break;
-            case $repo instanceof FigureRepository:
-                $group = "figure_read";
-                break;
-        }
-        return $group;
     }
 }

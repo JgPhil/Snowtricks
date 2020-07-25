@@ -9,152 +9,168 @@
 
 {% block body %}
 
+	<div class="container">
+		{% for message in app.flashes('message') %}
+			<div class="flash-info">
+				<div class="alert alert-success">{{ message }}</div>
+			</div>
+		{% endfor %}
 
-	{% for message in app.flashes('message') %}
-		<div class="flash-info">
-			<div class="alert alert-success">{{ message }}</div>
-		</div>
-	{% endfor %}
-
-	{% set pictureJumbotron = figure.pictures.first ? " /uploads/pictures/" ~ figure.pictures.first.name : '' %}
-	<div class="jumbotron container align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1080x800') }} ') no-repeat center;" id="topJumbotron">
-		<div>
-			<h1 class="display-4">
-				<a href="{{ path( 'trick_show', { id: figure.id } ) }}" style="color: white">
-					{{ figure.title }}
-				</a>
+		{% set pictureJumbotron = figure.pictures.first ? " /uploads/pictures/" ~ figure.pictures.first.name : '' %}
+		<div class="jumbotron  align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+			<h1 class="display-4" style="color: white">
+				{{ figure.title }}
 			</h1>
-			<hr>
-			<p class="lead">
-				{{ figure.description|u.truncate(80) }}
-			</p>
-			<p class="lead">
-				<div hidden id="figureId">
-					{{ figure.id }}</div>
-				<a href="{{ path('trick_show', { id: figure.id } ) }}" class="btn btn-primary btn-lg">Voir</a>
-				{% if app.user %}
-					<a href="{{ path('figure_edit', { id: figure.id }) }}">
+
+			<div hidden id="figureId">
+				{{ figure.id }}
+			</div>
+
+
+			{% if app.user %}
+
+				<div class="buttonMenu">
+					<a href="{{ path('figure_edit', { id: figure.id }) }}" class="mr-2">
 						<i class="fas fa-pencil-alt fa-2x"></i>
 					</a>
 					<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}">
 						<i class="fas fa-trash-alt fa-2x"></i>
 					</a>
-				{% endif %}
-			</p>
+				</div>
+
+			{% endif %}
+
 		</div>
-	</div>
 
-
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<div class="row">
-					{% for picture in figure.pictures %}
-						<div class="col-sm-4">
-							{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
-							<div class="card mb-4 ">
-								<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
-							</div>
-							{% if app.user %}
-								<div class="media-container">
-									<a href="{{ path('figure_edit', { id: figure.id }) }}">
-										<i class="fas fa-pencil-alt fa-2x"></i>
-									</a>
-									<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" data-delete data-token="{{ csrf_token('delete' ~ figure.id)}}">
-										<i class="fas fa-trash-alt fa-2x"></i>
-									</a>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="row">
+					
+						{% for picture in figure.pictures %}
+							<div class="col-sm-4">
+								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
+								<div class="card mb-4 ">
+									<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
 								</div>
-							{% endif %}
-
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-
-			<div class="col-md-6">
-				<div class="row">
-					{% for video in figure.videos %}
-						<div class="card mb-4 col-sm-4">
-							<div class="iframe-container">
-								<iframe width="280" height="158" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete data-token="{{ csrf_token('delete' ~ video.id)}}">Supprimer</a>
+								{# {% if app.user %}
+									<div class="media-container">
+										<a href="{{ path('picture_edit',{id: picture.id }) }}" data-edit>
+											<i class="fas fa-pencil-alt fa-2x"></i>
+										</a>
+										<a href="{{ path('picture_delete', { id: picture.id }) }}" data-delete>
+											<i class="fas fa-trash-alt fa-2x"></i>
+										</a>
+									</div>
+								{% endif %} #}
 							</div>
+						{% endfor %}
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="row">
+
+						{% for video in figure.videos %}
+							<div class="card mb-4 col-sm-4">
+								<div class="iframe-container">
+									<iframe width="280" height="158" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									{# <a href="{{ path('video_delete', {id: video.id}) }} " data-delete>Supprimer</a> #}
+								</div>
+							</div>
+						{% endfor %}
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container">
+
+			<p class="lead mt-4 mb-4">{{ figure.description }}</p>
+
+			<div class="row justify-content-center ">
+				<div class="col-lg-8">
+
+					<div class="row align-items-center meta-box mt-4 mb-4">
+
+						<div class="col-sm-4 meta">
+							<p>Créée le  
+							{{ figure.createdAt|date('d/m/Y') }}
+							à
+							{{ figure.createdAt|date('H:i') }}
+							dans la catégorie 
+								{{ figure.category.title }}</p>
 						</div>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-	</div>
+
+						<div class="col-sm-4 meta">
+						Auteur: 
+							{{ figure.author.username }}
+						</div>
 
 
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8">
-				<p>Categorie :
-					{{ figure.category.title }}par</p>
-				<p class="lead">Créé par
-					{{ figure.author.username }}</p>
-				<!-- Date/Time -->
-				<div class="metadata">
-					Posté le
-					{{ figure.createdAt|date('d/m/Y') }}
-					à
-					{{ figure.createdAt|date('H:i') }}
-				</div>
-
-
-				<!-- Post Content -->
-				<p class="lead">{{ figure.description }}</p>
-			</div>
-		</div>
-	</div>
-
-	<hr>
-	<h3 class="d-flex justify-content-center">Commentaires</h3>
-	<hr>
-
-	<div class="container">
-
-		{% if app.user %}
-			{{ form_start(commentForm) }}
-			<div class="row d-flex align-items-center">
-				<div class="col-md-10">
-					{{ form_row(commentForm.content, {'label': 'Message', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
-				</div>
-				<button type="submit" class="btn btn-success">Envoyer</button>
-			</div>
-
-			{{ form_end(commentForm) }}
-		{% endif %}
-
-		<div id="forumComments">
-			{% for comment in comments %}
-				<div class="media mb-4 ">
-					<div hidden>
-						{{ comment.id }}
-					</div>
-
-					<img src="" class="d-flex mr-3 rounded-circle">
-					<div class="media-body">
-						<h5 class="mt-0">{{ comment.author.username }}
-							(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
-							</small>)</h5>
-						<p>{{ comment.content | raw }}</p>
+						<div class="col-sm-4 meta">
+							
+							<p>Dernière modif. le:
+							{{figure.lastModificationAt|date('d/m/y')}}
+							à
+							{{figure.lastModificationAt|date('H:i')}} 
+							</p>
+							
+						</div>
 					</div>
 				</div>
-			{% endfor %}
-			{# SCROLL DOWN BUTTON  #}
-					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
-						<i class="fas fa-arrow-up"></i>
-					</a>
+			</div>
 		</div>
-	</div>
 
-	<hr>
 
-{% endblock %}
+		<h3 class="d-flex justify-content-center">Commentaires</h3>
 
-{% block javascript %}
-	<script src=" {{ asset('js/comments_pagination.js') }}"></script>
-	<script src=" {{ asset('js/scrollUpBtn.js') }}"></script>
-{% endblock %}
+
+		<div class="container">
+
+			{% if app.user %}
+				<hr>
+				{{ form_start(commentForm) }}
+				<div class="row d-flex align-items-center justify-content-center">
+					<div class="col-md-10">
+						{{ form_row(commentForm.content, {'label': ' ', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+					</div>
+					<button type="submit" class="btn btn-success">Envoyer</button>
+				</div>
+				<hr>
+				{{ form_end(commentForm) }}
+			{% endif %}
+
+			<div id="forumComments">
+				{% for comment in comments %}
+					<div class="media mb-4 ">
+						<div hidden>
+							{{ comment.id }}
+						</div>
+
+						{% set userPicture = comment.author.pictures.count > 0  ? "uploads/pictures/" ~ comment.author.pictures.first : null %}
+
+						<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle">
+						<div class="media-body">
+							<h5 class="mt-0">{{ comment.author.username }}
+								(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
+								</small>)</h5>
+							<p>{{ comment.content | raw }}</p>
+						</div>
+					</div>
+				{% endfor %}
+				{# SCROLL DOWN BUTTON  #}
+				<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
+					<i class="fas fa-arrow-up"></i>
+				</a>
+			</div>
+		</div>
+
+		<hr>
+	{% endblock %}
+	{% block javascript %}
+		<script src=" {{ asset('js/comments_pagination.js') }}"></script>
+		<script src=" {{ asset('js/scrollUpBtn.js') }}"></script>
+	{% endblock %}

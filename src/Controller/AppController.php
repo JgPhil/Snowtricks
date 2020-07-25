@@ -10,7 +10,9 @@ use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,6 +44,7 @@ class AppController extends AbstractController
      */
     public function create(EntityManagerInterface $em, Request $request)
     {
+        $pictureOrder = 1; //initialisation du compteur lors d'une création de figure
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
@@ -49,9 +52,9 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
-            $videoUrl = $form->get('videos')->getData();
+            $videos = $form->get('videos')->getData();
 
-            //Images
+            //Images 
             foreach ($pictures as $picture) {
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
@@ -63,14 +66,18 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
+                $pic->setSortOrder($pictureOrder);
+
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
+                $pictureOrder++;
             }
-            //video
-            if ($videoUrl) {
-                $video = new Video();
-                $video->setUrl($videoUrl);
-                $figure->addVideo($video);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    $video = new Video();
+                    $em->persist($video);
+                    $figure->addVideo($video);
+                }
             }
 
 
@@ -79,6 +86,10 @@ class AppController extends AbstractController
 
             $em->persist($figure);
             $em->flush();
+
+
+
+
             $this->addFlash('message', 'Votre figure a bien été ajoutée');
             return $this->redirectToRoute('home');
         }
@@ -121,6 +132,7 @@ class AppController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      */
@@ -135,10 +147,12 @@ class AppController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Récupération des images
             $pictures = $form->get('pictures')->getData();
-            $videoUrl = $form->get('videos')->getData();
+            $videos = $form->get('videos')->getData();
 
             //Images
             foreach ($pictures as $picture) {
+
+                $maxOrder = $this->findPictureHighestOrder($figure);
                 //nouveau nom de fichier
                 $filename = md5(uniqid()) . '.' . $picture->guessExtension();
                 //copie dans dossier uploads
@@ -149,15 +163,18 @@ class AppController extends AbstractController
                 //stockage du nom du fichier dans la base de donnée
                 $pic = new Picture();
                 $pic->setName($filename);
+                $pic->setSortOrder($maxOrder + 1);
                 // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
                 $figure->addPicture($pic);
             }
-            //video
-            if ($videoUrl) {
-                $video = new Video();
-                $video->setUrl($videoUrl);
-                $figure->addVideo($video);
+
+            if ($videos) {
+                foreach ($videos as $video) {
+                    $em->persist($video);
+                    $figure->addVideo($video);
+                }
             }
+
 
             $figure->setLastModificationAt(new \DateTime());
             $em->flush();
@@ -195,8 +212,8 @@ class AppController extends AbstractController
     /**
      * @Route("/figure/{id}/next/comments/{lastCommentId}", name="load_next_comments")
      */
-    public function nextComments(CommentRepository $repo, Figure $figure , $lastCommentId)
-    {       
+    public function nextComments(CommentRepository $repo, Figure $figure, $lastCommentId)
+    {
         $comment = $repo->find($lastCommentId);
 
         return $this->json(
@@ -209,4 +226,94 @@ class AppController extends AbstractController
         );
     }
 
+
+
+    private function findPictureHighestOrder(Figure $figure)
+    {
+
+        $pictures = $figure->getPictures();
+        // trouver le sort_order le plus élevé dans les images
+        $maxOrder = 0;
+        foreach ($pictures as $picture) {
+            if ($picture->getsortOrder() > $maxOrder) {
+                $maxOrder = $picture->getsortOrder();
+            }
+        }
+
+        return $maxOrder;
+    }
+
+
+    /**
+     * @Route("/figure/{figureId}/update/oldPicture/{oldPictureId}/oldPictureOrder/{oldPictureOrder}", name="picture_edit")
+     */
+    public function updatePicture($figureId, $oldPictureId, $oldPictureOrder, Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $pictureRepo = $this->getDoctrine()->getRepository(Picture::class);
+        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
+
+        $content = $request->files;
+        $uploadedFile = $content->get('file');
+        $filename = md5(uniqid()) . '.' . $uploadedFile->guessExtension();
+        $uploadedFile->move(
+            $this->getParameter('pictures_directory'),
+            $filename
+        );
+
+
+        $oldPicture = $pictureRepo->find($oldPictureId);
+        $figure = $figureRepo->find($figureId);
+
+        // effacement de de l'ancienne image dans le dossier Pictures
+        unlink($this->getParameter('pictures_directory') . '/' . $oldPicture->getName());
+        //effacement de l'entrée en base de l'ancienne image
+        $em->remove($oldPicture);
+
+
+        $newPicture = new Picture;
+        $newPicture->setSortOrder($oldPictureOrder);
+        $newPicture->setFigure($figure);
+        $newPicture->setName($filename);
+
+        $figure->addPicture($newPicture);
+
+        $em->flush();
+
+        return $this->json([
+            'message' => "Image mise à jour",
+            'newPictureFilename' => $filename
+        ], 200);
+    }
+
+
+    /**
+     * @Route("/figure/{figureId}/update/oldVideo/{oldVideoId}", name="video_edit")
+     */
+    public function updateVideo($figureId, $oldVideoId, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $videoRepo = $this->getDoctrine()->getRepository(Video::class);
+        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
+        $figure = $figureRepo->find($figureId);
+
+        $newVideoUrl = $request->getContent();
+        // Effacement de l'ancienne vidéo 
+        $em->remove($videoRepo->find($oldVideoId));
+
+        $video = new Video;
+        $video->setFigureId($figureId);
+        $video->setUrl($newVideoUrl);
+
+        $figure->addVideo($video);
+
+        $em->persist($video);
+        $em->flush();
+
+        return $this->json([
+            'newVideoUrl' => $newVideoUrl,
+            'message' => "Video mise à jour"
+        ], 200);
+    }
 }
