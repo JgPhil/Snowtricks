@@ -18,6 +18,8 @@
             {{ form_row(form.confirm_password, {'label': 'Confirmation de mot de passe',  'attr': {'placeholder' :'Veuillez confirmer votre mot de passe ...'} }) }}
             <button type="submit" class="btn btn-success">Inscription !</button>
             {{ form_end(form) }}
+            <a class="btn btn-primary mt-2" href="{{ path('security_login')}} "> Déja un compte ?
+				</a>
         </div>
     </div>
 </div>
