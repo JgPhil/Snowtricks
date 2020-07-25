@@ -108,7 +108,9 @@ class AppController extends AbstractController
     public function profile(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
-        $oldPicture = $user->getPictures()[0];
+        if (count($user->getPictures()) > 0) {
+            $oldPicture = $user->getPictures()[0];
+        }
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);

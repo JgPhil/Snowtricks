@@ -3,21 +3,21 @@
 {% block title "Profil" %}
 
 {% block body %}
-	<div class="container">
+	<div class="container ">
 		<div class="row justify-content-center">
 
-			<div class="col-sm-8">
-				<h1>Page de profil de
+			<div class="col-sm-8 text-center" >
+				<h1>Image de profil de
 					{{user.username}}</h1>
 			</div>
 		</div>
 
 		<div class="row justify-content-center">
-			<div class="col-sm-8">
+			<div class="col-sm-8 text-center">
 				{% set userPicture = user.pictures.count > 0 ? "/uploads/pictures/" ~ user.pictures.first.name : null %}
-				<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ user.username) }}" alt="{{"image de profil de " ~ user.username}}" class="d-flex mr-3 rounded-circle">
+				<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ user.username) }}" alt="{{"image de profil de " ~ user.username}}" class="d-flex mr-3 rounded-circle mx-auto mt-4">
 
-				<button class="btn btn-primary" data-toggle="collapse" href="#userPictureInput">Changer mon image</button>
+				<button class="btn btn-primary mt-4" data-toggle="collapse" href="#userPictureInput">Changer mon image</button>
 				<div class="row collapse" id="userPictureInput">
 					{{ form_start(form) }}
 

@@ -22,15 +22,15 @@
 	</div>
 	<!-- FIGURE A LA UNE -->
 
-	{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
-	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/2500x1000') }} ') no-repeat center;" id="topJumbotron">
+	
+	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url('/uploads/pictures/main_snowtricks.jpg') no-repeat center;" id="topJumbotron">
 		<div class="container ">
 
-			<h1 class="display-4">Snowtricks</h1>
+			<h1 class="display-3">Snowtricks</h1>
 
 			<hr>
 
-			<p class="lead">
+			<p class="lead display-4">
 				Première source de référence de figures de snowboard.
 			</p>
 
