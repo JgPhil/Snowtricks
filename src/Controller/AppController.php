@@ -24,6 +24,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController
 {
+    const NEXT_FIGURES_MAX_RESULTS = 6;
+
     /**
      * @Route("/", name="home")
      */
@@ -127,7 +129,7 @@ class AppController extends AbstractController
             $user->addPicture($picture);
             $em->persist($picture);
             $em->flush();
-            
+
             return $this->redirectToRoute('profile');
         }
 
@@ -242,9 +244,10 @@ class AppController extends AbstractController
      */
     public function sliceActiveFigures(FigureRepository $repo, $offset)
     {
+
         return $this->json(
             [
-                'sliceFigures' => $repo->findActiveSliceFigures($offset),
+                'sliceFigures' => $repo->findActiveSliceFigures($offset, self::NEXT_FIGURES_MAX_RESULTS),
             ],
             200,
             [],
@@ -343,21 +346,29 @@ class AppController extends AbstractController
         $figure = $figureRepo->find($figureId);
 
         $newVideoUrl = $request->getContent();
-        // Effacement de l'ancienne vidéo 
-        $em->remove($videoRepo->find($oldVideoId));
 
-        $video = new Video;
-        $video->setFigureId($figureId);
-        $video->setUrl($newVideoUrl);
 
-        $figure->addVideo($video);
+        try {
+            $video = new Video;
+            $video->setFigureId($figureId);
+            $video->setUrl($newVideoUrl);
 
-        $em->persist($video);
-        $em->flush();
+            $figure->addVideo($video);
 
-        return $this->json([
-            'newVideoUrl' => $newVideoUrl,
-            'message' => "Video mise à jour"
-        ], 200);
+            $em->persist($video);
+            $em->flush();
+            // Effacement de l'ancienne vidéo 
+            $em->remove($videoRepo->find($oldVideoId));
+
+            return $this->json([
+                'newVideoUrl' => $newVideoUrl,
+                'message' => "Video mise à jour"
+            ], 200);
+        } catch (Exception $e) {
+            return $this->json([
+                'newVideoUrl' => $newVideoUrl,
+                'error' => "Il semble qu'il y ait un problème avec cette l'url"
+            ], 404);
+        }
     }
 }

@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FigureRepository extends ServiceEntityRepository
 {
+    
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Figure::class);
@@ -35,32 +37,32 @@ class FigureRepository extends ServiceEntityRepository
     /**
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findActiveSliceFigures($offset)
+    public function findActiveSliceFigures($offset, $maxResults)
     {
 
-         return $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
             ->andWhere('f.id < :offset')
             ->orderBy('f.id', 'DESC')
-            ->setMaxResults(6)
+            ->setMaxResults($maxResults)
             ->setParameter('offset', $offset)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 
     /**
      * 
      */
-    public function getList($page=1)
-    {     
+    public function getList($page = 1)
+    {
         $maxPerPage = 5;
 
         return $this->createQueryBuilder('f')
-            ->setFirstResult(($page-1) * $maxPerPage)
+            ->setFirstResult(($page - 1) * $maxPerPage)
             ->orderBy('f.createdAt', 'DESC')
             ->setMaxResults($maxPerPage)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 
 
@@ -71,13 +73,13 @@ class FigureRepository extends ServiceEntityRepository
     public function nextSlice($offset)
     {
 
-         return $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('f')
             ->andWhere('f.id < :offset')
             ->orderBy('f.id', 'DESC')
             ->setMaxResults(5)
             ->setParameter('offset', $offset)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 
 
@@ -87,12 +89,12 @@ class FigureRepository extends ServiceEntityRepository
     public function prvsSlice($offset)
     {
 
-         return $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('f')
             ->andWhere('f.id > :offset')
             ->orderBy('f.id', 'ASC')
             ->setMaxResults(5)
             ->setParameter('offset', $offset)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 }

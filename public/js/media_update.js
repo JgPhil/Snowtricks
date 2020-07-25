@@ -18,16 +18,21 @@ for (updateLink of updateMediaLinks) {
             let oldVideoId = this.parentElement.children[1].textContent;
             url += "oldVideo/" + oldVideoId;
 
+            newVideoUrlChecked = checkVideoUrl(newVideoUrl);
 
-            fetch(url, {
-                method: "post",
-                body: newVideoUrl
-            }).then(
-                response => response.json()
-            ).then(data => {
-                videoUpdate(data, this);
-                document.getElementById("alert").innerHTML = data.message;
-            })
+            if (newVideoUrlChecked !== null) {
+                fetch(url, {
+                    method: "post",
+                    body: newVideoUrlChecked
+                }).then(
+                    response => response.json()
+                ).then(data => {
+                    videoUpdate(data, this);
+                    document.getElementById("alert").innerHTML = data.message;
+                })
+            } else alert("Cette adrersse URL n'est pas valide");
+
+
 
         } else { //-----------------------------------------------------------------------PICTURE
             init = {
@@ -54,10 +59,10 @@ for (updateLink of updateMediaLinks) {
 
 const pictureUpdate = function (data, updateLink) {
 
-    if (updateLink.previousElementSibling.textContent == 1) {
+    if (updateLink.previousElementSibling.textContent == 1) { //jumbotron default picture
         updateLink.parentElement.parentElement.parentElement.style["backgroundImage"] =
             "url('/uploads/pictures/" + data.newPictureFilename;
-    } else {
+    } else {    
         updateLink.parentElement.parentElement.children[0].src =
             "/uploads/pictures/" + data.newPictureFilename;
     }
@@ -67,4 +72,26 @@ const pictureUpdate = function (data, updateLink) {
 
 const videoUpdate = function (data, updateLink) {
     updateLink.parentElement.previousElementSibling.children[0].src = data.newVideoUrl;
+}
+
+
+const checkVideoUrl = function (newVideoUrl) {
+
+    // Decompose Url and check
+    let splitUrl = newVideoUrl.split('/')
+    let videoServiceProvider = splitUrl[2];
+    let videoId = null;
+
+    console.log(videoServiceProvider);
+
+    if (videoServiceProvider === "www.youtube.com") {
+        videoId = newVideoUrl.split('=').pop();
+        newVideoUrl = "https://www.youtube.com/embed/" + videoId;
+    } else if (videoServiceProvider === "www.dailymotion.com") {
+        videoId = splitUrl.pop();
+        newVideoUrl = "https://www.dailymotion.com/embed/video/" + videoId;
+    } else {
+        newVideoUrl = null;
+    }
+    return newVideoUrl;
 }
