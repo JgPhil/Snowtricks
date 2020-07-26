@@ -18,6 +18,25 @@ jQuery(document).ready(function () {
         list.data('widget-counter', counter);
         // create a new list element and add it to the list
         var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
+
+        //create a button to close the li element
+        var closeLi = document.createElement('a');
+        closeLi.classList.add("closeLi");
+        closeLi.innerHTML = "X";
+
+        newElem.append(closeLi);
         newElem.appendTo(list);
     });
 });
+
+var videolistElement = document.querySelector("#videoList-fields-list");
+
+videolistElement.addEventListener("click", function (e) {
+    if (e.target && e.target.matches('a')) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.parentElement.remove();
+    }
+})
+
+

@@ -20,11 +20,11 @@
 				{% endif %}
 			{% endfor %}
 		{% endif %}
+
+
 		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
-
-
 		{#------------------------JUMBOTRON---------------------------#}
-		<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+		<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center; height: 500px " id="topJumbotron" style="">
 			<h1 class="display-4" style="color:white"></h1>
 			{% if trick is defined %}
 				<div
@@ -128,7 +128,7 @@
 					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
 
 
-					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}">
+					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li class=""list-group-text></li>'|e }}">
 
 						{% for videoField in figureForm.videos %}
 							<li hidden>

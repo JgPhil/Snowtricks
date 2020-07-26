@@ -23,6 +23,19 @@
   right: -47%;
 }
 
+<<<<<<< Updated upstream
+=======
+.closeLi {
+  position: relative;
+  top: -7rem;
+  right: -26rem;
+}
+
+.closeLi:hover{
+  cursor: pointer;
+}
+
+>>>>>>> Stashed changes
 .alert {
   padding: 0 0 0 0;
 }
