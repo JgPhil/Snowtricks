@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Figure;
 use App\Entity\Picture;
 use App\Entity\Category;
+use App\Form\PictureType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -32,9 +33,11 @@ class FigureType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'title',
             ])
-            ->add('pictures', FileType::class, [
+            ->add('pictures', CollectionType::class, [
+                'entry_type' => FileType::class,           
                 'label' => false,
-                'multiple' => true,
+                'allow_add' => true,
+                'prototype' => true,
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
@@ -50,6 +53,7 @@ class FigureType extends AbstractType
                     ]
                 ],
                 'allow_add' => true,
+                'mapped' => false,
                 'required' => false,
                 'prototype' => true,
                 'by_reference' => false

@@ -78,20 +78,8 @@ class AppController extends AbstractController
             }
             if ($videos) {
                 foreach ($videos as $video) {
-                    $url = $video->getUrl();
-                    $splittedUrl = explode('/', $url);
 
-
-                    if ($splittedUrl[2] === "www.youtube.com"||"youtu.be") {
-                        $videoId = array_pop($splittedUrl);
-                        $url = "https://www.youtube.com/embed/" . $videoId;
-                    } elseif ($splittedUrl[2] === "www.dailymotion.com" || "dai.ly") {
-                        $videoId = explode('?', array_pop($splittedUrl))[0];
-                        $url = "https://www.dailymotion.com/embed/video/" . $videoId;
-                    } else {
-                        $url = null;
-                        throw new Exception("Format de l'url invalide");
-                    }
+                    $url = $this->checkVideoUrl($video);
 
                     $video = new Video();
                     $video->setFigure($figure);
@@ -236,6 +224,11 @@ class AppController extends AbstractController
 
             if ($videos) {
                 foreach ($videos as $video) {
+
+                    $url = $this->checkVideoUrl($video);
+                    $video = new Video();
+                    $video->setFigure($figure);
+                    $video->setUrl($url);
 
                     $em->persist($video);
                     $figure->addVideo($video);
@@ -391,5 +384,24 @@ class AppController extends AbstractController
                 'error' => "Il semble qu'il y ait un problème avec cette l'url"
             ], 404);
         }
+    }
+
+
+    private function checkVideoUrl($video)
+    {
+        $url = $video->getUrl();
+        $splittedUrl = explode('/', $url);
+
+        if ($splittedUrl[2] === "www.youtube.com" || "youtu.be") {
+            $videoId = explode('=', array_pop($splittedUrl))[1];
+            $url = "https://www.youtube.com/embed/" . $videoId;
+        } elseif ($splittedUrl[2] === "www.dailymotion.com" || "dai.ly") {
+            $videoId = explode('?', array_pop($splittedUrl))[0];
+            $url = "https://www.dailymotion.com/embed/video/" . $videoId;
+        } else {
+            $url = null;
+        }
+
+        return $url;
     }
 }
