@@ -85,7 +85,7 @@
 
 						{% if trick is defined %}
 							<div class="row">
-								{% for picture in trick.pictures|slice(1) %}
+								{% for picture in trick.pictures %}
 									<div hidden>{{ picture.id }}</div>
 									<div class="col-sm-4">
 										<img
