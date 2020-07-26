@@ -13,20 +13,20 @@
 
 	<div class="container">
 		{% set defaultPicture = null %}
-		{% if trick is defined %}
+		{% if trick is defined %} {# edit figure page #}
+
 			{% for picture in trick.pictures %}
 				{% if picture.sortOrder == 1 %}
 					{% set defaultPicture = picture %}
 				{% endif %}
 			{% endfor %}
-		{% endif %}
-		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
+			{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
-		{#------------------------JUMBOTRON---------------------------#}
-		<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
-			<h1 class="display-4" style="color:white"></h1>
-			{% if trick is defined %}
+			{#------------------------JUMBOTRON---------------------------#}
+			<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+				<h1 class="display-4" style="color:white"></h1>
+
 				<div
 					class="editButtonMenu">
 
@@ -50,6 +50,12 @@
 							<button data-update>Envoyer</button>
 						</div>
 					{% endif %}
+					{% else %}
+
+					<p>Veuillez choisir l'image que vous souhaitez mettre à la une en premier. </p>
+					 <p>...Vous pourrez la modifier par la suite bien entendu</p>
+
+
 				{% endif %}
 
 			</div>
@@ -76,6 +82,7 @@
 					<div class="row justify-content-center">
 						<h3>Images</h3>
 					</div>
+
 					<div class="row justify-content-center">
 						{{ form_row(figureForm.pictures) }}
 					</div>

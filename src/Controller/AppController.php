@@ -93,7 +93,6 @@ class AppController extends AbstractController
                         throw new Exception("Format de l'url invalide");
                     }
 
-
                     $video = new Video();
                     $video->setFigure($figure);
                     $video->setUrl($url);
