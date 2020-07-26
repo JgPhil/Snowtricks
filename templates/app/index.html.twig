@@ -22,8 +22,8 @@
 	</div>
 	<!-- FIGURE A LA UNE -->
 
-	{% set pictureJumbotron = figures[0].pictures.first ? " /uploads/pictures/" ~ figures[0].pictures.first.name : '' %}
-	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/2500x1000') }} ') no-repeat center;" id="topJumbotron">
+	
+	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url('/uploads/pictures/main_snowtricks.jpg') no-repeat center;" id="topJumbotron">
 		<div class="container ">
 
 			<h1 class="display-4">Snowtricks</h1>
@@ -47,7 +47,9 @@
 
 	<div class="container figures-container" id="block-figures">
 		<div class="row mt-4" id="js-more">
+
 			{% for figure in figures %}
+
 				{% if figure.activatedAt != null %}
 					{% set picturePath = null %}
 					{% if figure.pictures is not empty %}
