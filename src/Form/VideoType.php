@@ -16,7 +16,7 @@ class VideoType extends AbstractType
             ->add('url', UrlType::class, [
                 'label' => false,
                 'attr' =>[
-                    'placeholder' => "Veuillez entrer une url http \"embed\" valide"
+                    'placeholder' => "Veuillez collez l'url de votre vidéo ici..."
                 ]
                 
             ])

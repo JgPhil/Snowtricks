@@ -82,10 +82,10 @@ class AppController extends AbstractController
                     $splittedUrl = explode('/', $url);
 
 
-                    if ($splittedUrl[2] === "www.youtube.com") {
+                    if ($splittedUrl[2] === "www.youtube.com"||"youtu.be") {
                         $videoId = array_pop($splittedUrl);
                         $url = "https://www.youtube.com/embed/" . $videoId;
-                    } elseif ($splittedUrl[2] === "www.dailymotion.com") {
+                    } elseif ($splittedUrl[2] === "www.dailymotion.com" || "dai.ly") {
                         $videoId = explode('?', array_pop($splittedUrl))[0];
                         $url = "https://www.dailymotion.com/embed/video/" . $videoId;
                     } else {

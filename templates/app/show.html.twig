@@ -43,12 +43,17 @@
 		</div>
 
 		<div class="container">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="row">
+			<div class="row justify-content-center ">
+				<a data-toggle="collapse" href="#media-block-show" role="button" aria-expanded="false" aria-controls="media-block">
+					<i class="fas fa-images fa-3x"></i>
+				</a>
+			</div>
 
+			<div class="row collapse media-block mb-4" id="media-block-show">
+				<div class="col-sm-6">
+					<div class="row">
 						{% for picture in figure.pictures %}
-							<div class="col-sm-4">
+							<div class="col-sm-12">
 								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
 								<div class="card mb-4 ">
 									<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
@@ -58,13 +63,12 @@
 					</div>
 				</div>
 
-				<div class="col-md-6">
+				<div class="col-sm-6">
 					<div class="row">
-
 						{% for video in figure.videos %}
-							<div class="card mb-4 col-sm-4">
+							<div class="card mb-4 col-sm-12">
 								<div class="iframe-container">
-									<iframe width="280" height="158" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									<iframe width="370" height="210" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 								</div>
 							</div>
 						{% endfor %}
@@ -73,93 +77,73 @@
 				</div>
 			</div>
 		</div>
+	</div>
+</div></div><div class="container">
+<p class="lead mt-4 mb-4">{{ figure.description }}</p>
+<div class="row justify-content-center ">
+	<div class="col-lg-8">
+
+		<div class="row align-items-center meta-box mt-4 mb-4">
+
+			<div class="col-sm-4 meta">
+				<p>Créée le
+					{{ figure.createdAt|date('d/m/Y') }}
+					à
+					{{ figure.createdAt|date('H:i') }}
+					dans la catégorie
+					{{ figure.category.title }}</p>
+			</div>
+
+			<div class="col-sm-4 meta">
+				Auteur:
+				{{ figure.author.username }}
+			</div>
 
 
-		<div class="container">
+			<div class="col-sm-4 meta">
 
-			<p class="lead mt-4 mb-4">{{ figure.description }}</p>
+				<p>Dernière modif. le:
+					{{figure.lastModificationAt|date('d/m/y')}}
+					à
+					{{figure.lastModificationAt|date('H:i')}}
+				</p>
 
-			<div class="row justify-content-center ">
-				<div class="col-lg-8">
-
-					<div class="row align-items-center meta-box mt-4 mb-4">
-
-						<div class="col-sm-4 meta">
-							<p>Créée le
-								{{ figure.createdAt|date('d/m/Y') }}
-								à
-								{{ figure.createdAt|date('H:i') }}
-								dans la catégorie
-								{{ figure.category.title }}</p>
-						</div>
-
-						<div class="col-sm-4 meta">
-							Auteur:
-							{{ figure.author.username }}
-						</div>
-
-
-						<div class="col-sm-4 meta">
-
-							<p>Dernière modif. le:
-								{{figure.lastModificationAt|date('d/m/y')}}
-								à
-								{{figure.lastModificationAt|date('H:i')}}
-							</p>
-
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
+	</div>
+</div></div><h3 class="d-flex justify-content-center">Commentaires</h3><div class="container">
+{% if app.user %}
+	<hr>
+	{{ form_start(commentForm) }}
+	<div class="row d-flex align-items-center justify-content-center">
+		<div class="col-md-10">
+			{{ form_row(commentForm.content, {'label': ' ', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+		</div>
+		<button type="submit" class="btn btn-success">Envoyer</button>
+	</div>
+	<hr>
+	{{ form_end(commentForm) }}
+{% endif %}
+<div id="forumComments">
+	{% for comment in comments %}
+		<div class="media mb-4 ">
+			<div hidden>
+				{{ comment.id }}
+			</div>
 
+			{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
 
-		<h3 class="d-flex justify-content-center">Commentaires</h3>
-
-
-		<div class="container">
-
-			{% if app.user %}
-				<hr>
-				{{ form_start(commentForm) }}
-				<div class="row d-flex align-items-center justify-content-center">
-					<div class="col-md-10">
-						{{ form_row(commentForm.content, {'label': ' ', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
-					</div>
-					<button type="submit" class="btn btn-success">Envoyer</button>
-				</div>
-				<hr>
-				{{ form_end(commentForm) }}
-			{% endif %}
-
-			<div id="forumComments">
-				{% for comment in comments %}
-					<div class="media mb-4 ">
-						<div hidden>
-							{{ comment.id }}
-						</div>
-
-						{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
-
-						<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle">
-						<div class="media-body">
-							<h5 class="mt-0">{{ comment.author.username }}
-								(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
-								</small>)</h5>
-							<p>{{ comment.content | raw }}</p>
-						</div>
-					</div>
-				{% endfor %}
-				{# SCROLL DOWN BUTTON  #}
-				<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
-					<i class="fas fa-arrow-up"></i>
-				</a>
+			<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle">
+			<div class="media-body">
+				<h5 class="mt-0">{{ comment.author.username }}
+					(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
+					</small>)</h5>
+				<p>{{ comment.content | raw }}</p>
 			</div>
 		</div>
-
-		<hr>
-	{% endblock %}
-	{% block javascript %}
-		<script src=" {{ asset('js/comments_pagination.js') }}"></script>
-		<script src=" {{ asset('js/scrollUpBtn.js') }}"></script>
-	{% endblock %}
+	{% endfor %}
+	{# SCROLL DOWN BUTTON  #}
+	<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
+		<i class="fas fa-arrow-up"></i>
+	</a>
+</div></div><hr>{% endblock %}{% block javascript %}<script src=" {{ asset('js/comments_pagination.js') }}"></script><script src=" {{ asset('js/scrollUpBtn.js') }}"></script>{% endblock %}

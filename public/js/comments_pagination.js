@@ -6,10 +6,12 @@ let url = '/figure/' + figureId + '/next/comments/';
 
 window.addEventListener('scroll', function () {
     if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) {
-        commentsOffset = forumCommentsElement.children[forumCommentsElement.children.length - 2].firstElementChild.textContent;
-        ajaxQuery(url, commentsOffset);
-        if (forumCommentsElement.childElementCount >= 10) {
-            scrollUpBtn.removeAttribute("hidden");
+        if (forumCommentsElement.childElementCount > 1) {
+            commentsOffset = forumCommentsElement.children[forumCommentsElement.children.length - 2].firstElementChild.textContent;
+            ajaxQuery(url, commentsOffset);
+            if (forumCommentsElement.childElementCount >= 10) {
+                scrollUpBtn.removeAttribute("hidden");
+            }
         }
     }
 })

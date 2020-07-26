@@ -29,7 +29,7 @@
   right: -26rem;
 }
 
-.closeLi:hover{
+.closeLi:hover {
   cursor: pointer;
 }
 
@@ -59,6 +59,7 @@
 .card-img-top {
   width: 100%;
   height: 10vw;
+  min-height: 180px;
   object-fit: cover;
 }
 
@@ -81,7 +82,6 @@
   top: 0;
   width: 100%;
 }
-
 
 .media-container {
   height: 40px;
@@ -180,11 +180,12 @@ a.btn-scroll {
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  color: black;
 }
 
 a.scroll-down {
   bottom: 140px;
-  right: 11em;
+  right: 50%;
   margin: auto;
   position: absolute;
   padding-top: 400px;
@@ -270,5 +271,28 @@ a.scroll-up {
   }
   0% {
     opacity: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .footer-mob {
+    display: block;
+    position: fixed;
+    bottom: 0em;
+    background-color: black;
+  }
+
+  .navbar-desk {
+    display: none;
+  }
+
+  .toto {
+    margin-top: 0;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .footer-mob {
+    display: none;
   }
 }
