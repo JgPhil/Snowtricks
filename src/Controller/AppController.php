@@ -78,7 +78,26 @@ class AppController extends AbstractController
             }
             if ($videos) {
                 foreach ($videos as $video) {
+                    $url = $video->getUrl();
+                    $splittedUrl = explode('/', $url);
+
+
+                    if ($splittedUrl[2] === "www.youtube.com") {
+                        $videoId = array_pop($splittedUrl);
+                        $url = "https://www.youtube.com/embed/" . $videoId;
+                    } elseif ($splittedUrl[2] === "www.dailymotion.com") {
+                        $videoId = explode('?', array_pop($splittedUrl))[0];
+                        $url = "https://www.dailymotion.com/embed/video/" . $videoId;
+                    } else {
+                        $url = null;
+                        throw new Exception("Format de l'url invalide");
+                    }
+
+
                     $video = new Video();
+                    $video->setFigure($figure);
+                    $video->setUrl($url);
+
                     $em->persist($video);
                     $figure->addVideo($video);
                 }
@@ -108,7 +127,9 @@ class AppController extends AbstractController
     public function profile(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
-        $oldPicture = $user->getPictures()[0];
+        if (count($user->getPictures()) > 0) {
+            $oldPicture = $user->getPictures()[0];
+        }
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
@@ -216,6 +237,7 @@ class AppController extends AbstractController
 
             if ($videos) {
                 foreach ($videos as $video) {
+
                     $em->persist($video);
                     $figure->addVideo($video);
                 }

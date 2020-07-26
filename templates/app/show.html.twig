@@ -46,23 +46,13 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="row">
-					
+
 						{% for picture in figure.pictures %}
 							<div class="col-sm-4">
 								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
 								<div class="card mb-4 ">
 									<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
 								</div>
-								{# {% if app.user %}
-									<div class="media-container">
-										<a href="{{ path('picture_edit',{id: picture.id }) }}" data-edit>
-											<i class="fas fa-pencil-alt fa-2x"></i>
-										</a>
-										<a href="{{ path('picture_delete', { id: picture.id }) }}" data-delete>
-											<i class="fas fa-trash-alt fa-2x"></i>
-										</a>
-									</div>
-								{% endif %} #}
 							</div>
 						{% endfor %}
 					</div>
@@ -75,7 +65,6 @@
 							<div class="card mb-4 col-sm-4">
 								<div class="iframe-container">
 									<iframe width="280" height="158" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-									{# <a href="{{ path('video_delete', {id: video.id}) }} " data-delete>Supprimer</a> #}
 								</div>
 							</div>
 						{% endfor %}
@@ -96,28 +85,28 @@
 					<div class="row align-items-center meta-box mt-4 mb-4">
 
 						<div class="col-sm-4 meta">
-							<p>Créée le  
-							{{ figure.createdAt|date('d/m/Y') }}
-							à
-							{{ figure.createdAt|date('H:i') }}
-							dans la catégorie 
+							<p>Créée le
+								{{ figure.createdAt|date('d/m/Y') }}
+								à
+								{{ figure.createdAt|date('H:i') }}
+								dans la catégorie
 								{{ figure.category.title }}</p>
 						</div>
 
 						<div class="col-sm-4 meta">
-						Auteur: 
+							Auteur:
 							{{ figure.author.username }}
 						</div>
 
 
 						<div class="col-sm-4 meta">
-							
+
 							<p>Dernière modif. le:
-							{{figure.lastModificationAt|date('d/m/y')}}
-							à
-							{{figure.lastModificationAt|date('H:i')}} 
+								{{figure.lastModificationAt|date('d/m/y')}}
+								à
+								{{figure.lastModificationAt|date('H:i')}}
 							</p>
-							
+
 						</div>
 					</div>
 				</div>
