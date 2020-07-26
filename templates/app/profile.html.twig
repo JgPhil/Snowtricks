@@ -17,13 +17,9 @@
 				{% set userPicture = user.pictures.count > 0 ? "/uploads/pictures/" ~ user.pictures.first.name : null %}
 				<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ user.username) }}" alt="{{"image de profil de " ~ user.username}}" class="d-flex mr-3 rounded-circle">
 
-<<<<<<< Updated upstream
-				<button class="btn btn-primary" data-toggle="collapse" href="#userPictureInput">Changer mon image</button>
-				<div class="row collapse" id="userPictureInput">
-=======
 				<button class="btn btn-primary mt-4 mb-3" data-toggle="collapse" href="#userPictureInput">Changer mon image</button>
 				<div class="row collapse justify-content-center" id="userPictureInput">
->>>>>>> Stashed changes
+
 					{{ form_start(form) }}
 
 					{{ form_end(form) }}
