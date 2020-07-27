@@ -16,6 +16,7 @@ for (updateLink of updateMediaLinks) {
 
             let newVideoUrl = this.parentElement.firstElementChild.value;
             let oldVideoId = this.parentElement.children[1].textContent;
+
             url += "oldVideo/" + oldVideoId;
 
             newVideoUrlChecked = checkVideoUrl(newVideoUrl);
@@ -42,11 +43,16 @@ for (updateLink of updateMediaLinks) {
                 prrocessData: false
             }
             let file = this.parentElement.firstElementChild.files[0];
-            let oldPictureId = this.parentElement.children[1].textContent;
-            let oldPictureOrder = this.parentElement.children[3].textContent;
-            url += "oldPicture/" + oldPictureId + "/oldPictureOrder/" + oldPictureOrder;
-            form_data.append("file", file);
+            if (this.parentElement.children[1].textContent != "") {
+                let oldPictureId = this.parentElement.children[1].textContent;
+                let oldPictureOrder = this.parentElement.children[3].textContent;
+                url += "oldPicture/" + oldPictureId + "/oldPictureOrder/" + oldPictureOrder;
 
+            } else {
+                url += "oldPicture/" + null + "/oldPictureOrder/" + null;
+            }
+
+            form_data.append("file", file);
             fetch(url, init).then(
                 response => response.json()
             ).then(data => {
@@ -62,7 +68,7 @@ const pictureUpdate = function (data, updateLink) {
     if (updateLink.previousElementSibling.textContent == 1) { //jumbotron default picture
         updateLink.parentElement.parentElement.parentElement.style["backgroundImage"] =
             "url('/uploads/pictures/" + data.newPictureFilename;
-    } else {    
+    } else {
         updateLink.parentElement.parentElement.children[0].src =
             "/uploads/pictures/" + data.newPictureFilename;
     }
@@ -76,7 +82,6 @@ const videoUpdate = function (data, updateLink) {
 
 
 const checkVideoUrl = function (newVideoUrl) {
-
     // Decompose Url and check
     let splitUrl = newVideoUrl.split('/')
     let videoServiceProvider = splitUrl[2];
@@ -95,3 +100,13 @@ const checkVideoUrl = function (newVideoUrl) {
     }
     return newVideoUrl;
 }
+
+
+// File Input form filename
+$('.custom-file-input').change(function (e) {
+    let files = [];
+    for (var i = 0; i < $(this)[0].files.length; i++) {
+        files.push($(this)[0].files[i].name);
+    }
+    $(this).next('.custom-file-label').html(files.join(', '));
+});

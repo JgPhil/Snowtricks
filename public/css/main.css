@@ -12,6 +12,7 @@
   color: white;
 }
 
+
 .buttonMenu {
   position: relative;
   top: -61%;
@@ -26,7 +27,7 @@
 
 .closeLi {
   position: relative;
-  top: -7rem;
+  top: -3rem;
   right: -26rem;
 }
 
@@ -48,6 +49,8 @@ img.card-img-top:hover {opacity: 0.7;}
 .centering {
   text-align: center;
 }
+
+
 
 .login_form,
 .registration_form {
@@ -154,10 +157,11 @@ button {
   border: 1px solid black;
 }
 
-.admin-title {
+.title {
   font-size: 3em;
   font-weight: bolder;
   background-image: url('../uploads/pictures/Snowboard.png');
+  background-color: lightblue;
   background-size: 10em, contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -174,7 +178,7 @@ button {
 h2 {
   text-align: center;
   font-weight: 700;
-  background-color: #ffa700;
+  background-color: #f1e042;
   border-radius: 32px;
 }
 

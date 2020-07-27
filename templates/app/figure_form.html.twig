@@ -13,7 +13,9 @@
 
 	<div class="container">
 		{% set defaultPicture = null %}
-		{% if trick is defined %} {# edit figure page #}
+		{% if trick is defined %}
+			{#----------------------------------EDIT FIGURE--------------------------------------------#}
+
 
 			{% for picture in trick.pictures %}
 				{% if picture.sortOrder == 1 %}
@@ -35,6 +37,7 @@
 						<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
 							<i class="fas fa-pencil-alt fa-2x"></i>
 						</a>
+
 						{#---------DELETE PICTURE---------#}
 						<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
 							<i class="fas fa-trash-alt fa-2x"></i>
@@ -49,11 +52,29 @@
 							<!-- Picture sortOrder -->
 							<button data-update>Envoyer</button>
 						</div>
-					{% endif %}
-					{% else %}
 
-					<p>Veuillez choisir l'image que vous souhaitez mettre à la une en premier. </p>
-					 <p>...Vous pourrez la modifier par la suite bien entendu</p>
+					{% else %}
+						{#!---------NEW-JUMBOTRON PICTURE--------#}
+						<a data-toggle="collapse" href="#new_jumbotron_picture" role="button" aria-expanded="false" aria-controls="new_jumbotron_picture">
+							<i class="fas fa-pencil-alt fa-2x"></i>
+						</a>
+
+
+						<div class="collapse" id="new_jumbotron_picture">
+							<input type="file" id="update_picture"/>
+							<div hidden>{{ null}}</div>
+							<div hidden>{{ trick.id }}</div>
+							<div hidden>{{1}}</div>
+							<!-- Picture sortOrder -->
+							<button data-update>Envoyer</button>
+						</div>
+
+					{% endif %}
+
+				{% else %}
+					{#---------------------------------NEW FIGURE------------------------------------------     #}
+
+					<h1 class="title">Création d'une nouvelle figure de Snowboard</h1>
 
 
 				{% endif %}
@@ -61,8 +82,16 @@
 			</div>
 
 		</div>
+		<div class="row justify-content-center">
 
-		<div id="alert" class="alert alert-success"></div>
+			<div id="alert" class="alert alert-success"></div>
+			{% for message in app.flashes('danger') %}
+				<div class="flash-info">
+					<div class="alert alert-danger">{{ message }}</div>
+				</div>
+			{% endfor %}
+
+		</div>
 		{#-----FLASH MESSAGES------#}
 
 		<div class="container ">
@@ -83,9 +112,7 @@
 						<h3>Images</h3>
 					</div>
 
-					<div class="row justify-content-center">
-						{{ form_row(figureForm.pictures) }}
-					</div>
+					<button type="button" class="add-another-picture-widget btn btn-primary" data-list="#pictureList-fields-list">Ajouter une image</button>
 
 					<div class="row picture-thumbs justify-content-center">
 
@@ -135,6 +162,8 @@
 					<div class="row justify-content-center">
 						<h3>Vidéos</h3>
 					</div>
+
+
 					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
 
 

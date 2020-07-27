@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class AppController extends AbstractController
 {
@@ -54,54 +56,47 @@ class AppController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //Récupération des images
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-            //Images 
-            foreach ($pictures as $picture) {
-                //nouveau nom de fichier
-                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
-                //copie dans dossier uploads
-                $picture->move(
-                    $this->getParameter('pictures_directory'),
-                    $filename
-                );
-                //stockage du nom du fichier dans la base de donnée
-                $pic = new Picture();
-                $pic->setName($filename);
-                $pic->setSortOrder($pictureOrder);
+            try {
+                //Images 
+                foreach ($pictures as $picture) {
+                    //nouveau nom de fichier
+                    $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                    //copie dans dossier uploads
+                    $picture->move(
+                        $this->getParameter('pictures_directory'),
+                        $filename
+                    );
+                    //stockage du nom du fichier dans la base de donnée
+                    $pic = new Picture();
+                    $pic->setName($filename);
+                    $pic->setSortOrder($pictureOrder);
 
-                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                $figure->addPicture($pic);
-                $pictureOrder++;
-            }
-            if ($videos) {
-                foreach ($videos as $video) {
-                    $url = $video->getUrl();
-                    $splittedUrl = explode('/', $url);
-
-
-                    if ($splittedUrl[2] === "www.youtube.com"||"youtu.be") {
-                        $videoId = array_pop($splittedUrl);
-                        $url = "https://www.youtube.com/embed/" . $videoId;
-                    } elseif ($splittedUrl[2] === "www.dailymotion.com" || "dai.ly") {
-                        $videoId = explode('?', array_pop($splittedUrl))[0];
-                        $url = "https://www.dailymotion.com/embed/video/" . $videoId;
-                    } else {
-                        $url = null;
-                        throw new Exception("Format de l'url invalide");
-                    }
-
-                    $video = new Video();
-                    $video->setFigure($figure);
-                    $video->setUrl($url);
-
-                    $em->persist($video);
-                    $figure->addVideo($video);
+                    // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                    $figure->addPicture($pic);
+                    $pictureOrder++;
                 }
-            }
+                if ($videos) {
+                    foreach ($videos as $video) {
+                        $url = $this->checkVideoUrl($video);
+                        if ($url != null) {
+                            $video = new Video();
+                            $video->setFigure($figure);
+                            $video->setUrl($url);
 
+                            $em->persist($video);
+                            $figure->addVideo($video);
+                        } else {
+                            $this->addFlash('danger', " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
+                            return $this->redirectToRoute('figure_create');
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                error_log(($e->getMessage()));
+            }
 
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
@@ -211,38 +206,52 @@ class AppController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //Récupération des images
+            //Récupération des médias
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-            //Images
-            foreach ($pictures as $picture) {
-
-                $maxOrder = $this->findPictureHighestOrder($figure);
-                //nouveau nom de fichier
-                $filename = md5(uniqid()) . '.' . $picture->guessExtension();
-                //copie dans dossier uploads
-                $picture->move(
-                    $this->getParameter('pictures_directory'),
-                    $filename
-                );
-                //stockage du nom du fichier dans la base de donnée
-                $pic = new Picture();
-                $pic->setName($filename);
-                $pic->setSortOrder($maxOrder + 1);
-                // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                $figure->addPicture($pic);
-            }
-
-            if ($videos) {
-                foreach ($videos as $video) {
-
-                    $em->persist($video);
-                    $figure->addVideo($video);
+            try {
+                // UNIQUEMENT LES IMAGES AJOUTEES  => les images modifiées sont gérées en AJAX
+                foreach ($pictures as $picture) {
+                    //Vérification du champ sort_order maximum en base
+                    $maxOrder = $this->findPictureHighestOrder($figure);
+                    //nouveau nom de fichier
+                    $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                    //copie dans dossier uploads
+                    $picture->move(
+                        $this->getParameter('pictures_directory'),
+                        $filename
+                    );
+                    //stockage du nom du fichier dans la base de donnée
+                    $pic = new Picture();
+                    $pic->setName($filename);
+                    $pic->setSortOrder($maxOrder + 1);
+                    // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                    $figure->addPicture($pic);
                 }
+
+                if ($videos) {
+                    foreach ($videos as $video) {
+
+                        $url = $this->checkVideoUrl($video);
+                        if ($url != null) {
+                            $video = new Video();
+                            $video->setFigure($figure);
+                            $video->setUrl($url);
+
+                            $em->persist($video);
+                            $figure->addVideo($video);
+                        } else {
+                            $this->addFlash('danger', " URL non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
+                            return $this->redirectToRoute('figure_edit', [
+                                'id' => $figure->getId()
+                            ]);
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
             }
-
-
             $figure->setLastModificationAt(new \DateTime());
             $em->flush();
             $this->addFlash('message', 'Votre figure a bien été modifiée');
@@ -321,27 +330,28 @@ class AppController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $pictureRepo = $this->getDoctrine()->getRepository(Picture::class);
         $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
+        $figure = $figureRepo->find($figureId);
 
-        $content = $request->files;
-        $uploadedFile = $content->get('file');
+        if ($oldPictureId != "null") { //modification d'une image
+            $oldPicture = $pictureRepo->find($oldPictureId);
+            // effacement de de l'ancienne image dans le dossier Pictures
+            unlink($this->getParameter('pictures_directory') . '/' . $oldPicture->getName());
+            //effacement de l'entrée en base de l'ancienne image
+            $em->remove($oldPicture);
+            $pictureOrder = $oldPictureOrder;
+        } else {
+            $pictureOrder = 1; // Default picture
+        }
+        //Récupération et sauvegarde du fichier image
+        $uploadedFile = $request->files->get('file');
         $filename = md5(uniqid()) . '.' . $uploadedFile->guessExtension();
         $uploadedFile->move(
             $this->getParameter('pictures_directory'),
             $filename
         );
 
-
-        $oldPicture = $pictureRepo->find($oldPictureId);
-        $figure = $figureRepo->find($figureId);
-
-        // effacement de de l'ancienne image dans le dossier Pictures
-        unlink($this->getParameter('pictures_directory') . '/' . $oldPicture->getName());
-        //effacement de l'entrée en base de l'ancienne image
-        $em->remove($oldPicture);
-
-
         $newPicture = new Picture;
-        $newPicture->setSortOrder($oldPictureOrder);
+        $newPicture->setSortOrder($pictureOrder);
         $newPicture->setFigure($figure);
         $newPicture->setName($filename);
 
@@ -354,6 +364,7 @@ class AppController extends AbstractController
             'newPictureFilename' => $filename
         ], 200);
     }
+
 
 
     /**
@@ -391,5 +402,23 @@ class AppController extends AbstractController
                 'error' => "Il semble qu'il y ait un problème avec cette l'url"
             ], 404);
         }
+    }
+
+
+    private function checkVideoUrl($video)
+    {
+        $url = $video->getUrl();
+        $splittedUrl = explode('/', $url);
+
+        if (($splittedUrl[2] === "www.youtube.com" || $splittedUrl[2] === "youtu.be") && (count($splittedUrl) < 5)) {
+            $videoId = explode('=', array_pop($splittedUrl))[1];
+            $url = "https://www.youtube.com/embed/" . $videoId;
+        } elseif (($splittedUrl[2] === "www.dailymotion.com" || $splittedUrl[2] === "dai.ly") && ((count($splittedUrl) < 5))) {
+            $videoId = explode('?', array_pop($splittedUrl))[0];
+            $url = "https://www.dailymotion.com/embed/video/" . $videoId;
+        } else {
+            $url = null;
+        }
+        return $url;
     }
 }

@@ -32,9 +32,11 @@ class FigureType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'title',
             ])
-            ->add('pictures', FileType::class, [
-                'label' => false,
-                'multiple' => true,
+            ->add('pictures', CollectionType::class, [
+                'entry_type' => FileType::class,           
+                'label' => true,
+                'allow_add' => true,
+                'prototype' => true,
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
