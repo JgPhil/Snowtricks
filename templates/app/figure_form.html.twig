@@ -13,9 +13,8 @@
 
 	<div class="container">
 		{% set defaultPicture = null %}
-		{% if trick is defined %}
-			{#----------------------------------EDIT FIGURE--------------------------------------------#}
-
+		{% if trick is defined %}{#----------------------------------EDIT FIGURE--------------------------------------------#}
+			
 
 			{% for picture in trick.pictures %}
 				{% if picture.sortOrder == 1 %}
@@ -53,13 +52,12 @@
 							<button data-update>Envoyer</button>
 						</div>
 
-					{% else %}
-						{#!---------NEW-JUMBOTRON PICTURE--------#}
+					{% else %}{#!---------NEW-JUMBOTRON PICTURE--------#}
 						<a data-toggle="collapse" href="#new_jumbotron_picture" role="button" aria-expanded="false" aria-controls="new_jumbotron_picture">
 							<i class="fas fa-pencil-alt fa-2x"></i>
 						</a>
 
-
+						
 						<div class="collapse" id="new_jumbotron_picture">
 							<input type="file" id="update_picture"/>
 							<div hidden>{{ null}}</div>
@@ -71,8 +69,7 @@
 
 					{% endif %}
 
-				{% else %}
-					{#---------------------------------NEW FIGURE------------------------------------------     #}
+				{% else %} {#---------------------------------NEW FIGURE------------------------------------------     #}
 
 					<h1 class="title">Création d'une nouvelle figure de Snowboard</h1>
 
