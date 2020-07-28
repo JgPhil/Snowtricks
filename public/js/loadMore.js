@@ -27,7 +27,7 @@ loadButton.addEventListener('click', function (event) {
 
             result.sliceFigures.forEach(function (k) {
                 let div1 = document.createElement('div');
-                div1.classList.add("col-md-6", "col-lg-4");
+                div1.classList.add("col-sm-6","col-md-4", "col-lg-3");
 
                 let div2 = document.createElement('div');
                 div2.classList.add("card", "mb-4");

@@ -29,7 +29,7 @@ class FigureRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('f')
             ->andWhere('f.activatedAt IS NOT NULL')
             ->orderBy('f.id', 'DESC')
-            ->setMaxResults(6)
+            ->setMaxResults(8)
             ->getQuery()
             ->getResult();
     }

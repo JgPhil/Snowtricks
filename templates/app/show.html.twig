@@ -9,6 +9,8 @@
 
 {% block body %}
 
+	{% set defaultPicture = null %}
+
 	<div class="container">
 		{% for message in app.flashes('message') %}
 			<div class="flash-info">
@@ -16,7 +18,13 @@
 			</div>
 		{% endfor %}
 
-		{% set pictureJumbotron = figure.pictures.first ? " /uploads/pictures/" ~ figure.pictures.first.name : '' %}
+		{% for picture in figure.pictures %}
+			{% if picture.sortOrder == 1 %}
+				{% set defaultPicture = picture %}
+			{% endif %}
+		{% endfor %}
+
+		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 		<div class="jumbotron  align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
 			<h1 class="display-4" style="color: white">
 				{{ figure.title }}
@@ -42,33 +50,31 @@
 
 		</div>
 
-		<div class="container">
-			<div class="row justify-content-center ">
-				<a data-toggle="collapse" href="#media-block-show" role="button" aria-expanded="false" aria-controls="media-block">
-					<i class="fas fa-images fa-3x"></i>
+		<div class="container-fluid">
+			<div class="row justify-content-center d-md-none">
+				<a data-toggle="collapse" href="#media-block-show" role="button" aria-expanded="false" aria-controls="media-block-show">
+					<i class="fas fa-images fa-2x"> Voir les Médias</i>
 				</a>
 			</div>
 
-			<div class="row collapse media-block mb-4" id="media-block-show">
-				<div class="col-sm-6">
+			<div class="row collapse media-block d-md-flex mb-4" id="media-block-show">
+				<div class="col-sm-12 col-md-6">
 					<div class="row">
 						{% for picture in figure.pictures %}
-							<div class="col-sm-12">
-								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
-								<div class="card mb-4 ">
-									<img class="card-img-top" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}" onclick="window.open(this.src)">
-								</div>
+							<div class="col-sm-12 col-md-4 col-lg-3 mr-2 mt-2">
+								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}								
+									<img class="img-fluid" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}" onclick="window.open(this.src)">								
 							</div>
 						{% endfor %}
 					</div>
 				</div>
 
-				<div class="col-sm-6">
+				<div class="col-sm-12 col-md-6">
 					<div class="row">
 						{% for video in figure.videos %}
-							<div class="card mb-4 col-sm-12">
-								<div class="iframe-container">
-									<iframe width="370" height="210" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							<div class=" col-sm-12 col-md-4 col-lg-3 mr-2 mt-2">
+								<div class="iframe-container embed-responsive embed-responsive-16by9">
+									<iframe class="embed-responsive-item" src="{{video.url}}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 								</div>
 							</div>
 						{% endfor %}
@@ -115,47 +121,52 @@
 		</div>
 	</div>
 
-	<h3 class="d-flex justify-content-center">Commentaires</h3>
-
-	<div class="container">
-		{% if app.user %}
-			<hr>
-			{{ form_start(commentForm) }}
-			<div class="row d-flex align-items-center justify-content-center">
-				<div class="col-md-10">
-					{{ form_row(commentForm.content, {'label': ' ', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+	<div class="container mt-4">
+		<div class="row justify-content-center">
+			<div class="col-sm-10 col-md-8">
+					{% if app.user %}
+		
+				<hr>
+				{{ form_start(commentForm) }}
+				<div class="row d-flex align-items-center justify-content-center">
+					<div class="col-md-10">
+						{{ form_row(commentForm.content, {'label': ' ', 'attr': {'placeholder' : 'Veuillez écrire votre message...' } }) }}
+					</div>
+					<button type="submit" class="btn btn-success">Envoyer</button>
 				</div>
-				<button type="submit" class="btn btn-success">Envoyer</button>
-			</div>
-			<hr>
-			{{ form_end(commentForm) }}
+
+				<hr>
+				{{ form_end(commentForm) }}
 		{% endif %}
 
-		<div id="forumComments">
-			{% for comment in comments %}
-				<div class="media mb-4 ">
-					<div hidden>
-						{{ comment.id }}
-					</div>
+				<div id="forumComments">
+					{% for comment in comments %}
+						<div class="media mb-4 ">
+							<div hidden>
+								{{ comment.id }}
+							</div>
 
-					{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
+							{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
 
-					<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle">
-					<div class="media-body">
-						<h5 class="mt-0">{{ comment.author.username }}
-							(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
-							</small>)</h5>
-						<p>{{ comment.content | raw }}</p>
-					</div>
+							<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle user-picture" alt="{{ "Une image de l'utilisateur" ~ comment.author.username }} ">
+							<div class="media-body">
+								<h5 class="mt-0">{{ comment.author.username }}
+									(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}
+									</small>)</h5>
+								<p>{{ comment.content | raw }}</p>
+							</div>
+						</div>
+					{% endfor %}
+					{# SCROLL DOWN BUTTON  #}
+					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
+						<i class="fas fa-arrow-up"></i>
+					</a>
 				</div>
-			{% endfor %}
-			{# SCROLL DOWN BUTTON  #}
-			<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
-				<i class="fas fa-arrow-up"></i>
-			</a>
+			</div>
 		</div>
+			
 	</div>
-	
+
 	<hr>
 {% endblock %}
 {% block javascript %}

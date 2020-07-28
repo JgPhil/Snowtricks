@@ -23,8 +23,8 @@
 	<!-- FIGURE A LA UNE -->
 
 	
-	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" style="background: url('/uploads/pictures/main_snowtricks.jpg') no-repeat center;" id="topJumbotron">
-		<div class="container ">
+	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" id="topJumbotron">
+		<div class="container-fluid">
 
 			<h1 class="display-3">Snowtricks</h1>
 
@@ -56,7 +56,7 @@
 						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
 					{% endif %}
 
-					<div class="col-md-6 col-lg-4">
+					<div class="col-sm-6 col-md-4 col-lg-3">
 						<div class="card mb-4 ">
 							<img class="card-img-top" src="{{picturePath|default('https://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}">
 							<div class="card-body">

@@ -39,7 +39,7 @@ class FigureType extends AbstractType
                 'allow_add' => true,
                 'prototype' => true,
                 'mapped' => false,
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'placeholder' => "Ajouter des images..."
                 ]
@@ -54,7 +54,7 @@ class FigureType extends AbstractType
                 ],
                 'allow_add' => true,
                 'mapped' => false,
-                'required' => false,
+                'required' => true,
                 'prototype' => true,
                 'by_reference' => false
             ])

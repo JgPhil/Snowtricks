@@ -410,11 +410,11 @@ class AppController extends AbstractController
         $url = $video->getUrl();
         $splittedUrl = explode('/', $url);
 
-        if (($splittedUrl[2] === "www.youtube.com" || $splittedUrl[2] === "youtu.be") && (count($splittedUrl) < 5)) {
+        if (($splittedUrl[2] === "www.youtube.com" || $splittedUrl[2] === "youtu.be") && (count($splittedUrl) < 6)) {
             $videoId = explode('=', array_pop($splittedUrl))[1];
             $url = "https://www.youtube.com/embed/" . $videoId;
-        } elseif (($splittedUrl[2] === "www.dailymotion.com" || $splittedUrl[2] === "dai.ly") && ((count($splittedUrl) < 5))) {
-            $videoId = explode('?', array_pop($splittedUrl))[0];
+        } elseif (($splittedUrl[2] === "www.dailymotion.com" || $splittedUrl[2] === "dai.ly") && ((count($splittedUrl) < 6))) {
+            $videoId = array_pop($splittedUrl);
             $url = "https://www.dailymotion.com/embed/video/" . $videoId;
         } else {
             $url = null;

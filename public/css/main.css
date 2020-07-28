@@ -1,7 +1,10 @@
 .jumbotron {
-  background-image: cover;
+  background-image: url('/uploads/pictures/main_snowtricks.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-left: 5rem;
   width: 100%;
-  height: 85vh;
+  height: 95vh;
   top: 0;
   left: 0;
   z-index: -1;
@@ -11,7 +14,6 @@
   justify-content: center;
   color: white;
 }
-
 
 .buttonMenu {
   position: relative;
@@ -27,8 +29,8 @@
 
 .closeLi {
   position: relative;
+  right: -25rem;
   top: -3rem;
-  right: -26rem;
 }
 
 .closeLi:hover {
@@ -44,18 +46,22 @@
   height: 3rem;
 }
 
-img.card-img-top:hover {opacity: 0.7;}
+img.card-img-top:hover {
+  opacity: 0.7;
+}
 
 .centering {
   text-align: center;
 }
 
-
-
 .login_form,
 .registration_form {
   margin-top: 5em;
   margin-bottom: 15em;
+}
+
+.card {
+  margin: auto;
 }
 
 .card-body {
@@ -67,6 +73,7 @@ img.card-img-top:hover {opacity: 0.7;}
   height: 10vw;
   min-height: 180px;
   object-fit: cover;
+  overflow: hidden;
 }
 
 .toto {
@@ -74,20 +81,11 @@ img.card-img-top:hover {opacity: 0.7;}
   margin-bottom: 50px;
 }
 
-.iframe-container {
-  overflow: hidden;
-  padding-top: 56.25%;
-  position: relative;
+.container {
+  max-width: 90%;
 }
 
-.iframe-container iframe {
-  border: 0;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
+
 
 .media-container {
   height: 40px;
@@ -113,9 +111,8 @@ img.card-img-top:hover {opacity: 0.7;}
   margin: 2rem;
 }
 
-img {
-  object-fit: contain;
-  width: 150px;
+.user-picture {
+  height: 4rem;
 }
 
 table {
@@ -153,7 +150,7 @@ button {
 
 .pictures-container,
 .videos-container {
-  padding: 1% 5% 5% 5%;
+  padding: 1% 5% 2% 5%;
   border: 1px solid black;
 }
 
