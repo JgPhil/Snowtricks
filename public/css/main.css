@@ -15,12 +15,6 @@
   color: white;
 }
 
-.buttonMenu {
-  position: relative;
-  top: -61%;
-  right: -47%;
-}
-
 .editButtonMenu {
   position: relative;
   top: -56%;
@@ -77,15 +71,13 @@ img.card-img-top:hover {
 }
 
 .toto {
-  margin-top: 95px;
+  margin-top: 76px;
   margin-bottom: 50px;
 }
 
 .container {
   max-width: 90%;
 }
-
-
 
 .media-container {
   height: 40px;
@@ -136,6 +128,10 @@ button {
   margin-right: 5px;
 }
 
+.fas {
+  mix-blend-mode: difference;
+}
+
 .link_blog {
   font-size: 1.7em;
   margin-left: 0.5em;
@@ -150,8 +146,20 @@ button {
 
 .pictures-container,
 .videos-container {
-  padding: 1% 5% 2% 5%;
-  border: 1px solid black;
+  padding: 2px 5px 2px 5px;
+  border: 1px solid rgb(61, 30, 30);
+}
+
+.pictures-row,
+.videos-row {
+  min-height: 150px;
+}
+
+label.custom-file-label {
+  white-space: nowrap;  
+   width: 100%;                     
+   overflow: hidden;
+   text-overflow: clip;
 }
 
 .title {

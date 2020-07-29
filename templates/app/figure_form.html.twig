@@ -14,10 +14,12 @@
 	<div class="container">
 		{% set defaultPicture = null %}
 		{% if trick is defined %}
+
 			{#----------------------------------EDIT FIGURE--------------------------------------------#}
 
-
-			{% for picture in trick.pictures %}
+			{% set picturesArray = trick.pictures %}
+			{# loop in pictures to find picture with sort_order = 1 #}
+			{% for picture in picturesArray %}
 				{% if picture.sortOrder == 1 %}
 					{% set defaultPicture = picture %}
 				{% endif %}
@@ -27,7 +29,8 @@
 
 			{#------------------------JUMBOTRON---------------------------#}
 			<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
-				<h1 class="display-4" style="color:white">{{trick.title}} </h1>
+				<h1 class="display-4" style="color:white">{{trick.title}}
+				</h1>
 
 				<div
 					class="editButtonMenu">
@@ -98,15 +101,16 @@
 			{{ form_start(figureForm) }}
 			<div class="row justify-content-center d-md-none">
 				<a data-toggle="collapse" href="#media-block" role="button" aria-expanded="false" aria-controls="media-block">
-					<i class="fas fa-images fa-3x"></i>
+					<i class="fas fa-images fa-3x">Voir les Médias</i>
 				</a>
 			</div>
+
 			<div
 				class="row collapse media-block d-md-flex mb-4" id="media-block">
 
 				{# -------------------------FIGURES PICTURES------------------------ #}
 
-				<div class="col-lg-6 pictures-container">
+				<div class="col-md-6 pictures-container">
 					<div class="row justify-content-center">
 						<h3>Images</h3>
 					</div>
@@ -117,19 +121,18 @@
 						</div>
 					</div>
 					<div class="row mt-2 justify_content-center">
-						<ul id="pictureList-fields-list" data-prototype='{{form_widget(figureForm.pictures.vars.prototype)|e}}'  data-widget-tags="{{ '<li></li>'|e }}">
-						</ul>
+						<ul id="pictureList-fields-list" data-prototype='{{form_widget(figureForm.pictures.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
 					</div>
 
 
 					{% if trick is defined %}
 						<div class="row">
 
-							{% for picture in trick.pictures %}
+							{% for picture in picturesArray|filter(picture => picture.sortOrder != 1) %}
 								<div hidden>{{ picture.id }}</div>
-								<div class="col-sm-12 col-md-6 col-lg-4 mr-2 mt-2">
-									<img class="img-fluid"
-									src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}">
+								<div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
+									<img
+									class="img-fluid" src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}">
 
 									{#-----------UPDATE PICTURE --------#}
 									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
@@ -172,34 +175,33 @@
 					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
 
 
-					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}">
-					</ul>
+					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
 
-				<div class="row">
-					{% if trick is defined %}
-						{% for video in trick.videos %}
-						<div class=" col-sm-12 col-md-6 col-lg-4 mr-2 mt-2">
-							<div class="embed-responsive embed-responsive-16by9">
-								<iframe class="embed-responsive-item" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-							</div>
-								<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
-									<i class="fas fa-pencil-alt fa-2x"></i>
-								</a>
+					<div class="row">
+						{% if trick is defined %}
+							{% for video in trick.videos %}
+								<div class=" col-sm-12 col-md-6 col-lg-4 mx-auto">
+									<div class="embed-responsive embed-responsive-16by9">
+										<iframe class="embed-responsive-item" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									</div>
+									<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
+										<i class="fas fa-pencil-alt fa-2x"></i>
+									</a>
 
-								<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
-									<i class="fas fa-trash-alt fa-2x"></i>
-								</a>
-							
+									<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
+										<i class="fas fa-trash-alt fa-2x"></i>
+									</a>
 
-							<div class="collapse" id={{"update_video_input" ~ video.id }}>
-								<input type="text" id="newVideoUrl"/>
-								<div hidden>{{ video.id }}</div>
-								<div hidden>{{ trick.id }}</div>
-								<button data-update>Envoyer</button>
-							</div>
-							</div>
-						{% endfor %}
-					{% endif %}
+
+									<div class="collapse" id={{"update_video_input" ~ video.id }}>
+										<input type="text" id="newVideoUrl"/>
+										<div hidden>{{ video.id }}</div>
+										<div hidden>{{ trick.id }}</div>
+										<button data-update>Envoyer</button>
+									</div>
+								</div>
+							{% endfor %}
+						{% endif %}
 					</div>
 				</div>
 				{# -------------------------FIGURES VIDEOS------------------------ #}
@@ -217,7 +219,7 @@
 				</div>
 				<div class="col d-flex justify-content-end align-items-center form-group">
 					{{ form_widget(figureForm.submit) }}
-				</div>				
+				</div>
 			</div>
 			{{ form_end(figureForm) }}
 
@@ -225,7 +227,7 @@
 	{% endblock %}
 
 	{% block javascript %}
-		<script src=" {{ asset('js/delete.js') }} "></script>
+		<script src=" {{ asset('js/media_delete.js') }} "></script>
 		<script src=" {{ asset('js/media_update.js') }} "></script>
 		<script src=" {{ asset('js/add_video.js') }} "></script>
 		<script src=" {{ asset('js/add_picture.js') }} "></script>
