@@ -10,6 +10,8 @@ use App\Entity\Picture;
 use App\Repository\UserRepository;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -206,5 +208,20 @@ class AdminController extends AbstractController
             [],
             ['groups' => 'user_read']
         );
+    }
+
+
+    /**
+     * @Route("/delete/figure/{id}", name="delete_figure")
+     */
+    public function deleteFigure(Figure $figure, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $figure->setActivatedAt(null);
+        $figure->setTitle($figure->getTitle().'-old');
+        $em->persist($figure);
+        $em->flush();
+        $this->addFlash('message', 'La figure a bien été effacée');
+        return $this->redirectToRoute('home');
     }
 }

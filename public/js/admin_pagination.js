@@ -348,7 +348,7 @@ const userRows = function (u) {
 for (table of tables) {
 
     table.addEventListener("click", function (e) {
-        if (e.target && e.target.matches("a")) {
+        if (e.target && e.target.matches("a") && e.target.hasAttribute('activation')) {
             e.preventDefault();
             e.stopPropagation();
             link = e.target;

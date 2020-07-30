@@ -10,7 +10,7 @@
 {% block body %}
 	<div class="container">
 
-	<h1 class="title">Administration</h1>
+		<h1 class="title">Administration</h1>
 		<div class="mb-5 block-table">
 			<div>
 				<h2>Figures</h2>
@@ -26,38 +26,44 @@
 						</tr>
 					</thead>
 
-						{% for figure in figures %}
-							<tbody>
-								<tr>
-									<td>{{figure.id }}</td>
-									<td>{{figure.title }}</td>
-									<td>{{figure.category.title}}</td>
-									<td>{{figure.createdAt|date }}</td>
-									<td>{{figure.author.username }}</td>
-									<td>
-										{% if figure.getActivatedAt is not null %}
-											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true"  class="btn btn-warning btn-sm">Désactiver</a>
-										{% else %}
-											<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
-										{% endif %}
-									</td>
-								</tr>
-							</tbody>
-						{% endfor %}
-					
+					{% for figure in figures %}
+						<tbody>
+							<tr>
+								<td>{{figure.id }}</td>
+								<td>
+									<a href="{{path('trick_show', {id: figure.id})}}">{{figure.title }}</a>
+								</td>
+								<td>{{figure.category.title}}</td>
+								<td>{{figure.createdAt|date }}</td>
+								<td>{{figure.author.username }}</td>
+								<td>
+									{% if figure.getActivatedAt is not null %}
+										<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+									{% else %}
+										<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
+									{% endif %}
+								</td>
+							</tr>
+						</tbody>
+					{% endfor %}
+
 
 				</table>
 			</div>
 
-				<input type="text" hidden data-figurescount={{ figuresCount }}>
+			<input type="text" hidden data-figurescount={{ figuresCount }}>
 
-				<a href="" data-figureBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
-				
-				{% for i in 1..((figuresCount / maxPerPage)|round(0,'ceil')) %}
-					<a href="" data-figureBtns class="link_blog">{{i}}</a>
-				{% endfor %}
+			<a href="" data-figurebtns class="link_blog prev">
+				<i class="fas fa-angle-left"></i>
+			</a>
 
-				<a href="" data-figureBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
+			{% for i in 1..((figuresCount / maxPerPage)|round(0,'ceil')) %}
+				<a href="" data-figurebtns class="link_blog">{{i}}</a>
+			{% endfor %}
+
+			<a href="" data-figurebtns class="link_blog next">
+				<i class="fas fa-angle-right"></i>
+			</a>
 		</div>
 
 
@@ -68,44 +74,53 @@
 					<thead>
 						<tr>
 							<th>ID</th>
+							<th>Article</th>
 							<th>Contenu</th>
 							<th>Date</th>
 							<th>Auteur</th>
 							<th>Activation</th>
 						</tr>
 					</thead>
-						{% for comment in comments %}
-							<tbody>
-								<tr>
-									<td>
-										{{comment.id}}</td>
-									<td>
-										{{comment.content}}</td>
-									<td>
-										{{comment.createdAt | date}}</td>
-									<td>
-										{{comment.author.username}}</td>
-									<td>
-										{% if comment.getActivatedAt is not null %}
-											<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
-										{% else  %}
-											<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
-										{% endif %}
-									</td>
-								</tr>
-							</tbody>
-						{% endfor %}
+					{% for comment in comments %}
+						<tbody>
+							<tr>
+								<td>
+									{{comment.id}}</td>
+								<td>
+									<a href="{{ path( 'trick_show', { id: comment.figure.id })}}">{{comment.figure.title}}</a>
+								</td>
+
+								<td>
+									{{comment.content}}</td>
+								<td>
+									{{comment.createdAt | date}}</td>
+								<td>
+									{{comment.author.username}}</td>
+								<td>
+									{% if comment.getActivatedAt is not null %}
+										<a href="{{ path('admin_comment_desactivate', { id: comment.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+									{% else  %}
+										<a href="{{ path('admin_comment_activate', { id: comment.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
+									{% endif %}
+								</td>
+							</tr>
+						</tbody>
+					{% endfor %}
 				</table>
 
-			</div>				
-			
-				<input type="text" hidden data-commentsCount={{ commentsCount }}>
+			</div>
 
-				<a href="" data-commentBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
-				{% for j in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
-					<a href="" data-commentBtns class="link_blog">{{j}}</a>
-				{% endfor %}
-				<a href="" data-commentBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
+			<input type="text" hidden data-commentscount={{ commentsCount }}>
+
+			<a href="" data-commentbtns class="link_blog prev">
+				<i class="fas fa-angle-left"></i>
+			</a>
+			{% for j in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
+				<a href="" data-commentbtns class="link_blog">{{j}}</a>
+			{% endfor %}
+			<a href="" data-commentbtns class="link_blog next">
+				<i class="fas fa-angle-right"></i>
+			</a>
 		</div>
 		<div class="mb-5 block-table">
 			<div>
@@ -121,34 +136,38 @@
 							<th>Activation</th>
 						</tr>
 					</thead>
-						{% for user in users %}
-							<tbody>
-								<tr>
-									<td>{{user.id}}</td>
-									<td>{{user.username}}</td>
-									<td>{{user.createdAt | date}}</td>
-									<td>{{user.email}}</td>
-									<td>{{user.roles[0]}}</td>
-									<td>
-										{% if user.token is null %}
-											<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
-										{% else  %}
-											<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
-										{% endif %}
-									</td>
-								</tr>
-							</tbody>
-						{% endfor %}
+					{% for user in users %}
+						<tbody>
+							<tr>
+								<td>{{user.id}}</td>
+								<td>{{user.username}}</td>
+								<td>{{user.createdAt | date}}</td>
+								<td>{{user.email}}</td>
+								<td>{{user.roles[0]}}</td>
+								<td>
+									{% if user.token is null %}
+										<a href="{{ path('admin_user_desactivate', { id: user.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+									{% else  %}
+										<a href="{{ path('admin_user_activate', { id: user.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
+									{% endif %}
+								</td>
+							</tr>
+						</tbody>
+					{% endfor %}
 				</table>
 			</div>
-				
-				<input type="text" hidden data-usersCount={{ usersCount }}>
 
-				<a href="" data-userBtns class="link_blog prev"><i class="fas fa-angle-left"></i></a>
-				{% for k in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
-					<a href="" data-userBtns class="link_blog">{{k}}</a>
-				{% endfor %}
-				<a href="" data-userBtns class="link_blog next"><i class="fas fa-angle-right"></i></a>
+			<input type="text" hidden data-userscount={{ usersCount }}>
+
+			<a href="" data-userbtns class="link_blog prev">
+				<i class="fas fa-angle-left"></i>
+			</a>
+			{% for k in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
+				<a href="" data-userbtns class="link_blog">{{k}}</a>
+			{% endfor %}
+			<a href="" data-userbtns class="link_blog next">
+				<i class="fas fa-angle-right"></i>
+			</a>
 		</div>
 	</div>
 {% endblock %}

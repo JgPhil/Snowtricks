@@ -22,7 +22,7 @@
 	</div>
 	<!-- FIGURE A LA UNE -->
 
-	
+
 	<div class="jumbotron jumbotron-fluid align-items-center justify-content-center" id="topJumbotron">
 		<div class="container-fluid">
 
@@ -49,11 +49,20 @@
 		<div class="row mt-4" id="js-more">
 
 			{% for figure in figures %}
-
 				{% if figure.activatedAt != null %}
+					
 					{% set picturePath = null %}
+					{% set defaultPicture = null %}
+					{# search for figure default picture #}
 					{% if figure.pictures is not empty %}
-						{% set picturePath =  "/uploads/pictures/" ~ figure.pictures.first.name %}
+						{% for picture in figure.pictures %}
+							{% if picture.sortOrder == 1 %}
+								{% set defaultPicture = picture %}
+								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
+							{% endif %}
+						{% endfor %}
+
+						{#  #}
 					{% endif %}
 
 					<div class="col-sm-6 col-md-4 col-lg-3">

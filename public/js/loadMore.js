@@ -20,6 +20,8 @@ loadButton.addEventListener('click', function (event) {
     }).then(response => response.json()
     ).then(data => {
         data.sliceFigures.forEach(function (k) {
+            let defaultPicture = null;
+
             let div1 = document.createElement('div');
             div1.classList.add("col-sm-6", "col-md-4", "col-lg-3");
 
@@ -28,7 +30,14 @@ loadButton.addEventListener('click', function (event) {
 
             let img = document.createElement('img');
             img.classList.add('card-img-top');
-            img.src = k.pictures.length !== 0 ? "/uploads/pictures/" + k.pictures[0].name : "uploads/pictures/fail.jpg";
+            // Search for default picture
+            for (picture of k.pictures) {
+                if (picture.sortOrder == 1) {
+                    defaultPicture = picture;
+                }
+            }
+            img.src = defaultPicture != null ? "/uploads/pictures/" + defaultPicture.name : "uploads/pictures/fail.jpg";
+            
 
             let div3 = document.createElement('div');
             div3.classList.add("card-body");
@@ -82,10 +91,6 @@ loadButton.addEventListener('click', function (event) {
             }
             more.appendChild(div1);
         });
-
-        if (more.childElementCount >= 10) { // On affiche le bouton pour remonter en haut du bloc des figures
-            scrollUpBtn.removeAttribute("hidden");
-        }
 
         links = document.querySelectorAll("[data-delete]"); // on re-séléctionne tous les liens
     });

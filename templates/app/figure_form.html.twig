@@ -28,7 +28,7 @@
 			{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
 			{#------------------------JUMBOTRON---------------------------#}
-			<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+			<div class="jumbotron align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('/uploads/pictures/fail.jpg') }} ') no-repeat center;" id="topJumbotron">
 				<h1 class="display-4" style="color:white">{{trick.title}}
 				</h1>
 
@@ -38,12 +38,12 @@
 					{#-----------UPDATE PICTURE --------#}
 					{% if defaultPicture %}
 						<a data-toggle="collapse" href={{"#update_picture_input" ~ defaultPicture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ defaultPicture.id }}>
-							<i class="fas fa-pencil-alt fa-2x"></i>
+							<i class="fas fa-pencil-alt fa-2x" title="remplacer l'image"></i>
 						</a>
 
 						{#---------DELETE PICTURE---------#}
 						<a href="{{ path('picture_delete', { id: defaultPicture.id }) }}" data-delete>
-							<i class="fas fa-trash-alt fa-2x"></i>
+							<i class="fas fa-trash-alt fa-2x" title="supprimer l'image"></i>
 						</a>
 
 						{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
@@ -59,7 +59,7 @@
 					{% else %}
 						{#!---------NEW-JUMBOTRON PICTURE--------#}
 						<a data-toggle="collapse" href="#new_jumbotron_picture" role="button" aria-expanded="false" aria-controls="new_jumbotron_picture">
-							<i class="fas fa-pencil-alt fa-2x"></i>
+							<i class="fas fa-pencil-alt fa-2x" title="remplacer l'image"></i>
 						</a>
 
 
@@ -101,7 +101,7 @@
 			{{ form_start(figureForm) }}
 			<div class="row justify-content-center d-md-none">
 				<a data-toggle="collapse" href="#media-block" role="button" aria-expanded="false" aria-controls="media-block">
-					<i class="fas fa-images fa-3x">Voir les Médias</i>
+					<i class="fas fa-images fa-2	x">Voir les Médias</i>
 				</a>
 			</div>
 
@@ -133,11 +133,11 @@
 
 									{#-----------UPDATE PICTURE --------#}
 									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
-										<i class="fas fa-pencil-alt fa-2x"></i>
+										<i class="fas fa-pencil-alt fa-2x" title="remplacer l'image"></i>
 									</a>
 									{#!---------DELETE PICTURE---------#}
-									<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
-										<i class="fas fa-trash-alt fa-2x"></i>
+									<a href="{{ path('picture_delete', {id: picture.id}) }} "  data-delete>
+										<i class="fas fa-trash-alt fa-2x" title="effacer l'image"></i>
 									</a>
 
 									{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
@@ -182,11 +182,11 @@
 										<iframe class="embed-responsive-item" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 									</div>
 									<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
-										<i class="fas fa-pencil-alt fa-2x"></i>
+										<i class="fas fa-pencil-alt fa-2x" title="remplacer la vidéo"></i>
 									</a>
 
 									<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
-										<i class="fas fa-trash-alt fa-2x"></i>
+										<i class="fas fa-trash-alt fa-2x" title="supprimer la vidéo"></i>
 									</a>
 
 

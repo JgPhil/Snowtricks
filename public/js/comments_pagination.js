@@ -3,18 +3,22 @@ const forumCommentsElement = document.getElementById("forumComments");
 const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
 let figureId = document.getElementById("figureId").textContent;
 let url = '/figure/' + figureId + '/next/comments/';
+let scrollUpBtn = document.getElementById("js-btn-scroll-up");
 
 window.addEventListener('scroll', function () {
     if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) {
         if (forumCommentsElement.childElementCount > 1) {
             commentsOffset = forumCommentsElement.children[forumCommentsElement.children.length - 2].firstElementChild.textContent;
             ajaxQuery(url, commentsOffset);
-            if (forumCommentsElement.childElementCount >= 10) {
-                scrollUpBtn.removeAttribute("hidden");
-            }
         }
-    }
+    } scrollUpBtn.removeAttribute("hidden");
 })
+
+window.addEventListener('scroll', function () {
+    if (window.scrollY < (document.documentElement.scrollHeight) / 3) {
+        scrollUpBtn.setAttribute("hidden", true)
+    }
+});
 
 
 

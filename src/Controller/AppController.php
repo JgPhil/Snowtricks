@@ -194,13 +194,16 @@ class AppController extends AbstractController
                 'id' => $figure->getId(),
             ]);
         }
-
-        return $this->render('app/show.html.twig', [
-            'figure' => $figure,
-            'commentForm' => $form->createView(),
-            'comments' => $comments
-
-        ]);
+        if ($figure->getActivatedAt() != null) {
+            return $this->render('app/show.html.twig', [
+                'figure' => $figure,
+                'commentForm' => $form->createView(),
+                'comments' => $comments
+            ]);
+        } else {
+            $this->addFlash('danger', "Cette figure n'est pas activée");
+            return $this->redirectToRoute('home');
+        }
     }
 
 
@@ -221,39 +224,52 @@ class AppController extends AbstractController
             $videos = $form->get('videos')->getData();
 
             try {
-                // UNIQUEMENT LES IMAGES AJOUTEES  => les images modifiées sont gérées en AJAX
+                // Uniquement les images AJOUTEES  => les images REMPLACEES sont gérées en AJAX
                 foreach ($pictures as $picture) {
-                    //Vérification du champ sort_order maximum en base
-                    $maxOrder = $this->findPictureHighestOrder($figure);
-                    //nouveau nom de fichier
-                    $filename = md5(uniqid()) . '.' . $picture->guessExtension();
-                    //copie dans dossier uploads
-                    $picture->move(
-                        $this->getParameter('pictures_directory'),
-                        $filename
-                    );
-                    //stockage du nom du fichier dans la base de donnée
-                    $pic = new Picture();
-                    $pic->setName($filename);
-                    $pic->setSortOrder($maxOrder + 1);
-                    // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                    $figure->addPicture($pic);
+                    if (!empty($picture)) {
+                        //Vérification du champ sort_order maximum en base
+                        $maxOrder = $this->findPictureHighestOrder($figure);
+                        //nouveau nom de fichier
+                        $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                        //copie dans dossier uploads
+                        $picture->move(
+                            $this->getParameter('pictures_directory'),
+                            $filename
+                        );
+                        //stockage du nom du fichier dans la base de donnée
+                        $pic = new Picture();
+                        $pic->setName($filename);
+                        $pic->setSortOrder($maxOrder + 1);
+                        // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                        $figure->addPicture($pic);
+                    } else {
+                        $this->addFlash('danger', "Il y a eu un problème lors de la modification de la figure");
+                        return $this->redirectToRoute('trick_show', [
+                            'id' => $figure->getId()
+                        ]);
+                    }
                 }
 
                 if ($videos) {
                     foreach ($videos as $video) {
+                        if (!empty($video)) {
+                            $url = $this->checkVideoUrl($video);
+                            if ($url != null) {
+                                $video = new Video();
+                                $video->setFigure($figure);
+                                $video->setUrl($url);
 
-                        $url = $this->checkVideoUrl($video);
-                        if ($url != null) {
-                            $video = new Video();
-                            $video->setFigure($figure);
-                            $video->setUrl($url);
-
-                            $em->persist($video);
-                            $figure->addVideo($video);
+                                $em->persist($video);
+                                $figure->addVideo($video);
+                            } else {
+                                $this->addFlash('danger', " URL non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
+                                return $this->redirectToRoute('figure_edit', [
+                                    'id' => $figure->getId()
+                                ]);
+                            }
                         } else {
-                            $this->addFlash('danger', " URL non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
-                            return $this->redirectToRoute('figure_edit', [
+                            $this->addFlash('danger', "Il y a eu un problème lors de la modification de la figure");
+                            return $this->redirectToRoute('trick_show', [
                                 'id' => $figure->getId()
                             ]);
                         }
@@ -417,7 +433,7 @@ class AppController extends AbstractController
 
     private function checkVideoUrl($video)
     {
-        $url = $video->getUrl();
+        $url = htmlspecialchars($video->getUrl());
         $splittedUrl = explode('/', $url);
 
         if (($splittedUrl[2] === "www.youtube.com" || $splittedUrl[2] === "youtu.be") && (count($splittedUrl) < 6)) {
