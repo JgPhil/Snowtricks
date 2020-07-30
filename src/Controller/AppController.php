@@ -62,35 +62,45 @@ class AppController extends AbstractController
             try {
                 //Images 
                 foreach ($pictures as $picture) {
-                    //nouveau nom de fichier
-                    $filename = md5(uniqid()) . '.' . $picture->guessExtension();
-                    //copie dans dossier uploads
-                    $picture->move(
-                        $this->getParameter('pictures_directory'),
-                        $filename
-                    );
-                    //stockage du nom du fichier dans la base de donnée
-                    $pic = new Picture();
-                    $pic->setName($filename);
-                    $pic->setSortOrder($pictureOrder);
+                    if (!empty($picture)) {
+                        //nouveau nom de fichier
+                        $filename = md5(uniqid()) . '.' . $picture->guessExtension();
+                        //copie dans dossier uploads
+                        $picture->move(
+                            $this->getParameter('pictures_directory'),
+                            $filename
+                        );
+                        //stockage du nom du fichier dans la base de donnée
+                        $pic = new Picture();
+                        $pic->setName($filename);
+                        $pic->setSortOrder($pictureOrder);
 
-                    // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                    $figure->addPicture($pic);
-                    $pictureOrder++;
+                        // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                        $figure->addPicture($pic);
+                        $pictureOrder++;
+                    } else {
+                        $this->addFlash('danger', "Il y a eu un problème lors de la création de votre figure");
+                        return $this->redirectToRoute('home');
+                    }
                 }
                 if ($videos) {
                     foreach ($videos as $video) {
-                        $url = $this->checkVideoUrl($video);
-                        if ($url != null) {
-                            $video = new Video();
-                            $video->setFigure($figure);
-                            $video->setUrl($url);
+                        if (!empty($video)) {
+                            $url = $this->checkVideoUrl($video);
+                            if ($url != null) {
+                                $video = new Video();
+                                $video->setFigure($figure);
+                                $video->setUrl($url);
 
-                            $em->persist($video);
-                            $figure->addVideo($video);
+                                $em->persist($video);
+                                $figure->addVideo($video);
+                            } else {
+                                $this->addFlash('danger', " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
+                                return $this->redirectToRoute('figure_create');
+                            }
                         } else {
-                            $this->addFlash('danger', " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg ");
-                            return $this->redirectToRoute('figure_create');
+                            $this->addFlash('danger', "Il y a eu un problème lors de la création de votre figure");
+                            return $this->redirectToRoute('home');
                         }
                     }
                 }

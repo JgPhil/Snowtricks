@@ -27,7 +27,7 @@
 		{% endfor %}
 
 		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
-		<div class="jumbotron  align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('http://placehold.it/1300x800') }} ') no-repeat center;" id="topJumbotron">
+		<div class="jumbotron  align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron |default('uploads/pictures/fail.jpg') }} ') no-repeat center;" id="topJumbotron">
 			<h1 class="display-4" style="color: white">
 				{{ figure.title }}
 			</h1>

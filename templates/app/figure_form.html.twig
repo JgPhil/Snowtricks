@@ -110,13 +110,10 @@
 
 				{# -------------------------FIGURES PICTURES------------------------ #}
 
-				<div class="col-md-6 pictures-container">
-					<div class="row justify-content-center">
-						<h3>Images</h3>
-					</div>
+				<div class="col-lg-6 pictures-container">
 
-					<div class="row justify_content-center">
-						<div class="col-sm-10">
+					<div class="row text-center">
+						<div class="col">
 							<button type="button" class="add-another-picture-widget btn btn-primary" data-list="#pictureList-fields-list">Ajouter une image</button>
 						</div>
 					</div>
@@ -132,7 +129,7 @@
 								<div hidden>{{ picture.id }}</div>
 								<div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
 									<img
-									class="img-fluid" src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}">
+									class="img-responsive" width="100%" src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}" onclick="window.open(this.src)">
 
 									{#-----------UPDATE PICTURE --------#}
 									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
@@ -168,14 +165,14 @@
 
 				{# -------------------------FIGURES VIDEOS------------------------ #}
 				<div class="col-lg-6 videos-container">
-					<div class="row justify-content-center">
-						<h3>Vidéos</h3>
+					<div class="row text-center">
+						<div class="col">
+							<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
+						</div>
 					</div>
 
-					<button type="button" class="add-another-collection-widget btn btn-primary" data-list="#videoList-fields-list">Ajouter une vidéo</button>
 
-
-					<ul id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
+					<ul class="mt-2" id="videoList-fields-list" data-prototype='{{form_widget(figureForm.videos.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
 
 					<div class="row">
 						{% if trick is defined %}

@@ -19,12 +19,28 @@
   position: relative;
   top: -56%;
   right: -47%;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2px 5px 2px 5px ;
+  text-align: center;
+  width: 7rem;
+}
+
+#pictureList-fields-list,
+#videoList-fields-list
+{
+  width:80%;
+}
+
+.editButtonMenu>a{
+  margin-left: 7px;
+  margin-right: 7px;
 }
 
 .closeLi {
   position: relative;
-  right: -25rem;
-  top: -3rem;
+  right: -103%;
+  top: -30px;
 }
 
 .closeLi:hover {

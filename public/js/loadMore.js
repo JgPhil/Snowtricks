@@ -28,7 +28,7 @@ loadButton.addEventListener('click', function (event) {
 
             let img = document.createElement('img');
             img.classList.add('card-img-top');
-            img.src = k.pictures.length !== 0 ? "/uploads/pictures/" + k.pictures[0].name : "http://placehold.it/300x200";
+            img.src = k.pictures.length !== 0 ? "/uploads/pictures/" + k.pictures[0].name : "uploads/pictures/fail.jpg";
 
             let div3 = document.createElement('div');
             div3.classList.add("card-body");
