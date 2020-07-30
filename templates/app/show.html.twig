@@ -100,28 +100,35 @@
 
 				<div class="row align-items-center meta-box mt-4 mb-4">
 
-					<div class="col-sm-4 meta">
-						<p>Créée le
+					<div class="col-3 ">
+						<div class="meta">Créée le
 							{{ figure.createdAt|date('d/m/Y') }}
-							à
-							{{ figure.createdAt|date('H:i') }}
-							dans la catégorie
-							{{ figure.category.title }}</p>
+						</div>
+
 					</div>
 
-					<div class="col-sm-4 meta">
-						Auteur:
-						{{ figure.author.username }}
+					<div class="col-3 ">
+						<div class="meta">Catégorie
+							{{ figure.category.title }}
+						</div>
+
+					</div>
+
+					<div class="col-3 ">
+						<div class="meta">Auteur:
+							{{ figure.author.username }}
+						</div>
+
 					</div>
 
 
-					<div class="col-sm-4 meta">
-
-						<p>Dernière modif. le:
+					<div class="col-sm-3 ">
+						<div class="meta">Dernière modif :<br>
 							{{figure.lastModificationAt|date('d/m/y')}}
 							à
 							{{figure.lastModificationAt|date('H:i')}}
-						</p>
+						</div>
+
 
 					</div>
 				</div>
