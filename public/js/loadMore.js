@@ -1,5 +1,3 @@
-const xhr = new XMLHttpRequest();
-
 let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
