@@ -117,6 +117,15 @@ img.card-img-top:hover {
   justify-content: center;
 }
 
+.base-container {
+  padding: 4rem 0 19rem 0;
+}
+
+.base-container > div {
+  padding: 2rem 5rem 2rem 5rem;
+  box-shadow: 3px 3px 20px black;
+}
+
 .picture-thumbs {
   display: flex;
   flex-wrap: wrap;
