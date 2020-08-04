@@ -7,10 +7,8 @@ const resultsperWidth = function () {
         maxResults = 8;
     } else if (window.matchMedia("(min-width: 992px)").matches) {
         maxResults = 6;
-    } else if (window.matchMedia("(min-width: 768px)").matches) {
-        maxResults = 4;
     } else if (window.matchMedia("(min-width: 576px)").matches) {
-        maxResults = 1;
+        maxResults = 4;
     }
     return maxResults;
 }
@@ -32,6 +30,9 @@ loadButton.addEventListener('click', function (event) {
         method: "GET"
     }).then(response => response.json()
     ).then(data => {
+        if (data.sliceFigures.length < 4) {
+            loadButton.style.display = "none";
+        }
         data.sliceFigures.forEach(function (k) {
             let defaultPicture = null;
 

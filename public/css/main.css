@@ -15,10 +15,16 @@
   color: white;
 }
 
+.show_main_picture {
+  background-size: cover;
+  background-position: center top;
+  height: 500px;
+}
+
 .editButtonMenu {
   position: relative;
-  top: -56%;
-  right: -47%;
+  top: -11%;
+  right: -89%;
   border: 1px solid black;
   border-radius: 5px;
   padding: 2px 5px 2px 5px;
@@ -113,15 +119,6 @@ img.card-img-top:hover {
   width: 5em;
   display: flex;
   justify-content: center;
-}
-
-.base-container {
-  padding: 4rem 0 19rem 0;
-}
-
-.base-container > div {
-  padding: 2rem 5rem 2rem 5rem;
-  box-shadow: 3px 3px 20px black;
 }
 
 .picture-thumbs {
