@@ -7,9 +7,9 @@
 	<div class="container mt-4">
 
 
-		<div class="row justify-content-center">
+		<div class="row justify-content-center base-container">
 
-			<div class="col-lg-6  login_form">
+			<div class="col-lg-6 ">
 				{% if error %}
 					<div class="alert alert-danger">
 						{{ error.messageKey | trans(error.messagedata, 'security')}}
@@ -43,8 +43,10 @@
 						<a href=" {{ path('security_forgotten_password') }} ">Mot de passe oublié ?</a>
 					</div>
 				</form>
-				<a class="btn btn-primary" href="{{ path('security_registration')}} "> Créer un compte
-				</a>
+				<a class="btn btn-primary" href="{{ path('security_registration')}} ">
+					Créer un compte</a>
+
+
 			</div>
 		</div>
 	</div>

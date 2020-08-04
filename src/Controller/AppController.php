@@ -138,6 +138,8 @@ class AppController extends AbstractController
     public function profile(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
+        $oldPicture = null;
+        
         if (count($user->getPictures()) > 0) {
             $oldPicture = $user->getPictures()[0];
         }
@@ -149,7 +151,6 @@ class AppController extends AbstractController
             if ($oldPicture) {
                 $em->remove($oldPicture);
             }
-
             $pictureData = $form->get('pictures')->getData();
             $filename = md5(uniqid()) . '.' . $pictureData->guessExtension();
             $pictureData->move(
@@ -451,7 +452,7 @@ class AppController extends AbstractController
                 [
                     'newVideoUrl' => $newVideoUrl,
                     'error' =>
-                        "Il semble qu'il y ait un problème avec cette l'url",
+                    "Il semble qu'il y ait un problème avec cette l'url",
                 ],
                 404
             );
@@ -468,7 +469,11 @@ class AppController extends AbstractController
                 $splittedUrl[2] === 'youtu.be') &&
             count($splittedUrl) < 6
         ) {
-            $videoId = explode('=', array_pop($splittedUrl))[1];
+            if (preg_match('/watch?v=/', $url)) {
+                $videoId = explode('=', array_pop($splittedUrl))[1];
+            } else {
+                $videoId = array_pop($splittedUrl);
+            }
             $url = 'https://www.youtube.com/embed/' . $videoId;
         } elseif (
             ($splittedUrl[2] === 'www.dailymotion.com' ||
