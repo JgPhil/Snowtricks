@@ -302,19 +302,19 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/more/figures/{offset}", name="load_more_figures")
+     * @Route("/more/figures/{offset}/{maxResults}", name="load_more_figures")
      *
      * @param FigureRepository $repo
      * @param [type] $offset
      * @return void
      */
-    public function sliceActiveFigures(FigureRepository $repo, $offset)
+    public function sliceActiveFigures(FigureRepository $repo, $offset, $maxResults)
     {
         return $this->json(
             [
                 'sliceFigures' => $repo->findActiveSliceFigures(
                     $offset,
-                    self::NEXT_FIGURES_MAX_RESULTS
+                    $maxResults
                 ),
             ],
             200,

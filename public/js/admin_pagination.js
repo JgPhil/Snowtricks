@@ -37,7 +37,7 @@ let confirmation = null;
 
 //--------------FIGURES----------------//
 
-for (figurePaginationlink of figurePaginationlinks) {
+for ( let figurePaginationlink of figurePaginationlinks) {
     figurePaginationlink.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -64,7 +64,7 @@ for (figurePaginationlink of figurePaginationlinks) {
 
 //--------------COMMENTS----------------//
 
-for (commentPaginationlink of commentPaginationlinks) {
+for (let commentPaginationlink of commentPaginationlinks) {
     commentPaginationlink.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -90,7 +90,7 @@ for (commentPaginationlink of commentPaginationlinks) {
 
 //--------------USERS----------------//
 
-for (userPaginationlink of userPaginationlinks) {
+for (let userPaginationlink of userPaginationlinks) {
     userPaginationlink.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -141,7 +141,7 @@ const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow)
         currentPage = pageTarget;
     }
     return [currentPage, pageTarget];
-}
+};
 
 
 
@@ -188,7 +188,7 @@ const ajaxQuery = function (url, pageTarget, content) {
 //figures
 const figureRows = function (e) {
     let tbody = document.createElement("tbody");
-    let tr = document.createElement("tr")
+    let tr = document.createElement("tr");
 
     let td1 = document.createElement("td");
     td1.textContent = e.id;
@@ -351,7 +351,7 @@ for (table of tables) {
         if (e.target && e.target.matches("a") && e.target.hasAttribute('activation')) {
             e.preventDefault();
             e.stopPropagation();
-            link = e.target;
+            let link = e.target;
             //if activation
             if (link.attributes.activation.value == "true") {
                 confirmation = "Voulez-vous vraiment désactiver l'élément ?";
@@ -373,7 +373,7 @@ for (table of tables) {
                     }
                 }).then(
                     //Récupération de la réponse en JSON
-                    response => response.json()
+                    (response) => response.json()
                 ).catch(e => alert(e))
                 linkSWapp(link);
             }

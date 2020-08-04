@@ -2,6 +2,19 @@ let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
 
+const resultsperWidth = function () {
+    if (window.matchMedia("(min-width: 1200px)").matches) {
+        maxResults = 8;
+    } else if (window.matchMedia("(min-width: 992px)").matches) {
+        maxResults = 6;
+    } else if (window.matchMedia("(min-width: 768px)").matches) {
+        maxResults = 4;
+    } else if (window.matchMedia("(min-width: 576px)").matches) {
+        maxResults = 1;
+    }
+    return maxResults;
+}
+
 
 
 loadButton.addEventListener('click', function (event) {
@@ -11,7 +24,9 @@ loadButton.addEventListener('click', function (event) {
     let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.firstElementChild.href.split('/');
     //the last figure url link splitted into an array
     let offset = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
-    let url = "/more/figures/" + offset; // construct the url with the last figureID to get new figures in database
+    let maxResults = resultsperWidth();
+
+    let url = "/more/figures/" + offset + "/" + maxResults; // construct the url with the last figureID to get new figures in database
 
     fetch(url, {
         method: "GET"
@@ -35,7 +50,7 @@ loadButton.addEventListener('click', function (event) {
                 }
             }
             img.src = defaultPicture != null ? "/uploads/pictures/" + defaultPicture.name : "uploads/pictures/fail.jpg";
-            
+
 
             let div3 = document.createElement('div');
             div3.classList.add("card-body");
@@ -92,5 +107,4 @@ loadButton.addEventListener('click', function (event) {
 
         links = document.querySelectorAll("[data-delete]"); // on re-séléctionne tous les liens
     });
-
-})
+});

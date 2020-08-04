@@ -41,7 +41,7 @@ for (updateLink of updateMediaLinks) {
                 body: form_data,
                 contentType: false,
                 prrocessData: false
-            }
+            };
             let file = this.parentElement.firstElementChild.files[0];
             if (this.parentElement.children[1].textContent != "") {
                 let oldPictureId = this.parentElement.children[1].textContent;
@@ -86,8 +86,6 @@ const checkVideoUrl = function (newVideoUrl) {
     let splitUrl = newVideoUrl.split('/')
     let videoServiceProvider = splitUrl[2];
     let videoId = null;
-
-    console.log(videoServiceProvider);
 
     if (videoServiceProvider === "www.youtube.com") {
         videoId = newVideoUrl.split('=').pop();

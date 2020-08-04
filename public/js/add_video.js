@@ -37,6 +37,6 @@ videolistElement.addEventListener("click", function (e) {
         e.stopPropagation();
         e.target.parentElement.remove();
     }
-})
+});
 
 
