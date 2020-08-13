@@ -22,8 +22,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 6; $i++) {
             $category = new Category();
             $category
-                ->setTitle($faker->word())
-                ->setDescription($faker->sentence(16));
+                ->setTitle($faker->word());
             $manager->persist($category);
 
             for ($j = 0; $j < mt_rand(2, 5); $j++) {

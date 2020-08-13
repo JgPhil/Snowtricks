@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -28,13 +27,7 @@ class Category
     private $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups("figure_read")
-     */
-    private $description;
-
-    /**
-     * 
+     *
      * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="category")
      */
     private $figures;
@@ -43,10 +36,6 @@ class Category
     {
         $this->figures = new ArrayCollection();
     }
-
-    
-
-  
 
     public function getId(): ?int
     {
@@ -61,18 +50,6 @@ class Category
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -103,6 +80,4 @@ class Category
 
         return $this;
     }
-
-    
 }
