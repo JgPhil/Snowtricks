@@ -24,18 +24,25 @@
 		{% endfor %}
 
 		{% set picturesArray = figure.pictures %}
+		{% set defaultPictureUrl = null %}
 		{# loop in pictures to find picture with sort_order = 1 #}
 		{% for picture in picturesArray %}
 			{% if picture.sortOrder == 1 %}
 				{% set defaultPicture = picture %}
+				{% if "https" in picture.name %}
+					{% set defaultPictureUrl = picture.name %}
+				{% else %}
+					{% set defaultPictureUrl = " /uploads/pictures/" ~ defaultPicture.name %}
+				{% endif %}
 			{% endif %}
 		{% endfor %}
 
-		{% set pictureJumbotron = defaultPicture ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
+		{% set pictureJumbotron = defaultPictureUrl  ? defaultPictureUrl : '' %}
+
 		<div class="show_main_picture align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('/uploads/pictures/fail.jpg') }} ') no-repeat center;
-										background-size: cover;
-										background-position: center top;
-										height: 500px;">
+																																														background-size: cover;
+																																														background-position: center top;
+																																														height: 500px;">
 			<h1 class="display-4" style="color: white">
 				{{ figure.title|e }}
 			</h1>
