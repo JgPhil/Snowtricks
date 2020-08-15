@@ -18,7 +18,7 @@ use Doctrine\Persistence\ObjectManager as PersistenceObjectManager;
 
 class AppFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    /* public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');
         $users = $manager->getRepository(User::class)->findAll();
@@ -58,7 +58,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
             }
         }
         $manager->flush();
-    }
+    } */
 
     public function getDependencies()
     {
@@ -71,34 +71,42 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
      * @param ObjectManager $manager
      * @return void
      */
-    public function newLoad(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $categoryArray = [
             [
                 'title' => 'Flips',
                 'figures' => [
-                    'title' => 'Backflip',
-                    'description' =>
-                        'Le backflip figure parmi les sauts les plus spectaculaires de cette discipline. Il nécessite la maîtrise des fondamentaux et d’une bonne perception du corps. En effet, avoir la tête en bas, même pendant quelques secondes seulement, est très difficile pour les non-initiés.',
-                    'picture' =>
-                        'https://www.shutterstock.com/image-photo/snowboarder-jumps-backflip-laax-switzerland-392784835',
-                    'video' => 'https://www.youtube.com/watch?v=W853WVF5AqI',
-                ],
-                [
-                    'title' => 'Mc Twist',
-                    'description' =>
-                        "Le Mc Twist est un flip (rotation verticale) agrémenté d'une vrille. Un saut plutôt périlleux réservé aux riders les plus confirmés. Le champion Shaun White s'est illustré par un Double Mc Twist 1260 lors de sa session de Half-Pipe aux Jeux Olympiques de Vancouver en 2010.",
-                    'picture' => 'https://images.app.goo.gl/8kcQs8hXEccSYcD16',
-                    'video' => 'https://www.youtube.com/watch?v=k-CoAquRSwY',
-                ],
-                [
-                    'title' => 'Wildcat',
-                    'description' =>
-                        'Aussi appelé backflip, le wildcat est un salto arrière que le rider effectue dans les airs après avoir pris de la vitesse. C\'est un trick qui peut être difficile à réaliser puisque le snowboardeur doit veiller à rester dans le bon axe.',
-                    'picture' => 'https://images.app.goo.gl/5Bm4JqqjkCy7VD8PA',
-                    'video' => 'https://www.youtube.com/watch?v=7KUpodSrZqI',
+                    [
+                        'title' => 'Backflip',
+                        'description' =>
+                            'Le backflip figure parmi les sauts les plus spectaculaires de cette discipline. Il nécessite la maîtrise des fondamentaux et d’une bonne perception du corps. En effet, avoir la tête en bas, même pendant quelques secondes seulement, est très difficile pour les non-initiés.',
+                        'picture' =>
+                            'https://www.shutterstock.com/image-photo/snowboarder-jumps-backflip-laax-switzerland-392784835',
+                        'video' =>
+                            'https://www.youtube.com/watch?v=W853WVF5AqI',
+                    ],
+                    [
+                        'title' => 'Mc Twist',
+                        'description' =>
+                            "Le Mc Twist est un flip (rotation verticale) agrémenté d'une vrille. Un saut plutôt périlleux réservé aux riders les plus confirmés. Le champion Shaun White s'est illustré par un Double Mc Twist 1260 lors de sa session de Half-Pipe aux Jeux Olympiques de Vancouver en 2010.",
+                        'picture' =>
+                            'https://images.app.goo.gl/8kcQs8hXEccSYcD16',
+                        'video' =>
+                            'https://www.youtube.com/watch?v=k-CoAquRSwY',
+                    ],
+                    [
+                        'title' => 'Wildcat',
+                        'description' =>
+                            'Aussi appelé backflip, le wildcat est un salto arrière que le rider effectue dans les airs après avoir pris de la vitesse. C\'est un trick qui peut être difficile à réaliser puisque le snowboardeur doit veiller à rester dans le bon axe.',
+                        'picture' =>
+                            'https://images.app.goo.gl/5Bm4JqqjkCy7VD8PA',
+                        'video' =>
+                            'https://www.youtube.com/watch?v=7KUpodSrZqI',
+                    ],
                 ],
             ],
+
             [
                 'title' => 'Grabs',
                 'figures' => [
@@ -131,6 +139,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ],
             ],
+
             [
                 'title' => 'Spins',
                 'figures' => [
@@ -154,14 +163,19 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ],
             ],
+
             [
                 'title' => 'Slides',
                 'figures' => [
-                    'title' => 'Jib',
-                    'description' => "Mais qu’est-ce que le Jib ? C’est le fait de glisser sur des obstacles tels que des rails ou des box avec un snowboard. Il y a de nombreuses façons de faire du jib en snow. C’est aussi ce qui rend le concept si sympa – les possibilités infinies d’apprendre de nouveaux tricks. Et le mieux dans tout ça, c’est qu’une fois que les bases sont maîtrisées, on peut progresser assez rapidement.
-                La discipline royale du jib te permet de tester toutes tes compétences en street snow. Pour faire du jib dans les rues, pense à porter les meilleures vestes de snowboard et des pantalons de snowboard adaptés, car tu vas attirer les regards ! Les rois du jib de rue viennent principalement des villes du nord, bien enneigées en hiver, qui comptent peu de stations. Le snowboard de rue demande beaucoup d’habileté en snow, mais c’est aussi une nouvelle toile où exprimer sa créativité. Sebastian Toutant (plus connu sous le nom de Seb Toots) est l’un de ces snowboarders talentueux qui parvient à faire des rues enneigées du Québec son propre snowpark. Ne nous voilons pas la face, personne ne sera jamais aussi dur à cuire. Mais on peut déjà essayer d’apprendre les rudiments du jib en s’inspirant des idées de ce roi du snow urbain.",
-                    'picture' => 'https://images.app.goo.gl/uH3wrHm7mjJdGV767',
-                    'video' => 'https://www.youtube.com/watch?v=5mxLMI4w_wE',
+                    [
+                        'title' => 'Jib',
+                        'description' => "Mais qu’est-ce que le Jib ? C’est le fait de glisser sur des obstacles tels que des rails ou des box avec un snowboard. Il y a de nombreuses façons de faire du jib en snow. C’est aussi ce qui rend le concept si sympa – les possibilités infinies d’apprendre de nouveaux tricks. Et le mieux dans tout ça, c’est qu’une fois que les bases sont maîtrisées, on peut progresser assez rapidement.
+                    La discipline royale du jib te permet de tester toutes tes compétences en street snow. Pour faire du jib dans les rues, pense à porter les meilleures vestes de snowboard et des pantalons de snowboard adaptés, car tu vas attirer les regards ! Les rois du jib de rue viennent principalement des villes du nord, bien enneigées en hiver, qui comptent peu de stations. Le snowboard de rue demande beaucoup d’habileté en snow, mais c’est aussi une nouvelle toile où exprimer sa créativité. Sebastian Toutant (plus connu sous le nom de Seb Toots) est l’un de ces snowboarders talentueux qui parvient à faire des rues enneigées du Québec son propre snowpark. Ne nous voilons pas la face, personne ne sera jamais aussi dur à cuire. Mais on peut déjà essayer d’apprendre les rudiments du jib en s’inspirant des idées de ce roi du snow urbain.",
+                        'picture' =>
+                            'https://images.app.goo.gl/uH3wrHm7mjJdGV767',
+                        'video' =>
+                            'https://www.youtube.com/watch?v=5mxLMI4w_wE',
+                    ],
                 ],
             ],
         ];
@@ -172,14 +186,13 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         foreach ($categoryArray as $categoryData) {
             $category = new Category();
             $now = new \DateTime();
-            $category->setTitle($categoryData['title']);
 
+            $category->setTitle($categoryData['title']);
             $manager->persist($category);
 
-            for ($l = 0; $l < count($categoryData['figures']); $l++) {
-                $figureData = $categoryData['figures'];
+            $figuresDataArray = $categoryData['figures'];
+            foreach ($figuresDataArray as $figureData) {
                 $figure = new Figure();
-
                 $figure
                     ->setTitle($figureData['title'])
                     ->setAuthor($users[array_rand($users, 1)])
