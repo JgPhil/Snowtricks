@@ -10,6 +10,7 @@ use App\Entity\Picture;
 use App\Entity\Category;
 use App\DataFixtures\UserFixtures;
 use App\Entity\Video;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -170,6 +171,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
         foreach ($categoryArray as $categoryData) {
             $category = new Category();
+            $now = new \DateTime();
             $category->setTitle($categoryData['title']);
 
             $manager->persist($category);
@@ -185,7 +187,8 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     ->setCategory($category)
                     ->setCreatedAt(
                         $faker->dateTimeThisMonth('now', 'Europe/Paris')
-                    );
+                    )
+                    ->setActivatedAt($now);
 
                 $picture = new Picture();
                 $picture->setName($figureData['picture']);
@@ -201,7 +204,6 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
                 for ($k = 0; $k < mt_rand(20, 40); $k++) {
                     $comment = new Comment();
-                    $now = new \DateTime();
                     $days = $now->diff($figure->getCreatedAt())->days;
 
                     $comment
@@ -210,6 +212,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                         ->setCreatedAt(
                             $faker->dateTimeBetween('-' . $days . ' days')
                         )
+                        ->setActivatedAt($now)
                         ->setFigure($figure);
 
                     $manager->persist($comment);
