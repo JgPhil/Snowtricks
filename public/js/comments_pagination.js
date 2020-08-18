@@ -12,7 +12,8 @@ window.addEventListener('scroll', function () {
             ajaxQuery(url, commentsOffset);
         }
     } scrollUpBtn.removeAttribute("hidden");
-})
+});
+
 
 window.addEventListener('scroll', function () {
     if (window.scrollY < (document.documentElement.scrollHeight) / 3) {

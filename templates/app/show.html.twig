@@ -11,7 +11,7 @@
 
 	{% set defaultPicture = null %}
 
-	<div class="container">
+	<div class="container" id="top">
 		{% for message in app.flashes('message') %}
 			<div class="flash-info">
 				<div class="alert alert-success">{{ message }}</div>
@@ -71,7 +71,7 @@
 				</a>
 			</div>
 
-			<div class="row collapse media-block d-md-flex mb-4" id="media-block-show">
+			<div class="row collapse media-block d-md-flex mb-4 mt-4" id="media-block-show">
 				<div class="col-sm-12 col-md-6 pictures-container">
 					<div class="row">
 						{% for picture in picturesArray|filter(picture => picture.sortOrder != 1) %}
@@ -179,7 +179,7 @@
 						</div>
 					{% endfor %}
 					{# SCROLL DOWN BUTTON  #}
-					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#topJumbotron" hidden>
+					<a class="btn-scroll scroll-up" id="js-btn-scroll-up" href="#top" hidden>
 						<i class="fas fa-arrow-up"></i>
 					</a>
 				</div>
