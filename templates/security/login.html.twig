@@ -26,7 +26,8 @@
 					</div>
 				{% endfor %}
 
-				<h1>Connexion</h1>
+
+				<h1 class="text-center mb-4">Connexion</h1>
 
 				<form action="{{ path('security_login') }}" method="post" class="form">
 					<div class="form-group">
@@ -39,12 +40,13 @@
 						<input class="form-control" type="password" required label="Mot de passe" name="_password" placeholder="Mot de passe...">
 					</div>
 					<div class="form-group">
-						<input type="submit" name="submit" class="btn btn-success btn-md" value="Connexion">
-						<a href=" {{ path('security_forgotten_password') }} ">Mot de passe oublié ?</a>
+						<input type="submit" name="submit" class="btn btn-success btn-md mr-2" value="Connexion" style="width:130px;">
+						<a href=" {{ path('security_forgotten_password') }} "><small>Mot de passe oublié ?</small></a>
 					</div>
+
+					<a class="btn btn-primary" href="{{ path('security_registration')}} ">
+						Créer un compte</a>
 				</form>
-				<a class="btn btn-primary" href="{{ path('security_registration')}} ">
-					Créer un compte</a>
 
 
 			</div>

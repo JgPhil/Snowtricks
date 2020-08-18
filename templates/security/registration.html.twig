@@ -2,24 +2,26 @@
 
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Inscription
+{% endblock %}
 
 
 {% block body %}
 <div class="container">
 	<div class="row justify-content-center registration_form base-container">
 		<div class="col-lg-6 ">
-			<h1>Inscription</h1>
+			<h1 class="text-center mb-4">Inscription</h1>
 
 			{{ form_start(form) }}
 			{{ form_row(form.username, {'label': 'Nom d\'utilisateur', 'attr' : {'placeholder' : 'Veuillez entrer votre nom ...'} }) }}
             {{ form_row(form.email, {'label': 'Adresse email',  'attr': {'placeholder' :'Veuillez entrer votre adresse email ...'} }) }}
             {{ form_row(form.password, {'label': 'Mot de passe',  'attr': {'placeholder' :'Veuillez entrer mot de passe ...'} }) }}
             {{ form_row(form.confirm_password, {'label': 'Confirmation de mot de passe',  'attr': {'placeholder' :'Veuillez confirmer votre mot de passe ...'} }) }}
-            <button type="submit" class="btn btn-success">Inscription !</button>
-            {{ form_end(form) }}
-            <a class="btn btn-primary mt-2" href="{{ path('security_login')}} "> Déja un compte ?
+            <button type="submit" class="btn btn-success" style="width:133px;">Inscription !</button><br>
+            <a class="btn btn-primary mt-2" href="{{ path('security_login')}} " > Déja un compte ?
 				</a>
+            {{ form_end(form) }}
+            
         </div>
     </div>
 </div>

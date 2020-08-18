@@ -15,30 +15,31 @@
   color: white;
 }
 
-.show_main_picture {
-  background-size: cover;
-  background-position: center top;
-  height: 500px;
-}
-
 .editButtonMenu {
-  position: relative;
-  top: -11%;
-  right: -89%;
-  border: 1px solid black;
-  border-radius: 5px;
+  position: absolute;
+  top: 10%;
+  right: 7%;
+  /* border: 1px solid black;
+  border-radius: 5px; */
   padding: 2px 5px 2px 5px;
   text-align: center;
   width: 7rem;
 }
 
-#pictureList-fields-list, #videoList-fields-list {
+.editButtonMenu > a {
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+#pictureList-fields-list,
+#videoList-fields-list {
   width: 80%;
 }
 
-.editButtonMenu>a {
-  margin-left: 7px;
-  margin-right: 7px;
+.figure_show-title {
+  color: white;
+  font-weight: bolder;
+  text-shadow: black 0.1em 0.1em 0.2em;
 }
 
 .closeLi {
@@ -77,11 +78,6 @@ img.card-img-top:hover {
   text-align: center;
 }
 
-.login_form, .registration_form {
-  margin-top: 5em;
-  margin-bottom: 15em;
-}
-
 .card {
   margin: auto;
 }
@@ -112,7 +108,7 @@ img.card-img-top:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 .media-container a {
@@ -177,12 +173,26 @@ button {
   border-color: #2780e3;
 }
 
-.pictures-container, .videos-container {
+.base-container {
+  padding-top: 10%;
+  padding-bottom: 10%;
+  height: 750px;
+}
+
+form[name='registration'],
+form[action='/connexion'] {
+  border: 2px solid black;
+  padding: 5% 15% 5% 15%;
+}
+
+.pictures-container,
+.videos-container {
   padding: 2px 5px 2px 5px;
   border: 1px solid rgb(61, 30, 30);
 }
 
-.pictures-row, .videos-row {
+.pictures-row,
+.videos-row {
   min-height: 150px;
 }
 
@@ -209,6 +219,10 @@ label.custom-file-label {
   text-align: center;
   margin-bottom: 1em;
   border-radius: 32px;
+}
+
+ul {
+  list-style-type: none;
 }
 
 h2 {
@@ -332,6 +346,10 @@ a.scroll-up {
   }
   .toto {
     margin-top: 0;
+  }
+  .editButtonMenu {
+    top: 2%;
+    right: 8%;
   }
 }
 

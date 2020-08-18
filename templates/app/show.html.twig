@@ -29,18 +29,19 @@
 		{% for picture in picturesArray %}
 			{% if picture.sortOrder == 1 %}
 				{% set defaultPicture = picture %}
-			{% endif %}	
+			{% endif %}
 		{% endfor %}
 
 		{% set pictureJumbotron = defaultPicture  ? " /uploads/pictures/" ~ defaultPicture.name : '' %}
 
-		<div class="show_main_picture align-items-center justify-content-center" style="background: url(' {{ pictureJumbotron|default('/uploads/pictures/fail.jpg') }} ') no-repeat center;
-																																																					background-size: cover;
-																																																					background-position: center top;
-																																																					height: 500px;">
-			<h1 class="display-4" style="color: white">
+		<div class="d-flex align-items-center justify-content-center text-center" style="background: url(' {{ pictureJumbotron|default('/uploads/pictures/fail.jpg') }} ') no-repeat center;background-size: cover;
+																  background-position: center top;
+																  height: 720px;">
+
+			<h1 class="display-3 figure_show-title">
 				{{ figure.title|e }}
 			</h1>
+
 
 			<div hidden id="figureId">
 				{{ figure.id }}
@@ -63,7 +64,7 @@
 		</div>
 
 		<div class="container-fluid">
-			<div class="row justify-content-center d-md-none">
+			<div class="row justify-content-center d-md-none mt-2 mb-2">
 				<a data-toggle="collapse" href="#media-block-show" role="button" aria-expanded="false" aria-controls="media-block-show">
 					<i class="fas fa-images fa-2x">
 						Voir les Médias</i>
