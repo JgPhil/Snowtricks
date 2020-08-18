@@ -3,14 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Figure;
-use App\Entity\Picture;
 use App\Entity\Category;
-use App\Form\PictureType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -34,15 +31,13 @@ class FigureType extends AbstractType
                 'choice_label' => 'title',
             ])
             ->add('pictures', CollectionType::class, [
-                'entry_type' => FileType::class,           
+                'entry_type' => FileType::class,        
                 'label' => false,
                 'allow_add' => true,
                 'prototype' => true,
                 'mapped' => false,
                 'required' => true,
-                'attr' => [
-                    'placeholder' => "Ajouter des images..."
-                ]
+                'allow_extra_fields'=> true
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,

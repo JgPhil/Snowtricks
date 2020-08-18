@@ -16,7 +16,7 @@
 
 	<body>
 
-		<nav class="navbar navbar-expand-lg fixed-top bg-primary navbar-dark justify-content-end navbar-desk">
+		<nav class="navbar navbar-expand-xl fixed-top bg-primary navbar-dark navbar-desk">
 			<a class="navbar-brand font-weight-bold" href="{{ path('home') }}">
 				<img src=" {{ asset('uploads/pictures/logo.png') }} " width="50" height="50" alt="Info Logo">
 				Snowtricks
@@ -24,8 +24,8 @@
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse " id="navbarContent">
-				<ul class="navbar-nav ml-auto">
+			<div class="collapse navbar-collapse" id="navbarContent">
+				<ul class="navbar-nav ml-auto  text-center">
 					<li {% if route_name == "home" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
 						<a class="nav-link" href="{{ path('home') }}">
 							Accueil

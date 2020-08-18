@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Figure;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PictureRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**

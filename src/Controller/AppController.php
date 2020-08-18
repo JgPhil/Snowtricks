@@ -15,14 +15,16 @@ use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
 
 class AppController extends AbstractController
 {
@@ -50,6 +52,7 @@ class AppController extends AbstractController
      */
     public function create(EntityManagerInterface $em, Request $request)
     {
+        $acceptedExtensions = ["jpeg", "jpg", "gif", "png"];
         $pictureOrder = 1; //initialisation du compteur lors d'une création de figure
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -59,26 +62,70 @@ class AppController extends AbstractController
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-            try {
-                //Images
-                foreach ($pictures as $picture) {
-                    if (!empty($picture)) {
-                        //nouveau nom de fichier
-                        $filename =
-                            md5(uniqid()) . '.' . $picture->guessExtension();
-                        //copie dans dossier uploads
-                        $picture->move(
-                            $this->getParameter('pictures_directory'),
-                            $filename
-                        );
-                        //stockage du nom du fichier dans la base de donnée
-                        $pic = new Picture();
-                        $pic->setName($filename);
-                        $pic->setSortOrder($pictureOrder);
 
-                        // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                        $figure->addPicture($pic);
-                        $pictureOrder++;
+            //Images
+            foreach ($pictures as $picture) {
+                if (!empty($picture)) {
+                    if ($picture->getSize() < 2097150) {
+                        $extension = $picture->guessExtension();
+                        if (isset($extension) && in_array($extension, $acceptedExtensions)) {
+                            //nouveau nom de fichier
+                            $filename =
+                                md5(uniqid()) . '.' . $extension;
+
+                            //copie dans dossier uploads
+                            try {
+                                $picture->move(
+                                    $this->getParameter('pictures_directory'),
+                                    $filename
+                                );
+                            } catch (FileException $e) {
+                                error_log($e->getMessage());
+                            }
+
+
+                            //stockage du nom du fichier dans la base de donnée
+                            $pic = new Picture();
+                            $pic->setName($filename);
+                            $pic->setSortOrder($pictureOrder);
+
+                            // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
+                            $figure->addPicture($pic);
+                            $pictureOrder++;
+                        } else {
+                            $this->addFlash('danger', "Mauvais format d'image.  Fichiers acceptés: jpg/jpeg/gif/png");
+                            return $this->redirectToRoute('figure_create');
+                        }
+                    } else {
+                        $this->addFlash('danger', "Le fichier image est trop volumineux. maximum: 2 Mb");
+                        return $this->redirectToRoute('figure_create');
+                    }
+                } else {
+                    $this->addFlash(
+                        'danger',
+                        'Il y a eu un problème lors de la création de votre figure'
+                    );
+                    return $this->redirectToRoute('figure_create');
+                }
+            }
+            if ($videos) {
+                foreach ($videos as $video) {
+                    if (!empty($video)) {
+                        $url = $this->checkVideoUrl($video);
+                        if ($url != null) {
+                            $video = new Video();
+                            $video->setFigure($figure);
+                            $video->setUrl($url);
+
+                            $em->persist($video);
+                            $figure->addVideo($video);
+                        } else {
+                            $this->addFlash(
+                                'danger',
+                                " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg "
+                            );
+                            return $this->redirectToRoute('figure_create');
+                        }
                     } else {
                         $this->addFlash(
                             'danger',
@@ -87,36 +134,8 @@ class AppController extends AbstractController
                         return $this->redirectToRoute('home');
                     }
                 }
-                if ($videos) {
-                    foreach ($videos as $video) {
-                        if (!empty($video)) {
-                            $url = $this->checkVideoUrl($video);
-                            if ($url != null) {
-                                $video = new Video();
-                                $video->setFigure($figure);
-                                $video->setUrl($url);
-
-                                $em->persist($video);
-                                $figure->addVideo($video);
-                            } else {
-                                $this->addFlash(
-                                    'danger',
-                                    " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg "
-                                );
-                                return $this->redirectToRoute('figure_create');
-                            }
-                        } else {
-                            $this->addFlash(
-                                'danger',
-                                'Il y a eu un problème lors de la création de votre figure'
-                            );
-                            return $this->redirectToRoute('home');
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
             }
+
 
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
@@ -139,7 +158,7 @@ class AppController extends AbstractController
     {
         $user = $this->getUser();
         $oldPicture = null;
-        
+
         if (count($user->getPictures()) > 0) {
             $oldPicture = $user->getPictures()[0];
         }
