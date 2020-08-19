@@ -30,9 +30,7 @@
 						<tbody>
 							<tr>
 								<td>{{figure.id }}</td>
-								<td>
-									<a href="{{path('trick_show', {id: figure.id})}}">{{figure.title }}</a>
-								</td>
+								<td>{{figure.title }}</td>
 								<td>{{figure.category.title}}</td>
 								<td>{{figure.createdAt|date }}</td>
 								<td>{{figure.author.username }}</td>
@@ -74,7 +72,6 @@
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>Article</th>
 							<th>Contenu</th>
 							<th>Date</th>
 							<th>Auteur</th>
@@ -86,9 +83,6 @@
 							<tr>
 								<td>
 									{{comment.id}}</td>
-								<td>
-									<a href="{{ path( 'trick_show', { id: comment.figure.id })}}">{{comment.figure.title}}</a>
-								</td>
 
 								<td>
 									{{comment.content}}</td>

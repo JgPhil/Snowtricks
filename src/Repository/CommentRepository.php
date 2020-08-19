@@ -45,7 +45,7 @@ class CommentRepository extends ServiceEntityRepository
             ->orderBy('f.createdAt', 'DESC')
             ->setMaxResults($maxPerPage)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
 
 

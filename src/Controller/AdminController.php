@@ -187,7 +187,7 @@ class AdminController extends AbstractController
             ],
             200,
             [],
-            ['groups' => 'comment_read']
+            ['groups' => "comment_read"]
         );
     }
 

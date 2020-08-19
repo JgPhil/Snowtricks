@@ -4,7 +4,7 @@ const commentsElement = document.getElementById("js-comments");
 const usersElement = document.getElementById("js-users");
 const maxPerPage = 5;
 const tables = document.querySelectorAll("table");
-const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'};
+const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
 
 let figuresContent = figuresElement.tBodies;
 let commentsContent = commentsElement.tBodies;
@@ -37,8 +37,8 @@ let confirmation = null;
 
 //--------------FIGURES----------------//
 
-for ( let figurePaginationlink of figurePaginationlinks) {
-    figurePaginationlink.addEventListener('click', function (event) {
+for (let figurePaginationlink of figurePaginationlinks) {
+    figurePaginationlink.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -65,7 +65,7 @@ for ( let figurePaginationlink of figurePaginationlinks) {
 //--------------COMMENTS----------------//
 
 for (let commentPaginationlink of commentPaginationlinks) {
-    commentPaginationlink.addEventListener('click', function (event) {
+    commentPaginationlink.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -91,7 +91,7 @@ for (let commentPaginationlink of commentPaginationlinks) {
 //--------------USERS----------------//
 
 for (let userPaginationlink of userPaginationlinks) {
-    userPaginationlink.addEventListener('click', function (event) {
+    userPaginationlink.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -117,7 +117,7 @@ for (let userPaginationlink of userPaginationlinks) {
 //---------------------LOGIC--------------------//
 
 
-const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow) {
+const paginationLogic = function(currentPage, pageTarget, elementsCount, arrow) {
 
     if (arrow) {
         if (arrow == "prev") { //is prev btn
@@ -148,7 +148,7 @@ const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow)
 //------------FETCH DATA & DELETE ROWS----------------//
 
 
-const ajaxQuery = function (url, pageTarget, content) {
+const ajaxQuery = function(url, pageTarget, content) {
     fetch(url + pageTarget, {
         method: 'GET',
         headers: {
@@ -164,16 +164,16 @@ const ajaxQuery = function (url, pageTarget, content) {
         }
 
         data.slice.forEach(e => {
-            if (content === usersContent) {
-                userRows(e);
-            } else if (content === commentsContent) {
-                commentRows(e);
-            } else {
-                figureRows(e);
-            }
+                if (content === usersContent) {
+                    userRows(e);
+                } else if (content === commentsContent) {
+                    commentRows(e);
+                } else {
+                    figureRows(e);
+                }
 
-        })
-        // Integration des nouveaux liens créés via JavaScript
+            })
+            // Integration des nouveaux liens créés via JavaScript
         links = document.querySelectorAll("[activation]");
     })
 
@@ -186,7 +186,7 @@ const ajaxQuery = function (url, pageTarget, content) {
 //-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
 
 //figures
-const figureRows = function (e) {
+const figureRows = function(e) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr");
 
@@ -208,8 +208,7 @@ const figureRows = function (e) {
         activationlink.setAttribute("activation", "true");
         activationlink.classList.add("btn", "btn-warning", "btn-sm");
         activationlink.textContent = "Désactiver";
-    }
-    else {
+    } else {
         activationlink.setAttribute("href", "/figure/activate/" + e.id);
         activationlink.setAttribute("activation", "false");
         activationlink.classList.add("btn", "btn-success", "btn-sm");
@@ -238,7 +237,7 @@ const figureRows = function (e) {
 }
 
 //comments admin panel
-const commentRows = function (c) {
+const commentRows = function(c) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr");
 
@@ -259,8 +258,7 @@ const commentRows = function (c) {
         activationlink.setAttribute("activation", "true");
         activationlink.classList.add("btn", "btn-warning", "btn-sm");
         activationlink.textContent = "Désactiver";
-    }
-    else {
+    } else {
         activationlink.setAttribute("href", "/comment/activate/" + c.id);
         activationlink.setAttribute("activation", "false");
         activationlink.classList.add("btn", "btn-success", "btn-sm");
@@ -289,7 +287,7 @@ const commentRows = function (c) {
 }
 
 //users
-const userRows = function (u) {
+const userRows = function(u) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr")
 
@@ -312,8 +310,7 @@ const userRows = function (u) {
         activationlink.setAttribute("activation", "true");
         activationlink.classList.add("btn", "btn-warning", "btn-sm");
         activationlink.textContent = "Désactiver";
-    }
-    else {
+    } else {
         activationlink.setAttribute("href", "/user/activate/" + u.id);
         activationlink.setAttribute("activation", "false");
         activationlink.classList.add("btn", "btn-success", "btn-sm");
@@ -347,7 +344,7 @@ const userRows = function (u) {
 
 for (table of tables) {
 
-    table.addEventListener("click", function (e) {
+    table.addEventListener("click", function(e) {
         if (e.target && e.target.matches("a") && e.target.hasAttribute('activation')) {
             e.preventDefault();
             e.stopPropagation();
@@ -384,20 +381,17 @@ for (table of tables) {
 
 //Cacher un bouton et afficher l'autre
 
-const linkSWapp = function (link) {
+const linkSWapp = function(link) {
 
     if (link.textContent === "Désactiver") {
         link.textContent = "Activer"
         link.href.split('/')[3] = "activate";
         link.attributes.activation.value = false;
         link.classList.replace("btn-warning", "btn-success");
-    }
-    else {
+    } else {
         link.textContent = "Désactiver";
         link.href.split('/')[3] = "desactivate";
         link.attributes.activation.value = true;
         link.classList.replace("btn-success", "btn-warning");
     }
 }
-
-

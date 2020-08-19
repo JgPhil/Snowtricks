@@ -1,363 +1,363 @@
 .jumbotron {
-  background-image: url('/uploads/pictures/main_snowtricks.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-left: 5rem;
-  width: 100%;
-  height: 60em;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
+    background-image: url('/uploads/pictures/main_snowtricks.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-left: 5rem;
+    width: 100%;
+    height: 60em;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
 }
 
 .editButtonMenu {
-  position: absolute;
-  top: 10%;
-  right: 7%;
-  padding: 2px 5px 2px 5px;
-  text-align: center;
-  width: 7rem;
+    position: absolute;
+    top: 10%;
+    right: 7%;
+    padding: 2px 5px 2px 5px;
+    text-align: center;
+    width: 7rem;
 }
 
-.editButtonMenu > a {
-  margin-left: 7px;
-  margin-right: 7px;
+.editButtonMenu>a {
+    margin-left: 7px;
+    margin-right: 7px;
 }
 
 #pictureList-fields-list,
 #videoList-fields-list {
-  width: 80%;
+    width: 80%;
 }
 
 .figure_show-title {
-  color: white;
-  font-weight: bolder;
-  text-shadow: black 0.1em 0.1em 0.2em;
+    color: white;
+    font-weight: bolder;
+    text-shadow: black 0.1em 0.1em 0.2em;
 }
 
 .closeLi {
-  position: relative;
-  right: -103%;
-  top: -30px;
+    position: relative;
+    right: -103%;
+    top: -30px;
 }
 
 .closeLi:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .alert {
-  padding: 0 0 0 0;
+    padding: 0 0 0 0;
 }
 
 .meta-box {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .meta {
-  border: 1px solid black;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 0.9rem;
-  min-height: 3rem;
-  padding: 5px 5px 5px 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    min-height: 3rem;
+    padding: 5px 5px 5px 5px;
 }
 
 img.card-img-top:hover {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 
 .centering {
-  text-align: center;
+    text-align: center;
 }
 
 .card {
-  margin: auto;
+    margin: auto;
 }
 
 .card-body {
-  min-height: 92px;
+    min-height: 92px;
 }
 
 .card-img-top {
-  width: 100%;
-  height: 10vw;
-  min-height: 180px;
-  object-fit: cover;
-  overflow: hidden;
+    width: 100%;
+    height: 10vw;
+    min-height: 180px;
+    object-fit: cover;
+    overflow: hidden;
 }
 
 .toto {
-  margin-top: 76px;
-  margin-bottom: 50px;
+    margin-top: 76px;
+    margin-bottom: 50px;
 }
 
 .container {
-  max-width: 90%;
+    max-width: 90%;
 }
 
 .media-container {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .media-container a {
-  width: 5em;
-  display: flex;
-  justify-content: center;
+    width: 5em;
+    display: flex;
+    justify-content: center;
 }
 
 .picture-thumbs {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .img-thumbnail {
-  min-height: 13rem;
-  margin: 2rem;
+    min-height: 13rem;
+    margin: 2rem;
 }
 
 .user-picture {
-  height: 4rem;
+    height: 4rem;
 }
 
 table {
-  height: 510px;
-  table-layout: fixed;
-  width: 100%;
+    height: 510px;
+    table-layout: fixed;
+    width: 100%;
 }
 
 tr {
-  height: 85px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  justify-content: center;
-  text-align: center;
+    height: 85px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    justify-content: center;
+    text-align: center;
 }
 
 th {
-  background-color: azure;
+    background-color: azure;
 }
 
 th.td {
-  word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 button {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .fas {
-  mix-blend-mode: difference;
+    mix-blend-mode: difference;
 }
 
 .link_blog {
-  font-size: 1.7em;
-  margin-left: 0.5em;
+    font-size: 1.7em;
+    margin-left: 0.5em;
 }
 
 .media_buttons {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 5px
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 5px;
 }
 
 .block-table {
-  border: solid;
-  border-radius: 32px;
-  padding: 1em;
-  border-color: #2780e3;
+    border: solid;
+    border-radius: 32px;
+    padding: 1em;
+    border-color: #2780e3;
 }
 
 .base-container {
-  padding-top: 10%;
-  padding-bottom: 10%;
-  height: 750px;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    height: 750px;
 }
 
 form[name='registration'],
 form[action='/connexion'] {
-  border: 2px solid black;
-  padding: 5% 15% 5% 15%;
+    border: 2px solid black;
+    padding: 5% 15% 5% 15%;
 }
 
 .pictures-container,
 .videos-container {
-  padding: 2px 5px 2px 5px;
-  border: 1px solid rgb(61, 30, 30);
+    padding: 2px 5px 2px 5px;
+    border: 1px solid rgb(61, 30, 30);
 }
 
 .pictures-row,
 .videos-row {
-  min-height: 150px;
+    min-height: 150px;
 }
 
 label.custom-file-label {
-  white-space: nowrap;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: clip;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 .title {
-  font-size: 3em;
-  font-weight: bolder;
-  background-image: url('../uploads/pictures/Snowboard.png');
-  background-color: lightblue;
-  background-size: 10em, contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  color: aliceblue;
-  height: 85px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  margin-bottom: 1em;
-  border-radius: 32px;
+    font-size: 3em;
+    font-weight: bolder;
+    background-image: url('../uploads/pictures/Snowboard.png');
+    background-color: lightblue;
+    background-size: 10em, contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: aliceblue;
+    height: 85px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 1em;
+    border-radius: 32px;
 }
 
 ul {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 h2 {
-  text-align: center;
-  font-weight: 700;
-  background-color: #f1e042;
-  border-radius: 32px;
+    text-align: center;
+    font-weight: 700;
+    background-color: #f1e042;
+    border-radius: 32px;
 }
 
 a.btn-scroll {
-  font-size: 3em;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  color: black;
+    font-size: 3em;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    color: black;
 }
 
 a.scroll-down {
-  bottom: 140px;
-  right: 50%;
-  margin: auto;
-  position: absolute;
-  padding-top: 400px;
-  z-index: 9;
-  -webkit-animation: scroll_down_btn-animation 2s infinite;
-  animation: scroll_down_btn-animation 2s infinite;
+    bottom: 140px;
+    right: 50%;
+    margin: auto;
+    position: absolute;
+    padding-top: 400px;
+    z-index: 9;
+    -webkit-animation: scroll_down_btn-animation 2s infinite;
+    animation: scroll_down_btn-animation 2s infinite;
 }
 
 a.scroll-up {
-  position: fixed;
-  left: 50%;
-  bottom: 2.5em;
-  -webkit-animation: scroll_up_btn-animation 2s infinite;
-  animation: scroll_up_btn-animation 2s infinite;
+    position: fixed;
+    left: 50%;
+    bottom: 2.5em;
+    -webkit-animation: scroll_up_btn-animation 2s infinite;
+    animation: scroll_up_btn-animation 2s infinite;
 }
 
 @keyframes scroll_down_btn-animation {
-  0% {
-    transform: translate(0, 0);
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  80% {
-    transform: translate(0, 20px);
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+    80% {
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes scroll_down_btn-animation {
-  0% {
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  80% {
-    -webkit-transform: translate(0, 20px);
-    transform: translate(0, 20px);
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% {
+        -webkit-transform: translate(0, 0);
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+    80% {
+        -webkit-transform: translate(0, 20px);
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @keyframes scroll_up_btn-animation {
-  100% {
-    transform: translate(0, 0);
-    opacity: 0;
-  }
-  80% {
-    opacity: 1;
-  }
-  40% {
-    transform: translate(0, 20px);
-    opacity: 0;
-  }
-  0% {
-    opacity: 0;
-  }
+    100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    80% {
+        opacity: 1;
+    }
+    40% {
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+    0% {
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes scroll_up_btn-animation {
-  100% {
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
-    opacity: 0;
-  }
-  80% {
-    opacity: 1;
-  }
-  40% {
-    -webkit-transform: translate(0, 20px);
-    transform: translate(0, 20px);
-    opacity: 0;
-  }
-  0% {
-    opacity: 0;
-  }
+    100% {
+        -webkit-transform: translate(0, 0);
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    80% {
+        opacity: 1;
+    }
+    40% {
+        -webkit-transform: translate(0, 20px);
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+    0% {
+        opacity: 0;
+    }
 }
 
 @media screen and (max-width: 768px) {
-  .footer-mob {
-    display: block;
-    position: fixed;
-    bottom: 0em;
-    background-color: black;
-  }
-  .footer-desk {
-    display: none;
-  }
-  .navbar-desk {
-    display: none;
-  }
-  .toto {
-    margin-top: 0;
-  }
-  .editButtonMenu {
-    top: 2%;
-    right: 8%;
-  }
+    .footer-mob {
+        display: block;
+        position: fixed;
+        bottom: 0em;
+        background-color: black;
+    }
+    .footer-desk {
+        display: none;
+    }
+    .navbar-desk {
+        display: none;
+    }
+    .toto {
+        margin-top: 0;
+    }
+    .editButtonMenu {
+        top: 2%;
+        right: 8%;
+    }
 }
 
 @media screen and (min-width: 769px) {
-  .footer-mob {
-    display: none;
-  }
+    .footer-mob {
+        display: none;
+    }
 }

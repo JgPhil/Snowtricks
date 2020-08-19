@@ -48,7 +48,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $createdAt;
 

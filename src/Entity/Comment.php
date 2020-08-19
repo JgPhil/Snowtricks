@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Figure;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\CommentRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
@@ -114,5 +118,4 @@ class Comment
 
         return $this;
     }
-
 }

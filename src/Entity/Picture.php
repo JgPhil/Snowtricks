@@ -16,13 +16,13 @@ class Picture
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("figure_read")
+     * @Groups({"figure_read", "comment_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"figure_read", "user_read"})
+     * @Groups({"figure_read", "user_read", "comment_read"})
      */
     private $name;
 

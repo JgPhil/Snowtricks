@@ -1,9 +1,6 @@
-
-
-
-jQuery(document).ready(function () {
-    jQuery('.add-another-picture-widget').click(function (e) {
-        let pictureList = jQuery(jQuery(this).attr('data-list'));
+jQuery(document).ready(function() {
+    jQuery('.add-another-picture-widget').click(function(e) {
+        let pictureList = jQuery(jQuery(this).attr("data-list"));
         // Try to find the counter of the list or use the length of the list
         let counter = pictureList.data('widget-counter') | pictureList.children().length;
         // grab the prototype template
@@ -31,7 +28,7 @@ jQuery(document).ready(function () {
 
 var picturelistElement = document.querySelector("#pictureList-fields-list");
 if (picturelistElement) {
-    picturelistElement.addEventListener("click", function (e) {
+    picturelistElement.addEventListener("click", function(e) {
         if (e.target && e.target.matches('a')) {
             e.preventDefault();
             e.stopPropagation();
@@ -39,6 +36,3 @@ if (picturelistElement) {
         }
     });
 }
-
-
-
