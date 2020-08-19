@@ -25,9 +25,9 @@ for (link of links) {
                 if (data.success && this.parentElement.firstElementChild.tagName == "IFRAME") {
                     //on supprime la balise <li> correspondante
                     document.querySelector("#liDelete-" + videoId).parentElement.remove();
-                    this.parentElement.remove();
+                    this.parentElement.parentElement.remove();
                 } else if (data.success) {
-                    this.parentElement.remove();
+                    this.parentElement.parentElement.remove();
                 } else {
                     alert(data.error)
                 }

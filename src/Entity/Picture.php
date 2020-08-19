@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\PictureRepository;
 use App\Entity\Figure;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -52,7 +53,7 @@ class Picture
      */
     private $sortOrder;
 
-    
+
 
     public function getId(): ?int
     {
@@ -142,5 +143,4 @@ class Picture
 
         return $this;
     }
-
 }

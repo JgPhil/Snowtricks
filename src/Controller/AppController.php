@@ -212,7 +212,7 @@ class AppController extends AbstractController
 
             $manager->persist($comment);
             $manager->flush();
-            $this->addFlash('message', 'Message posté !');
+            $this->addFlash('message', 'Message posté ! Il sera visible après validation');
             return $this->redirectToRoute('trick_show', [
                 'id' => $figure->getId(),
             ]);

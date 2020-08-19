@@ -75,7 +75,7 @@
 				<div class="col-sm-12 col-md-6 pictures-container">
 					<div class="row">
 						{% for picture in picturesArray|filter(picture => picture.sortOrder != 1) %}
-							<div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
+							<div class="col-sm-12 col-md-6 col-lg-4 mx-auto mb-2">
 								{% set picturePath =  "/uploads/pictures/" ~ picture.name %}
 								<img class="img-responsive" width="100%" src="{{picturePath|default('http://placehold.it/300x200') }}" alt="Une image de la figure {{figure.title}}" onclick="window.open(this.src)">
 							</div>
@@ -86,7 +86,7 @@
 				<div class="col-sm-12 col-md-6 videos-container">
 					<div class="row">
 						{% for video in figure.videos %}
-							<div class=" col-sm-12 col-md-6 col-lg-4 mx-auto">
+							<div class=" col-sm-12 col-md-6 col-lg-4 mx-auto mb-2">
 								<div class="iframe-container embed-responsive embed-responsive-4by3">
 									<iframe class="embed-responsive-item" src="{{video.url}}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 								</div>
@@ -169,7 +169,7 @@
 
 							{% set userPicture = comment.author.pictures.count > 0  ? "/uploads/pictures/" ~ comment.author.pictures.first.name : null %}
 
-							<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " class="d-flex mr-3 rounded-circle user-picture" alt="{{ "Une image de l'utilisateur" ~ comment.author.username }} ">
+							<img src=" {{ userPicture|default('https://eu.ui-avatars.com/api/?name=' ~ comment.author.username)  }} " style="height: 5rem; width: 5rem;" class="d-flex mr-3 w-2 rounded-circle user-picture" alt="{{ "Une image de l'utilisateur" ~ comment.author.username }} ">
 							<div class="media-body">
 								<h5 class="mt-0">{{ comment.author.username }}
 									(<small>{{ comment.createdAt | date('d/m/Y à H:i') }}

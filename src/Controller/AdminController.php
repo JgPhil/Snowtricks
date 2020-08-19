@@ -10,6 +10,7 @@ use App\Entity\Picture;
 use App\Repository\UserRepository;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -218,7 +219,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $figure->setActivatedAt(null);
-        $figure->setTitle($figure->getTitle().'-old');
+        $figure->setTitle($figure->getTitle() . '-old');
         $em->persist($figure);
         $em->flush();
         $this->addFlash('message', 'La figure a bien été effacée');

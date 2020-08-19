@@ -29,9 +29,9 @@
 
 			{#------------------------JUMBOTRON---------------------------#}
 			<div class="d-flex align-items-center justify-content-center text-center" style="background: url(' {{ pictureJumbotron|default('/uploads/pictures/fail.jpg') }} ') no-repeat center;
-									background-size: cover;																			
-									background-position: center top;
-									height: 720px;">																										
+																								background-size: cover;
+																								background-position: center top;
+																								height: 720px;">
 				<h1 class="display-4 figure_show-title" style="color:white">{{trick.title}}
 				</h1>
 
@@ -104,7 +104,8 @@
 			{{ form_start(figureForm) }}
 			<div class="row justify-content-center d-md-none">
 				<a data-toggle="collapse" href="#media-block" role="button" aria-expanded="false" aria-controls="media-block">
-					<i class="fas fa-images fa-2x mb-3">  Voir les Médias</i>
+					<i class="fas fa-images fa-2x mb-3">
+						Voir les Médias</i>
 				</a>
 			</div>
 
@@ -120,8 +121,8 @@
 							<button type="button" class="add-another-picture-widget btn btn-primary" data-list="#pictureList-fields-list">Ajouter une image</button>
 						</div>
 					</div>
-					<div class="row mt-2 justify_content-center">
-						<ul id="pictureList-fields-list" data-prototype='{{form_widget(figureForm.pictures.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
+					<div class="rowjustify_content-center">
+						<ul class="mt-2" id="pictureList-fields-list" data-prototype='{{form_widget(figureForm.pictures.vars.prototype)|e}}' data-widget-tags="{{ '<li></li>'|e }}"></ul>
 					</div>
 
 
@@ -130,18 +131,21 @@
 
 							{% for picture in picturesArray|filter(picture => picture.sortOrder != 1) %}
 								<div hidden>{{ picture.id }}</div>
-								<div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
-									<img
-									class="img-responsive" width="100%" src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}" onclick="window.open(this.src)">
+								<div class="col-sm-12 col-md-6 col-lg-4 mx-auto mb-2">
+									<img class="img-fluid" src="{{ asset('/uploads/pictures/' ~ picture.name) }}" alt="{{"Image numéro" ~ picture.id}}" onclick="window.open(this.src)">
 
-									{#-----------UPDATE PICTURE --------#}
-									<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
-										<i class="fas fa-pencil-alt fa-2x" title="remplacer l'image"></i>
-									</a>
-									{#!---------DELETE PICTURE---------#}
-									<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
-										<i class="fas fa-trash-alt fa-2x" title="effacer l'image"></i>
-									</a>
+
+									<div
+										class="media_buttons">
+										{#-----------UPDATE PICTURE --------#}
+										<a data-toggle="collapse" href={{"#update_picture_input" ~ picture.id }} role="button" aria-expanded="false" aria-controls={{"update_picture_input" ~ picture.id }}>
+											<i class="fas fa-pencil-alt fa-2x" title="remplacer l'image"></i>
+										</a>
+										{#!---------DELETE PICTURE---------#}
+										<a href="{{ path('picture_delete', {id: picture.id}) }} " data-delete>
+											<i class="fas fa-trash-alt fa-2x" title="effacer l'image"></i>
+										</a>
+									</div>
 
 									{#!---------UPDATE PICTURE HIDDEN INPUT---------#}
 									<div class="collapse" id={{"update_picture_input" ~ picture.id }}>
@@ -180,17 +184,19 @@
 					<div class="row">
 						{% if trick is defined %}
 							{% for video in trick.videos %}
-								<div class=" col-sm-12 col-md-6 col-lg-4 mx-auto">
-									<div class="embed-responsive embed-responsive-16by9">
+								<div class=" col-sm-12 col-md-6 col-lg-4 mx-auto mb-2">
+									<div class="embed-responsive embed-responsive-4by3">
 										<iframe class="embed-responsive-item" src="{{video.url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 									</div>
-									<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
-										<i class="fas fa-pencil-alt fa-2x" title="remplacer la vidéo"></i>
-									</a>
+									<div class="media_buttons">
+										<a data-toggle="collapse" href={{"#update_video_input" ~ video.id }} role="button" aria-expanded="false" aria-controls={{"update_video_input" ~ video.id }}>
+											<i class="fas fa-pencil-alt fa-2x" title="remplacer la vidéo"></i>
+										</a>
 
-									<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
-										<i class="fas fa-trash-alt fa-2x" title="supprimer la vidéo"></i>
-									</a>
+										<a href="{{ path('video_delete', {id: video.id}) }} " data-delete>
+											<i class="fas fa-trash-alt fa-2x" title="supprimer la vidéo"></i>
+										</a>
+									</div>
 
 
 									<div class="collapse" id={{"update_video_input" ~ video.id }}>
