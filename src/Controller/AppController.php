@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PictureRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class AppController extends AbstractController
      */
     public function create(EntityManagerInterface $em, Request $request)
     {
-        $acceptedExtensions = ["jpeg", "jpg", "gif", "png"];
+        $acceptedExtensions = ['jpeg', 'jpg', 'gif', 'png'];
         $pictureOrder = 1; //initialisation du compteur lors d'une création de figure
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -62,16 +63,17 @@ class AppController extends AbstractController
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-
             //Images
             foreach ($pictures as $picture) {
                 if (!empty($picture)) {
                     if ($picture->getSize() < 2097150) {
                         $extension = $picture->guessExtension();
-                        if (isset($extension) && in_array($extension, $acceptedExtensions)) {
+                        if (
+                            isset($extension) &&
+                            in_array($extension, $acceptedExtensions)
+                        ) {
                             //nouveau nom de fichier
-                            $filename =
-                                md5(uniqid()) . '.' . $extension;
+                            $filename = md5(uniqid()) . '.' . $extension;
 
                             //copie dans dossier uploads
                             try {
@@ -83,7 +85,6 @@ class AppController extends AbstractController
                                 error_log($e->getMessage());
                             }
 
-
                             //stockage du nom du fichier dans la base de donnée
                             $pic = new Picture();
                             $pic->setName($filename);
@@ -93,11 +94,17 @@ class AppController extends AbstractController
                             $figure->addPicture($pic);
                             $pictureOrder++;
                         } else {
-                            $this->addFlash('danger', "Mauvais format d'image.  Fichiers acceptés: jpg/jpeg/gif/png");
+                            $this->addFlash(
+                                'danger',
+                                "Mauvais format d'image.  Fichiers acceptés: jpg/jpeg/gif/png"
+                            );
                             return $this->redirectToRoute('figure_create');
                         }
                     } else {
-                        $this->addFlash('danger', "Le fichier image est trop volumineux. maximum: 2 Mb");
+                        $this->addFlash(
+                            'danger',
+                            'Le fichier image est trop volumineux. maximum: 2 Mb'
+                        );
                         return $this->redirectToRoute('figure_create');
                     }
                 } else {
@@ -135,7 +142,6 @@ class AppController extends AbstractController
                     }
                 }
             }
-
 
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
@@ -209,10 +215,13 @@ class AppController extends AbstractController
             $comment->setCreatedAt(new \DateTime());
             $comment->setFigure($figure);
             $comment->setAuthor($this->getUser());
-
+            $comment->setActivatedAt(new \DateTime());
             $manager->persist($comment);
             $manager->flush();
-            $this->addFlash('message', 'Message posté ! Il sera visible après validation');
+            $this->addFlash(
+                'message',
+                'Votre commentaire a été posté !'
+            );
             return $this->redirectToRoute('trick_show', [
                 'id' => $figure->getId(),
             ]);
@@ -328,8 +337,11 @@ class AppController extends AbstractController
      * @param [type] $offset
      * @return void
      */
-    public function sliceActiveFigures(FigureRepository $repo, $offset, $maxResults)
-    {
+    public function sliceActiveFigures(
+        FigureRepository $repo,
+        $offset,
+        $maxResults
+    ) {
         return $this->json(
             [
                 'sliceFigures' => $repo->findActiveSliceFigures(
@@ -471,7 +483,7 @@ class AppController extends AbstractController
                 [
                     'newVideoUrl' => $newVideoUrl,
                     'error' =>
-                    "Il semble qu'il y ait un problème avec cette l'url",
+                        "Il semble qu'il y ait un problème avec cette l'url",
                 ],
                 404
             );
