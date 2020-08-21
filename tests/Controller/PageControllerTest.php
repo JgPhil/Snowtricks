@@ -8,17 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PageControllerTest extends WebTestCase
 {
-    private function testPage($method, $url)
-    {
-        $client = static::createClient();
-        $crawler = $client->request($method, $url);
-        $response = $client->getResponse()->getStatusCode();
-        return $this->assertEquals(200, $response);
-    }
+
 
     public function testIndexPage()
     {
-        $this->testPage('GET', '/');
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/');
+        $response = $client->getResponse()->getStatusCode();
+        $this->assertEquals(200, $response);
     }
 
     public function testFigureDetailPage()
