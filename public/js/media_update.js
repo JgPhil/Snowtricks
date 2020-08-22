@@ -5,14 +5,14 @@ for (updateLink of updateMediaLinks) {
 
     let figureId = updateLink.parentElement.children[2].textContent;
 
-    updateLink.addEventListener("click", function (e) {
+    updateLink.addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
         let form_data = new FormData;
         let init = null;
         let url = "/figure/" + figureId + "/update/";
 
-        if (this.parentElement.parentElement.classList.contains("videos-container")) { //-----------VIDEO
+        if (this.parentElement.firstElementChild.id === "newVideoUrl") { //-----------VIDEO
 
             let newVideoUrl = this.parentElement.firstElementChild.value;
             let oldVideoId = this.parentElement.children[1].textContent;
@@ -63,7 +63,7 @@ for (updateLink of updateMediaLinks) {
     })
 }
 
-const pictureUpdate = function (data, updateLink) {
+const pictureUpdate = function(data, updateLink) {
 
     if (updateLink.previousElementSibling.textContent == 1) { //jumbotron default picture
         updateLink.parentElement.parentElement.parentElement.style["backgroundImage"] =
@@ -76,12 +76,12 @@ const pictureUpdate = function (data, updateLink) {
 
 }
 
-const videoUpdate = function (data, updateLink) {
+const videoUpdate = function(data, updateLink) {
     updateLink.parentElement.previousElementSibling.children[0].src = data.newVideoUrl;
 }
 
 
-const checkVideoUrl = function (newVideoUrl) {
+const checkVideoUrl = function(newVideoUrl) {
     // Decompose Url and check
     let splitUrl = newVideoUrl.split('/')
     let videoServiceProvider = splitUrl[2];
@@ -105,12 +105,12 @@ const checkVideoUrl = function (newVideoUrl) {
 
 let newPictureFieldBtn = document.getElementsByClassName('add-another-picture-widget')[0];
 
-newPictureFieldBtn.addEventListener('click', function (e) {
+newPictureFieldBtn.addEventListener('click', function(e) {
     setTimeout(fileInputText, 500);
 })
 
-const fileInputText = function () {
-    $('.custom-file-input').change(function (e) {
+const fileInputText = function() {
+    $('.custom-file-input').change(function(e) {
         let files = [];
         for (var i = 0; i < $(this)[0].files.length; i++) {
             files.push($(this)[0].files[i].name);
@@ -118,7 +118,3 @@ const fileInputText = function () {
         $(this).next('.custom-file-label').html(files.join(', '));
     });
 }
-
-
-
-

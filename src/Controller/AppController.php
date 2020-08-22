@@ -456,34 +456,31 @@ class AppController extends AbstractController
 
         $newVideoUrl = $request->getContent();
 
-        if (
-            !empty($newVideoUrl) &&
-            $this->checkVideoUrl($newVideoUrl) != null
-        ) {
+        if (!empty($newVideoUrl)) {
             $video = new Video();
-            $video->setFigureId($figureId);
             $video->setUrl($newVideoUrl);
-
-            $figure->addVideo($video);
-
-            $em->persist($video);
-            $em->flush();
-            // Effacement de l'ancienne vidéo
-            $em->remove($videoRepo->find($oldVideoId));
-
-            return $this->json(
-                [
-                    'newVideoUrl' => $newVideoUrl,
-                    'message' => 'Video mise à jour',
-                ],
-                200
-            );
+            if ($this->checkVideoUrl($video) != null) {
+                $video->setFigureId($figureId);
+                $figure->addVideo($video);
+                $em->persist($video);
+                
+                // Effacement de l'ancienne vidéo
+                $em->remove($videoRepo->find($oldVideoId));
+                $em->flush();
+                return $this->json(
+                    [
+                        'newVideoUrl' => $newVideoUrl,
+                        'message' => 'Video mise à jour',
+                    ],
+                    200
+                );
+            }
         } else {
             return $this->json(
                 [
                     'newVideoUrl' => $newVideoUrl,
                     'error' =>
-                        "Il semble qu'il y ait un problème avec cette l'url",
+                    "Il semble qu'il y ait un problème avec cette l'url",
                 ],
                 404
             );
