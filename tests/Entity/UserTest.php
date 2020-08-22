@@ -38,7 +38,7 @@ class UserTest extends KernelTestCase
         $this->assertHasErrors($this->getEntity()->setUsername(''), 1);
     }
 
-    public function testAlreadyUsedUsername()
+    public function testInvalidAlreadyUsedUsername()
     {
         $this->assertHasErrors($this->getEntity()->setUsername('Paul'), 1);
     }
