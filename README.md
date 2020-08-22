@@ -1,3 +1,6 @@
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/498fa806a51647959cbeb451db0b7d3e)](https://app.codacy.com/manual/JgPhil/Snowtricks?utm_source=github.com&utm_medium=referral&utm_content=JgPhil/Snowtricks&utm_campaign=Badge_Grade_Dashboard)
+
 <article class="markdown-body entry-content container-lg" itemprop="text">
 <h1>Projet6 Openclassrooms- SnowTricks</h1>
     <p>Creation of a community site focused on the presentation of snowboard figures via the Symfony framework.</p>
@@ -104,3 +107,9 @@ Then consult the URL <a href="http://localhost:8000" rel="nofollow">http://local
 <p>If you don't wan't to use WebServerBundle, you can use your Apache/Php/Mysql environment in a normal way.<br>
 This by configuring a virtualhost in which to place the project.<br>
 Then check <a href="http://localhost" rel="nofollow">http://localhost</a>.</p>
+<h3>Admin credentials</h3>
+<p>You can access to the admin page by logging in as administrator with this credentials:</p>
+<ul>
+    <li>username: admin</li>
+    <li>password: admin</li>
+</ul>
