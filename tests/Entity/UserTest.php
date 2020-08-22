@@ -13,7 +13,7 @@ class UserTest extends KernelTestCase
     use EntityValidation;
     use AssertCheckResponse;
 
-    public function getEntity(): User
+    private function getEntity(): User
     {
         return (new User())
             ->setUsername('Conan')

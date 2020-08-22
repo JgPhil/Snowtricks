@@ -32,7 +32,6 @@ class PageControllerTest extends WebTestCase
         }
         $randomFigureId = $figuresArray[array_rand($figuresArray, 1)];
         $crawler = $client->request('GET', '/figure/' . $randomFigureId);
-        var_dump($crawler->getUri());
         $response = $client->getResponse()->getStatusCode();
         $this->assertEquals(200, $response);
     }
