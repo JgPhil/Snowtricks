@@ -81,11 +81,6 @@
 								</button>
 								<div class="collapse navbar-collapse justify-content-center" id="footer-navbar-collapse">
 									<ul class="pl-5 pr-5">
-										<li {% if route_name == "home" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
-											<a class="nav-link" href="{{ path('home') }}">
-												Accueil
-											</a>
-										</li>
 										{% if app.user %}
 											{% if (app.user.roles[0] == "ROLE_ADMIN") %}
 												<li class="nav-item">
@@ -99,10 +94,7 @@
 											<li {% if route_name == "figure_create" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
 												<a href="{{ path('figure_create') }} " class="nav-link">Poster</a>
 											</li>
-											{% else %}
-												<li class="nav-item">
-												<a href=" {{ path('security_login') }} " class="nav-link">Connexion</a>
-											</li>
+										{% else %}
 											<li {% if route_name == "figure_create" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
 												<a href="{{ path('security_registration') }} " class="nav-link">Inscription</a>
 											</li>
