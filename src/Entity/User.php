@@ -32,7 +32,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"figure_read", "user_read", "comment_read"})
-     * @Assert\NotBlank
+     * 
      */
     private $username;
 

@@ -497,7 +497,7 @@ class AppController extends AbstractController
                 $splittedUrl[2] === 'youtu.be') &&
             count($splittedUrl) < 6
         ) {
-            if (preg_match('/watch?v=/', $url)) {
+            if (preg_match('/watch/', $url)) {
                 $videoId = explode('=', array_pop($splittedUrl))[1];
             } else {
                 $videoId = array_pop($splittedUrl);

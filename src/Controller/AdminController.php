@@ -130,7 +130,7 @@ class AdminController extends AbstractController
 
     private function desactivateEntity($entity)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $em = $this->getDoctrine()->getManager();
 

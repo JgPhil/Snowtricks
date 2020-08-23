@@ -92,14 +92,21 @@
 													<a href="{{ path('admin')}}" class="nav-link">Admin</a>
 												</li>
 											{% endif %}
-										{% endif %}
-										<li class="nav-item">
-											<a href=" {{ path('profile') }} " class="nav-link">Profil</a>
-										</li>
-										<li {% if route_name == "figure_create" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
-											<a href="{{ path('figure_create') }} " class="nav-link">Poster</a>
-										</li>
 
+											<li class="nav-item">
+												<a href=" {{ path('profile') }} " class="nav-link">Profil</a>
+											</li>
+											<li {% if route_name == "figure_create" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+												<a href="{{ path('figure_create') }} " class="nav-link">Poster</a>
+											</li>
+											{% else %}
+												<li class="nav-item">
+												<a href=" {{ path('security_login') }} " class="nav-link">Connexion</a>
+											</li>
+											<li {% if route_name == "figure_create" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+												<a href="{{ path('security_registration') }} " class="nav-link">Inscription</a>
+											</li>
+										{% endif %}
 									</ul>
 								</div>
 							</div>
