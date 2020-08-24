@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PictureRepository;
+use App\Service\CommentHandling;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\BrowserKit\Response;
@@ -27,6 +28,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
+use App\Service\PictureHandling;
+use App\Service\VideoHandling;
+
+
 
 class AppController extends AbstractController
 {
@@ -52,10 +57,8 @@ class AppController extends AbstractController
     /**
      * @Route("/figure/new", name="figure_create")
      */
-    public function create(EntityManagerInterface $em, Request $request)
+    public function create(EntityManagerInterface $em, Request $request, PictureHandling $pictureHandling, VideoHandling $videoHandling)
     {
-        $acceptedExtensions = ['jpeg', 'jpg', 'gif', 'png'];
-        $pictureOrder = 1; //initialisation du compteur lors d'une création de figure
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
@@ -64,90 +67,19 @@ class AppController extends AbstractController
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-            //Images
-            foreach ($pictures as $picture) {
-                if (!empty($picture)) {
-                    if ($picture->getSize() < 2097150) {
-                        $extension = $picture->guessExtension();
-                        if (
-                            isset($extension) &&
-                            in_array($extension, $acceptedExtensions)
-                        ) {
-                            //nouveau nom de fichier
-                            $filename = md5(uniqid()) . '.' . $extension;
-
-                            //copie dans dossier uploads
-                            try {
-                                $picture->move(
-                                    $this->getParameter('pictures_directory'),
-                                    $filename
-                                );
-                            } catch (FileException $e) {
-                                error_log($e->getMessage());
-                            }
-
-                            //stockage du nom du fichier dans la base de donnée
-                            $pic = new Picture();
-                            $pic->setName($filename);
-                            $pic->setSortOrder($pictureOrder);
-
-                            // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                            $figure->addPicture($pic);
-                            $pictureOrder++;
-                        } else {
-                            $this->addFlash(
-                                'danger',
-                                "Mauvais format d'image.  Fichiers acceptés: jpg/jpeg/gif/png"
-                            );
-                            return $this->redirectToRoute('figure_create');
-                        }
-                    } else {
-                        $this->addFlash(
-                            'danger',
-                            'Le fichier image est trop volumineux. maximum: 2 Mb'
-                        );
-                        return $this->redirectToRoute('figure_create');
-                    }
-                } else {
-                    $this->addFlash(
-                        'danger',
-                        'Il y a eu un problème lors de la création de votre figure'
-                    );
-                    return $this->redirectToRoute('figure_create');
-                }
+            $picturesErrors = $pictureHandling->handlePictures($pictures, $figure);
+            if (!empty($picturesErrors[0])) {
+                $this->addFlash('danger', $picturesErrors[0]);
+                return $this->redirectToRoute('figure_create');
             }
-            if ($videos) {
-                foreach ($videos as $video) {
-                    if (!empty($video)) {
-                        $url = $this->checkVideoUrl($video);
-                        if ($url != null) {
-                            $video = new Video();
-                            $video->setFigure($figure);
-                            $video->setUrl($url);
-
-                            $em->persist($video);
-                            $figure->addVideo($video);
-                        } else {
-                            $this->addFlash(
-                                'danger',
-                                " URL de la vidéo non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg "
-                            );
-                            return $this->redirectToRoute('figure_create');
-                        }
-                    } else {
-                        $this->addFlash(
-                            'danger',
-                            'Il y a eu un problème lors de la création de votre figure'
-                        );
-                        return $this->redirectToRoute('home');
-                    }
-                }
+            $videoErrors = $videoHandling->handleVideo($videos, $figure);
+            if (!empty($videoErrors[0])) {
+                $this->addFlash('danger', $videoErrors[0]);
+                return $this->redirectToRoute(('figure_create'));
             }
-
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
             $figure->setSlug((Slugify::slugify($figure->getTitle())));
-
             $em->persist($figure);
             $em->flush();
 
@@ -162,41 +94,28 @@ class AppController extends AbstractController
     /**
      * @Route("/profile", name="profile")
      */
-    public function profile(EntityManagerInterface $em, Request $request)
+    public function profile(EntityManagerInterface $em, Request $request, PictureHandling $pictureHandling)
     {
         $user = $this->getUser();
-        $oldPicture = null;
-
-        if (count($user->getPictures()) > 0) {
-            $oldPicture = $user->getPictures()[0];
-        }
+        $pictures = [];
+        $oldPicture = $pictureHandling->userHasPicture($user);
         $form = $this->createForm(ProfileType::class, $user);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($oldPicture) {
-                $em->remove($oldPicture);
+            $pictures[] = $form->get('pictures')->getData();
+            [$oldPicture, $errors] = $pictureHandling->handlePictures($pictures, $user);
+            if (!empty($errors[0])) {
+                $this->addFlash('danger', $errors[0]);
+            } else {
+                $em->flush();
+                $this->addFlash('message', "Image modifiée avec succés");
             }
-            $pictureData = $form->get('pictures')->getData();
-            $filename = md5(uniqid()) . '.' . $pictureData->guessExtension();
-            $pictureData->move(
-                $this->getParameter('pictures_directory'),
-                $filename
-            );
-            $picture = new Picture();
-            $picture->setName($filename);
-            $user->addPicture($picture);
-            $em->persist($picture);
-            $em->flush();
-
             return $this->redirectToRoute('profile');
         }
-
         return $this->render('app/profile.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
-            'oldPicture' => $oldPicture,
+            'oldPicture' => $oldPicture
         ]);
     }
 
@@ -206,20 +125,17 @@ class AppController extends AbstractController
     public function show(
         Figure $figure,
         Request $request,
-        EntityManagerInterface $manager,
+        CommentHandling $commentHandling,
         CommentRepository $commentRepo
     ) {
         $comment = new Comment();
+        $user = $this->getUser();
         $comments = $commentRepo->firstComments($figure);
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setCreatedAt(new \DateTime());
-            $comment->setFigure($figure);
-            $comment->setAuthor($this->getUser());
-            $comment->setActivatedAt(new \DateTime());
-            $manager->persist($comment);
-            $manager->flush();
+            $commentHandling->postNewComment($comment, $figure, $user);
             $this->addFlash(
                 'message',
                 'Votre commentaire a été posté !'
@@ -245,6 +161,8 @@ class AppController extends AbstractController
      */
     public function edit(
         EntityManagerInterface $em,
+        PictureHandling $pictureHandling,
+        VideoHandling $videoHandling,
         Request $request,
         Figure $figure
     ) {
@@ -252,74 +170,22 @@ class AppController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //Récupération des médias
             $pictures = $form->get('pictures')->getData();
             $videos = $form->get('videos')->getData();
 
-            try {
-                // Uniquement les images AJOUTEES  => les images REMPLACEES sont gérées en AJAX
-                foreach ($pictures as $picture) {
-                    if (!empty($picture)) {
-                        //Vérification du champ sort_order maximum en base
-                        $maxOrder = $this->findPictureHighestOrder($figure);
-                        //nouveau nom de fichier
-                        $filename =
-                            md5(uniqid()) . '.' . $picture->guessExtension();
-                        //copie dans dossier uploads
-                        $picture->move(
-                            $this->getParameter('pictures_directory'),
-                            $filename
-                        );
-                        //stockage du nom du fichier dans la base de donnée
-                        $pic = new Picture();
-                        $pic->setName($filename);
-                        $pic->setSortOrder($maxOrder + 1);
-                        // Ajout de l'image par cascade dans l'entité Figure -> "pictures"
-                        $figure->addPicture($pic);
-                    } else {
-                        $this->addFlash(
-                            'danger',
-                            'Il y a eu un problème lors de la modification de la figure'
-                        );
-                        return $this->redirectToRoute('trick_show', [
-                            'slug' => $figure->getSlug(),
-                        ]);
-                    }
-                }
-
-                if ($videos) {
-                    foreach ($videos as $video) {
-                        if (!empty($video)) {
-                            $url = $this->checkVideoUrl($video);
-                            if ($url != null) {
-                                $video = new Video();
-                                $video->setFigure($figure);
-                                $video->setUrl($url);
-
-                                $em->persist($video);
-                                $figure->addVideo($video);
-                            } else {
-                                $this->addFlash(
-                                    'danger',
-                                    " URL non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg "
-                                );
-                                return $this->redirectToRoute('figure_edit', [
-                                    'slug' => $figure->getSlug(),
-                                ]);
-                            }
-                        } else {
-                            $this->addFlash(
-                                'danger',
-                                'Il y a eu un problème lors de la modification de la figure'
-                            );
-                            return $this->redirectToRoute('trick_show', [
-                                'slug' => $figure->getSlug(),
-                            ]);
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
+            $picturesErrors = $pictureHandling->handlePictures($pictures, $figure);
+            if (!empty($picturesErrors[1])) {
+                $this->addFlash('danger', $picturesErrors[0]);
+                return $this->redirectToRoute('trick_show', [
+                    'slug' => $figure->getSlug(),
+                ]);
+            }
+            $videoErrors = $videoHandling->handleVideo($videos, $figure);
+            if (!empty($videoErrors[0])) {
+                $this->addFlash('danger', $videoErrors[0]);
+                return $this->redirectToRoute('trick_show', [
+                    'slug' => $figure->getSlug(),
+                ]);
             }
             $figure->setLastModificationAt(new \DateTime());
             $figure->setSlug(Slugify::slugify($form->get('title')->getData()));
@@ -332,6 +198,8 @@ class AppController extends AbstractController
             'trick' => $figure,
         ]);
     }
+
+
 
     /**
      * @Route("/more/figures/{offset}/{maxResults}", name="load_more_figures")
@@ -376,146 +244,5 @@ class AppController extends AbstractController
             [],
             ['groups' => 'comment_read']
         );
-    }
-
-    private function findPictureHighestOrder(Figure $figure)
-    {
-        $pictures = $figure->getPictures();
-        // trouver le sort_order le plus élevé dans les images
-        $maxOrder = 0;
-        foreach ($pictures as $picture) {
-            if ($picture->getsortOrder() > $maxOrder) {
-                $maxOrder = $picture->getsortOrder();
-            }
-        }
-
-        return $maxOrder;
-    }
-
-    /**
-     * @Route("/figure/{figureId}/update/oldPicture/{oldPictureId}/oldPictureOrder/{oldPictureOrder}", name="picture_edit")
-     */
-    public function updatePicture(
-        $figureId,
-        $oldPictureId,
-        $oldPictureOrder,
-        Request $request
-    ) {
-        $em = $this->getDoctrine()->getManager();
-        $pictureRepo = $this->getDoctrine()->getRepository(Picture::class);
-        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
-        $figure = $figureRepo->find($figureId);
-
-        if ($oldPictureId != 'null') {
-            //modification d'une image
-            $oldPicture = $pictureRepo->find($oldPictureId);
-            // effacement de de l'ancienne image dans le dossier Pictures
-            unlink(
-                $this->getParameter('pictures_directory') .
-                    '/' .
-                    $oldPicture->getName()
-            );
-            //effacement de l'entrée en base de l'ancienne image
-            $em->remove($oldPicture);
-            $pictureOrder = $oldPictureOrder;
-        } else {
-            $pictureOrder = 1; // Default picture
-        }
-        //Récupération et sauvegarde du fichier image
-        $uploadedFile = $request->files->get('file');
-        $filename = md5(uniqid()) . '.' . $uploadedFile->guessExtension();
-        $uploadedFile->move(
-            $this->getParameter('pictures_directory'),
-            $filename
-        );
-
-        $newPicture = new Picture();
-        $newPicture->setSortOrder($pictureOrder);
-        $newPicture->setFigure($figure);
-        $newPicture->setName($filename);
-
-        $figure->addPicture($newPicture);
-
-        $em->flush();
-
-        return $this->json(
-            [
-                'message' => 'Image mise à jour',
-                'newPictureFilename' => $filename,
-            ],
-            200
-        );
-    }
-
-    /**
-     * @Route("/figure/{figureId}/update/oldVideo/{oldVideoId}", name="video_edit")
-     */
-    public function updateVideo($figureId, $oldVideoId, Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $videoRepo = $this->getDoctrine()->getRepository(Video::class);
-        $figureRepo = $this->getDoctrine()->getRepository(Figure::class);
-        $figure = $figureRepo->find($figureId);
-
-        $newVideoUrl = $request->getContent();
-
-        if (!empty($newVideoUrl)) {
-            $video = new Video();
-            $video->setUrl($newVideoUrl);
-            if ($this->checkVideoUrl($video) != null) {
-                $video->setFigureId($figureId);
-                $figure->addVideo($video);
-                $em->persist($video);
-
-                // Effacement de l'ancienne vidéo
-                $em->remove($videoRepo->find($oldVideoId));
-                $em->flush();
-                return $this->json(
-                    [
-                        'newVideoUrl' => $newVideoUrl,
-                        'message' => 'Video mise à jour',
-                    ],
-                    200
-                );
-            }
-        } else {
-            return $this->json(
-                [
-                    'newVideoUrl' => $newVideoUrl,
-                    'error' =>
-                    "Il semble qu'il y ait un problème avec cette l'url",
-                ],
-                404
-            );
-        }
-    }
-
-    private function checkVideoUrl($video)
-    {
-        $url = htmlspecialchars($video->getUrl());
-        $splittedUrl = explode('/', $url);
-
-        if (
-            ($splittedUrl[2] === 'www.youtube.com' ||
-                $splittedUrl[2] === 'youtu.be') &&
-            count($splittedUrl) < 6
-        ) {
-            if (preg_match('/watch/', $url)) {
-                $videoId = explode('=', array_pop($splittedUrl))[1];
-            } else {
-                $videoId = array_pop($splittedUrl);
-            }
-            $url = 'https://www.youtube.com/embed/' . $videoId;
-        } elseif (
-            ($splittedUrl[2] === 'www.dailymotion.com' ||
-                $splittedUrl[2] === 'dai.ly') &&
-            count($splittedUrl) < 6
-        ) {
-            $videoId = array_pop($splittedUrl);
-            $url = 'https://www.dailymotion.com/embed/video/' . $videoId;
-        } else {
-            $url = null;
-        }
-        return $url;
     }
 }

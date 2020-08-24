@@ -3,6 +3,24 @@
 {% block title "Profil" %}
 
 {% block body %}
+	<div class="container">
+		{% for message in app.flashes('info') %}
+			<div class="flash-info">
+				<div class="alert alert-success">{{ message }}</div>
+			</div>
+		{% endfor %}
+		{% for message in app.flashes('message') %}
+			<div class="flash-info">
+				<div class="alert alert-success">{{ message }}</div>
+			</div>
+		{% endfor %}
+		{% for message in app.flashes('danger') %}
+			<div class="flash-info">
+				<div class="alert alert-danger">{{ message }}</div>
+			</div>
+		{% endfor %}
+	</div>
+
 	<div class="container ">
 		<div class="row justify-content-center base-container">
 			<div class="col-md-10 col-lg-8 col-xl-6">
