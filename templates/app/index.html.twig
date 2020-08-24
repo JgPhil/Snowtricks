@@ -71,17 +71,17 @@
 							<div class="card-body">
 								<div class="row ">
 									<h5 class="col-7">
-										<a href="{{ path( 'trick_show', { id: figure.id } ) }}">
+										<a href="{{ path( 'trick_show', { slug: figure.slug } ) }}">
 											{{ figure.title }}
 										</a>
 									</h5>
 
 									{% if app.user %}
 										<div class="col-5">
-											<a href="{{ path('figure_edit', { id: figure.id }) }}" class="p-1">
+											<a href="{{ path('figure_edit', { slug: figure.slug }) }}" class="p-1">
 												<i class="fas fa-pencil-alt fa-2x"></i>
 											</a>
-											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" class="p-1" data-delete>
+											<a href="{{ path('admin_figure_desactivate', { slug: figure.slug }) }}" class="p-1" data-delete>
 												<i class="fas fa-trash-alt fa-2x"></i>
 											</a>
 										</div>

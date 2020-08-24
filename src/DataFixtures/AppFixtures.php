@@ -10,6 +10,7 @@ use App\Entity\Picture;
 use App\Entity\Category;
 use App\DataFixtures\UserFixtures;
 use App\Entity\Video;
+use App\Helpers\Slugify;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -201,7 +202,8 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
                     ->setCreatedAt(
                         $faker->dateTimeThisMonth('now', 'Europe/Paris')
                     )
-                    ->setActivatedAt($now);
+                    ->setActivatedAt($now)
+                    ->setSlug(Slugify::slugify($figure->getTitle()));
 
                 $picture = new Picture();
                 $picture->setName($figureData['picture']);

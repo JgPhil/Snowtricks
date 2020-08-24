@@ -87,6 +87,12 @@ class Figure
      */
     private $lastModificationAt;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("figure_read")
+     */
+    private $slug;
+
 
     public function __construct()
     {
@@ -274,6 +280,18 @@ class Figure
     public function setLastModificationAt(?\DateTimeInterface $lastModificationAt): self
     {
         $this->lastModificationAt = $lastModificationAt;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -51,10 +51,10 @@
 			{% if app.user %}
 
 				<div class="editButtonMenu">
-					<a href="{{ path('figure_edit', { id: figure.id }) }}" class="mr-2">
+					<a href="{{ path('figure_edit', { slug: figure.slug }) }}" class="mr-2">
 						<i class="fas fa-pencil-alt fa-2x" title="modifier la figure"></i>
 					</a>
-					<a href="{{ path('delete_figure', { id: figure.id }) }}" onclick="return confirm('êtes-vous sûr de vouloir effacer cette figure ?');">
+					<a href="{{ path('delete_figure', { slug: figure.slug }) }}" onclick="return confirm('êtes-vous sûr de vouloir effacer cette figure ?');">
 						<i class="fas fa-trash-alt fa-2x" title="supprimer la figure"></i>
 					</a>
 				</div>

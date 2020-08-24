@@ -36,9 +36,9 @@
 								<td>{{figure.author.username }}</td>
 								<td>
 									{% if figure.getActivatedAt is not null %}
-										<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
+										<a href="{{ path('admin_figure_desactivate', { slug: figure.slug }) }}" activation="true" class="btn btn-warning btn-sm">Désactiver</a>
 									{% else %}
-										<a href="{{ path('admin_figure_activate', { id: figure.id }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
+										<a href="{{ path('admin_figure_activate', { slug: figure.slug }) }}" activation="false" class="btn btn-success btn-sm">Activer</a>
 									{% endif %}
 								</td>
 							</tr>

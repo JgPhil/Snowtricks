@@ -10,6 +10,7 @@ use App\Entity\Picture;
 use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Form\ProfileType;
+use App\Helpers\Slugify;
 use Doctrine\ORM\EntityManager;
 use App\Repository\FigureRepository;
 use App\Repository\CommentRepository;
@@ -145,6 +146,7 @@ class AppController extends AbstractController
 
             $figure->setCreatedAt(new \DateTime());
             $figure->setAuthor($this->getUser());
+            $figure->setSlug((Slugify::slugify($figure->getTitle())));
 
             $em->persist($figure);
             $em->flush();
@@ -199,7 +201,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="trick_show")
+     * @Route("/figure/{slug}", name="trick_show")
      */
     public function show(
         Figure $figure,
@@ -223,7 +225,7 @@ class AppController extends AbstractController
                 'Votre commentaire a été posté !'
             );
             return $this->redirectToRoute('trick_show', [
-                'id' => $figure->getId(),
+                'slug' => $figure->getSlug(),
             ]);
         }
         if ($figure->getActivatedAt() != null) {
@@ -239,7 +241,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
+     * @Route("figure/edit/{slug}", name="figure_edit", methods={"GET", "POST"})
      */
     public function edit(
         EntityManagerInterface $em,
@@ -280,7 +282,7 @@ class AppController extends AbstractController
                             'Il y a eu un problème lors de la modification de la figure'
                         );
                         return $this->redirectToRoute('trick_show', [
-                            'id' => $figure->getId(),
+                            'slug' => $figure->getSlug(),
                         ]);
                     }
                 }
@@ -302,7 +304,7 @@ class AppController extends AbstractController
                                     " URL non valide. Veuillez entrer l'URL présente telle quelle dans la barre d\'adresse de votre navigateur internet.  Par ex: https://www.youtube.com/watch?v=Pq5p6zhgzlg "
                                 );
                                 return $this->redirectToRoute('figure_edit', [
-                                    'id' => $figure->getId(),
+                                    'slug' => $figure->getSlug(),
                                 ]);
                             }
                         } else {
@@ -311,7 +313,7 @@ class AppController extends AbstractController
                                 'Il y a eu un problème lors de la modification de la figure'
                             );
                             return $this->redirectToRoute('trick_show', [
-                                'id' => $figure->getId(),
+                                'slug' => $figure->getSlug(),
                             ]);
                         }
                     }
@@ -320,6 +322,7 @@ class AppController extends AbstractController
                 error_log($e->getMessage());
             }
             $figure->setLastModificationAt(new \DateTime());
+            $figure->setSlug(Slugify::slugify($form->get('title')->getData()));
             $em->flush();
             $this->addFlash('message', 'Votre figure a bien été modifiée');
             return $this->redirectToRoute('home');
@@ -463,7 +466,7 @@ class AppController extends AbstractController
                 $video->setFigureId($figureId);
                 $figure->addVideo($video);
                 $em->persist($video);
-                
+
                 // Effacement de l'ancienne vidéo
                 $em->remove($videoRepo->find($oldVideoId));
                 $em->flush();
