@@ -204,12 +204,12 @@ const figureRows = function(e) {
     let activationlink = document.createElement("a");
 
     if (e.activatedAt !== null) {
-        activationlink.setAttribute("href", "/figure/desactivate/" + e.id);
+        activationlink.setAttribute("href", "/figure/desactivate/" + e.slug);
         activationlink.setAttribute("activation", "true");
         activationlink.classList.add("btn", "btn-warning", "btn-sm");
         activationlink.textContent = "Désactiver";
     } else {
-        activationlink.setAttribute("href", "/figure/activate/" + e.id);
+        activationlink.setAttribute("href", "/figure/activate/" + e.slug);
         activationlink.setAttribute("activation", "false");
         activationlink.classList.add("btn", "btn-success", "btn-sm");
         activationlink.textContent = "Activer";

@@ -2,7 +2,7 @@ let loadButton = document.querySelector("#js-load");
 let result = null;
 let more = document.querySelector("#js-more"); //all figures container
 
-const resultsperWidth = function () {
+const resultsperWidth = function() {
     if (window.matchMedia("(min-width: 1200px)").matches) {
         maxResults = 8;
     } else if (window.matchMedia("(min-width: 992px)").matches) {
@@ -15,25 +15,24 @@ const resultsperWidth = function () {
 
 
 
-loadButton.addEventListener('click', function (event) {
+loadButton.addEventListener('click', function(event) {
     event.stopPropagation();
     event.preventDefault();
 
     let lasFigUrlArray = more.lastElementChild.lastElementChild.lastElementChild.firstElementChild.firstElementChild.firstElementChild.href.split('/');
     //the last figure url link splitted into an array
-    let offset = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
+    let slug = lasFigUrlArray.pop(); // search the last occurence in the array -> figureID
     let maxResults = resultsperWidth();
 
-    let url = "/more/figures/" + offset + "/" + maxResults; // construct the url with the last figureID to get new figures in database
+    let url = "/more/figures/" + slug + "/" + maxResults; // construct the url with the last figureID to get new figures in database
 
     fetch(url, {
         method: "GET"
-    }).then(response => response.json()
-    ).then(data => {
+    }).then(response => response.json()).then(data => {
         if (data.sliceFigures.length < 4) {
             loadButton.style.display = "none";
         }
-        data.sliceFigures.forEach(function (k) {
+        data.sliceFigures.forEach(function(k) {
             let defaultPicture = null;
 
             let div1 = document.createElement('div');

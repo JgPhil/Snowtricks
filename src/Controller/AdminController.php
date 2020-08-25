@@ -45,7 +45,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/figure/activate/{slug}", name="admin_figure_activate")
+     * @Route("/figure/activate/{id}", name="admin_figure_activate")
      */
     public function activateFigure(Figure $figure)
     {
@@ -61,7 +61,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/user/activate/{id}", name="admin_user_activate")
+     * @Route("/user/activate/{slug}", name="admin_user_activate")
      */
     public function activateUser(User $user)
     {

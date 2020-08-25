@@ -20,7 +20,7 @@ class VideoHandling
     }
 
 
-    public function handleVideo($videos, Figure $figure)
+    public function handleVideos($videos, Figure $figure)
     {
         $errors = [];
         foreach ($videos as $video) {
@@ -69,18 +69,5 @@ class VideoHandling
             $url = null;
         }
         return $url;
-    }
-
-    public function addVideo($video, Figure $figure)
-    {
-        $url = $this->checkVideoUrl($video);
-        if ($url != null) {
-            $vid = new Video();
-            $vid->setFigure($figure);
-            $vid->setUrl($url);
-            $this->em->persist($vid);
-            $figure->addVideo($vid);
-            $this->em->flush();
-        }
     }
 }
