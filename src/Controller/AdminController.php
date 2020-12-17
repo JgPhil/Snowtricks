@@ -61,7 +61,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/user/activate/{slug}", name="admin_user_activate")
+     * @Route("/user/activate/{id}", name="admin_user_activate")
      */
     public function activateUser(User $user)
     {
@@ -103,7 +103,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/figure/desactivate/{slug}", name="admin_figure_desactivate")
+     * @Route("/figure/desactivate/{id}", name="admin_figure_desactivate")
      */
     public function descativateFigure(Figure $figure)
     {
@@ -213,7 +213,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/delete/figure/{slug}", name="delete_figure")
+     * @Route("/delete/figure/{id}", name="delete_figure")
      */
     public function deleteFigure(Figure $figure, EntityManagerInterface $em)
     {

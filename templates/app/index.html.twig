@@ -67,7 +67,7 @@
 
 					<div class="col-sm-6 col-md-4 col-lg-3">
 						<div class="card mb-4 ">
-							<img class="card-img-top" src="{{picturePath|default('uploads/pictures/fail.jpg') }}" alt="Une image de la figure {{figure.title}}">
+							<img class="card-img-top" src="{{picturePath|default("uploads/pictures/fail.jpg") }}" alt="Une image de la figure {{figure.title}}">
 							<div class="card-body">
 								<div class="row ">
 									<h5 class="col-7">
@@ -81,7 +81,7 @@
 											<a href="{{ path('figure_edit', { slug: figure.slug }) }}" class="p-1">
 												<i class="fas fa-pencil-alt fa-2x"></i>
 											</a>
-											<a href="{{ path('admin_figure_desactivate', { slug: figure.slug }) }}" class="p-1" data-delete>
+											<a href="{{ path('admin_figure_desactivate', { id: figure.id }) }}" class="p-1" data-delete>
 												<i class="fas fa-trash-alt fa-2x"></i>
 											</a>
 										</div>
