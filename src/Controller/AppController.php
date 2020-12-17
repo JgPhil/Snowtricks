@@ -82,40 +82,4 @@ class AppController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/figure/{slug}", name="trick_show")
-     */
-    public function show(
-        Figure $figure,
-        Request $request,
-        CommentHandling $commentHandling,
-        CommentRepository $commentRepo
-    ) {
-        $comment = new Comment();
-        $user = $this->getUser();
-        $comments = $commentRepo->firstComments($figure);
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $commentHandling->postNewComment($comment, $figure, $user);
-            $this->addFlash(
-                'message',
-                'Votre commentaire a été posté !'
-            );
-            return $this->redirectToRoute('trick_show', [
-                'slug' => $figure->getSlug(),
-            ]);
-        }
-        if ($figure->getActivatedAt() != null) {
-            return $this->render('app/show.html.twig', [
-                'figure' => $figure,
-                'commentForm' => $form->createView(),
-                'comments' => $comments,
-            ]);
-        } else {
-            $this->addFlash('danger', "Cette figure n'est pas activée");
-            return $this->redirectToRoute('home');
-        }
-    }
 }
