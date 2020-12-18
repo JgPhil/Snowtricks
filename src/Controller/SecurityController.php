@@ -21,10 +21,18 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+
+/**
+ *  host="{subdomain}.philippe-j.fr",
+ *  defaults={"subdomain"="snowtricks"},
+ *  requirements={"subdomain"="snowtricks"})
+ */
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/inscription", name="security_registration")
+     * @Route(
+     * "/inscription",
+     *  name="security_registration")
      */
     public function registration(
         Request $request,
@@ -229,7 +237,7 @@ class SecurityController extends AbstractController
      */
     private function authenticateUser(User $user)
     {
-        $providerKey = 'main'; 
+        $providerKey = 'main';
         $token = new UsernamePasswordToken(
             $user,
             null,

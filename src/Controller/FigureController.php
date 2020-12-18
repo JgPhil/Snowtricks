@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Entity\Comment;
 use App\Form\FigureType;
 use App\Helpers\Slugify;
+use App\Form\CommentType;
 use App\Service\VideoHandling;
 use App\Service\CommentHandling;
 use App\Service\PictureHandling;
