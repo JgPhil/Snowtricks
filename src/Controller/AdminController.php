@@ -215,7 +215,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/delete/figure/{id}", name="delete_figure")
+     * @Route("/delete/figure/{slug}", name="delete_figure")
      */
     public function deleteFigure(Figure $figure, EntityManagerInterface $em)
     {

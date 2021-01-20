@@ -230,7 +230,7 @@ ul {
 
 h2 {
     text-align: center;
-    font-weight: 700;
+    font-weight: 700!important;
     background-color: #f1e042;
     border-radius: 32px;
 }
