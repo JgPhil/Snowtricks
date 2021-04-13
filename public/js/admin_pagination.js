@@ -11,19 +11,19 @@ let commentsContent = commentsElement.tBodies;
 let usersContent = usersElement.tBodies;
 
 
-let figurePaginationlinks = document.querySelectorAll("[data-figureBtns]");
+let figurePaginationlinks = document.querySelectorAll("[data-figure-link]");
 figurePaginationlinks[1].classList.add("font-weight-bolder");
 let figuresCount = document.querySelector("[data-figuresCount").getAttribute("data-figuresCount");
 let figuresCurrentPage = 1;
 let figuresPageTarget = null;
 
-let commentPaginationlinks = document.querySelectorAll("[data-commentBtns]");
+let commentPaginationlinks = document.querySelectorAll("[data-comment-link]");
 commentPaginationlinks[1].classList.add("font-weight-bolder");
 let commentsCount = document.querySelector("[data-commentsCount").getAttribute("data-commentsCount");
 let commentsCurrentPage = 1;
 let commentsPageTarget = null;
 
-let userPaginationlinks = document.querySelectorAll("[data-userBtns]");
+let userPaginationlinks = document.querySelectorAll("[data-user-link]");
 userPaginationlinks[1].classList.add("font-weight-bolder");
 let usersCount = document.querySelector("[data-usersCount").getAttribute("data-usersCount");
 let usersCurrentPage = 1;
@@ -35,89 +35,46 @@ let elementsCount = null;
 let arrow = null;
 let confirmation = null;
 
-//--------------FIGURES----------------//
-
-for (let figurePaginationlink of figurePaginationlinks) {
-    figurePaginationlink.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (this.classList.contains('prev')) {
-            arrow = "prev";
-        } else if (this.classList.contains('next')) {
-            arrow = "next";
-        }
-
-        figuresPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
-        [currentPage, pageTarget] = paginationLogic(figuresCurrentPage, figuresPageTarget, figuresCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
-
-        arrow = null;
-        figuresCurrentPage = parseInt(currentPage, 10);
-        figuresPageTarget = pageTarget;
-
-        ajaxQuery('/admin/next/figures/', figuresPageTarget, figuresContent); //on va chercher les éléments en base
-
-    })
-
-}
 
 
-//--------------COMMENTS----------------//
+[figurePaginationlinks, commentPaginationlinks, userPaginationlinks].forEach(entityLinks => {
+    for (let link of entityLinks) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
 
-for (let commentPaginationlink of commentPaginationlinks) {
-    commentPaginationlink.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
+            if (this.classList.contains('prev')) {
+                arrow = "prev";
+            } else if (this.classList.contains('next')) {
+                arrow = "next";
+            }
 
-        if (this.classList.contains('prev')) {
-            arrow = "prev";
-        } else if (this.classList.contains('next')) {
-            arrow = "next";
-        }
+            linkAttribute = link.getAttributeNames()[1]; // i.e. : data-figure-link attribute for the <a>
+            entityName = linkAttribute.split('-')[1] + 's'; // extract the entity name 
+            const prevPage = eval(entityName + 'CurrentPage');
+            const count = eval(entityName + 'Count');
+            target = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
+            [currentPage, pageTarget] = paginationLogic(prevPage, target, count, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
 
-        commentsPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
-        [currentPage, pageTarget] = paginationLogic(commentsCurrentPage, commentsPageTarget, commentsCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
+            arrow = null;
+            eval(entityName + 'CurrentPage =' + pageTarget)
+            eval(pageTarget = entityName + 'PageTarget');
+            const content = eval(entityName + 'Content');
 
-        arrow = null;
-        commentsCurrentPage = parseInt(currentPage, 10);
-        commentsPageTarget = pageTarget;
+            ajaxQuery(`/admin/next/${entityName}/`, parseInt(currentPage, 10), content); //on va chercher les éléments en base
 
+        })
 
-        ajaxQuery('/admin/next/comments/', commentsPageTarget, commentsContent); //on va chercher les éléments en base
-    })
-}
+    }
+})
 
-
-//--------------USERS----------------//
-
-for (let userPaginationlink of userPaginationlinks) {
-    userPaginationlink.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (this.classList.contains('prev')) {
-            arrow = "prev";
-        } else if (this.classList.contains('next')) {
-            arrow = "next";
-        }
-
-        usersPageTarget = parseInt(this.textContent, 10); //Récupération du contenu du lien de la pagination (1, 2, 3, 4, "prev", "next")
-        [currentPage, pageTarget] = paginationLogic(usersCurrentPage, usersPageTarget, usersCount, arrow); //On pose la logique en fonction du lien activé et on récupère les valeurs.
-
-        arrow = null;
-        usersCurrentPage = parseInt(currentPage, 10);
-        usersPageTarget = pageTarget;
-
-        ajaxQuery('/admin/next/users/', usersPageTarget, usersContent); //on va chercher les éléments en base
-    })
-}
 
 
 
 //---------------------LOGIC--------------------//
 
 
-const paginationLogic = function(currentPage, pageTarget, elementsCount, arrow) {
+const paginationLogic = function (currentPage, pageTarget, elementsCount, arrow) {
 
     if (arrow) {
         if (arrow == "prev") { //is prev btn
@@ -148,7 +105,7 @@ const paginationLogic = function(currentPage, pageTarget, elementsCount, arrow) 
 //------------FETCH DATA & DELETE ROWS----------------//
 
 
-const ajaxQuery = function(url, pageTarget, content) {
+const ajaxQuery = function (url, pageTarget, content) {
     fetch(url + pageTarget, {
         method: 'GET',
         headers: {
@@ -164,16 +121,16 @@ const ajaxQuery = function(url, pageTarget, content) {
         }
 
         data.slice.forEach(e => {
-                if (content === usersContent) {
-                    userRows(e);
-                } else if (content === commentsContent) {
-                    commentRows(e);
-                } else {
-                    figureRows(e);
-                }
+            if (content === usersContent) {
+                userRows(e);
+            } else if (content === commentsContent) {
+                commentRows(e);
+            } else {
+                figureRows(e);
+            }
 
-            })
-            // Integration des nouveaux liens créés via JavaScript
+        })
+        // Integration des nouveaux liens créés via JavaScript
         links = document.querySelectorAll("[activation]");
     })
 
@@ -186,7 +143,7 @@ const ajaxQuery = function(url, pageTarget, content) {
 //-----//--//--//--TD_ROWS_GENERATING---//--//--//--//-------------//
 
 //figures
-const figureRows = function(e) {
+const figureRows = function (e) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr");
 
@@ -237,7 +194,7 @@ const figureRows = function(e) {
 }
 
 //comments admin panel
-const commentRows = function(c) {
+const commentRows = function (c) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr");
 
@@ -287,7 +244,7 @@ const commentRows = function(c) {
 }
 
 //users
-const userRows = function(u) {
+const userRows = function (u) {
     let tbody = document.createElement("tbody");
     let tr = document.createElement("tr")
 
@@ -344,7 +301,7 @@ const userRows = function(u) {
 
 for (table of tables) {
 
-    table.addEventListener("click", function(e) {
+    table.addEventListener("click", function (e) {
         if (e.target && e.target.matches("a") && e.target.hasAttribute('activation')) {
             e.preventDefault();
             e.stopPropagation();
@@ -381,7 +338,7 @@ for (table of tables) {
 
 //Cacher un bouton et afficher l'autre
 
-const linkSWapp = function(link) {
+const linkSWapp = function (link) {
 
     if (link.textContent === "Désactiver") {
         link.textContent = "Activer"

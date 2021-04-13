@@ -51,15 +51,15 @@
 
 			<input type="text" hidden data-figurescount={{ figuresCount }}>
 
-			<a href="" data-figurebtns class="link_blog prev">
+			<a href="" data-figure-link class="link_blog prev">
 				<i class="fas fa-angle-left"></i>
 			</a>
 
 			{% for i in 1..((figuresCount / maxPerPage)|round(0,'ceil')) %}
-				<a href="" data-figurebtns class="link_blog">{{i}}</a>
+				<a href="" data-figure-link class="link_blog">{{i}}</a>
 			{% endfor %}
 
-			<a href="" data-figurebtns class="link_blog next">
+			<a href="" data-figure-link class="link_blog next">
 				<i class="fas fa-angle-right"></i>
 			</a>
 		</div>
@@ -106,13 +106,13 @@
 
 			<input type="text" hidden data-commentscount={{ commentsCount }}>
 
-			<a href="" data-commentbtns class="link_blog prev">
+			<a href="" data-comment-link class="link_blog prev">
 				<i class="fas fa-angle-left"></i>
 			</a>
 			{% for j in 1..((commentsCount / maxPerPage)|round(0,'ceil')) %}
-				<a href="" data-commentbtns class="link_blog">{{j}}</a>
+				<a href="" data-comment-link class="link_blog">{{j}}</a>
 			{% endfor %}
-			<a href="" data-commentbtns class="link_blog next">
+			<a href="" data-comment-link class="link_blog next">
 				<i class="fas fa-angle-right"></i>
 			</a>
 		</div>
@@ -153,13 +153,13 @@
 
 			<input type="text" hidden data-userscount={{ usersCount }}>
 
-			<a href="" data-userbtns class="link_blog prev">
+			<a href="" data-user-link class="link_blog prev">
 				<i class="fas fa-angle-left"></i>
 			</a>
 			{% for k in 1..((usersCount / maxPerPage)|round(0,'ceil')) %}
-				<a href="" data-userbtns class="link_blog">{{k}}</a>
+				<a href="" data-user-link class="link_blog">{{k}}</a>
 			{% endfor %}
-			<a href="" data-userbtns class="link_blog next">
+			<a href="" data-user-link class="link_blog next">
 				<i class="fas fa-angle-right"></i>
 			</a>
 		</div>
